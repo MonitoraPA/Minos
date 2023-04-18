@@ -1,0 +1,16 @@
+{
+  "name": "Minos",
+  "productName": "Minos",
+  "version": "1.0.0",
+  "description": "Interceptor for dangerous web requests",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "author": "ebmaj7",
+  "license": "Hacking License",
+  "devDependencies": {
+    "electron": "^24.1.2"
+  }
+}
