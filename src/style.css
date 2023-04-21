@@ -9,6 +9,9 @@
 
 :root {
 	--bar-bg: #222222;
+	--url-bg: #333333;
+	--url-color: #cccccc;
+	--url-border: #111111;
 }
 
 body {
@@ -27,7 +30,7 @@ body {
 	border-radius: 100px;
 	width: 80vw;
 	height: 70vh;
-	background-color: white;
+	background-color: var(--url-bg);
 	padding-left: 20px;
 	margin-left: 10px;
 	text-decoration: none;

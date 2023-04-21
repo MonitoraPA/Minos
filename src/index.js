@@ -35,6 +35,8 @@ const createWindow = () => {
 		}
 	});
 	registerForHeaders(mainWindow);
+	// disable spellchecker (by default electron will download languages from Google cdn)
+	// please see: https://www.electronjs.org/docs/latest/tutorial/spellchecker/#does-the-spellchecker-use-any-google-services
 	mainWindow.webContents.session.setSpellCheckerLanguages([]);
 	mainWindow.webContents.session.setSpellCheckerEnabled(false);
 	const topView = new BrowserView();
