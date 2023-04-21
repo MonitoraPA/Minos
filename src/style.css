@@ -1,0 +1,34 @@
+/**
+ * This file is part of Minos
+ *
+ * Copyright (C) 2023 ebmaj7 <ebmaj7@proton.me>
+ *
+ * Minos is a hack. You can use it according to the terms and
+ * conditions of the Hacking License (see licenses/HACK.txt)
+ */
+
+:root {
+	--bar-bg: #222222;
+}
+
+body {
+	/* reset body margin which is put by default by chromium */
+	margin: 0;
+}
+
+#bar {
+	background-color: var(--bar-bg);
+	height: 100vh;
+}
+
+#url-box {
+	margin-top: 5px;
+	font-size: 20px;
+	border-radius: 100px;
+	width: 80vw;
+	height: 70vh;
+	background-color: white;
+	padding-left: 20px;
+	margin-left: 10px;
+	text-decoration: none;
+}

@@ -35,13 +35,15 @@ const createWindow = () => {
 		}
 	});
 	registerForHeaders(mainWindow);
+	mainWindow.webContents.session.setSpellCheckerLanguages([]);
+	mainWindow.webContents.session.setSpellCheckerEnabled(false);
 	const topView = new BrowserView();
 	topView.webContents.loadFile('src/gui.html');
-	topView.setBounds({ x: 0, y: 0, width: 800, height: 100 });
+	topView.setBounds({ x: 0, y: 0, width: 800, height: 60 });
 	topView.setAutoResize({ width: true });
 	const mainView = new BrowserView();
 	mainView.webContents.loadURL('https://electronjs.org');
-	mainView.setBounds({ x: 0, y: 100, width: 800, height: 600 });
+	mainView.setBounds({ x: 0, y: 60, width: 800, height: 600 });
 	mainView.setAutoResize({ width: true, height: true });
 	mainWindow.addBrowserView(topView);
 	mainWindow.addBrowserView(mainView);
