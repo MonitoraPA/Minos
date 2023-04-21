@@ -7,8 +7,10 @@
  * conditions of the Hacking License (see licenses/HACK.txt)
  */ 
 
-const { session, BrowserWindow, app } = require('electron');
+const { session, BrowserWindow, BrowserView, app } = require('electron');
 const { appendFile } = require('fs');
+const { path } = require('path');
+const { url } = require('url');
 
 const LOG_FILE = "./log.txt";
 
@@ -24,9 +26,25 @@ const registerForHeaders = (win) => {
 };
 
 const createWindow = () => {
-	const mainWindow = new BrowserWindow({width: 800, height: 600});
+	const mainWindow = new BrowserWindow({
+		width: 800, 
+		height: 600, 
+		webPreferences: {
+			webViewTag: true,
+			nodeIntegration: true
+		}
+	});
 	registerForHeaders(mainWindow);
-	mainWindow.loadURL('https://duckduckgo.com');
+	const topView = new BrowserView();
+	topView.webContents.loadFile('src/gui.html');
+	topView.setBounds({ x: 0, y: 0, width: 800, height: 100 });
+	topView.setAutoResize({ width: true });
+	const mainView = new BrowserView();
+	mainView.webContents.loadURL('https://electronjs.org');
+	mainView.setBounds({ x: 0, y: 100, width: 800, height: 600 });
+	mainView.setAutoResize({ width: true, height: true });
+	mainWindow.addBrowserView(topView);
+	mainWindow.addBrowserView(mainView);
 };
 
 const onReadyApp = () => {
