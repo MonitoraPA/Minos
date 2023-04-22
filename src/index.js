@@ -41,11 +41,11 @@ const createWindow = () => {
 	mainWindow.webContents.session.setSpellCheckerEnabled(false);
 	const topView = new BrowserView();
 	topView.webContents.loadFile('src/gui.html');
-	topView.setBounds({ x: 0, y: 0, width: 800, height: 60 });
+	topView.setBounds({ x: 0, y: 0, width: 800, height: 50 });
 	topView.setAutoResize({ width: true });
 	const mainView = new BrowserView();
 	mainView.webContents.loadURL('https://electronjs.org');
-	mainView.setBounds({ x: 0, y: 60, width: 800, height: 600 });
+	mainView.setBounds({ x: 0, y: 50, width: 800, height: 600 });
 	mainView.setAutoResize({ width: true, height: true });
 	mainWindow.addBrowserView(topView);
 	mainWindow.addBrowserView(mainView);

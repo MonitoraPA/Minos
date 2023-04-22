@@ -11,7 +11,13 @@
 	--bar-bg: #222222;
 	--url-bg: #333333;
 	--url-color: #cccccc;
-	--url-border: #111111;
+	--url-border-normal: #111111;
+	--url-border-light: #555555;
+	--button-bg-normal: #FF8447;
+	--button-bg-dark: #e8773d;
+	--button-bg-darkest: #d95a33;
+	--border-radius: 10px;
+	--button-font-size: 16px;
 }
 
 body {
@@ -20,18 +26,49 @@ body {
 }
 
 #bar {
+	display: grid;
+	column-gap: 10px;
+	grid-template-columns: 6fr 1fr;
 	background-color: var(--bar-bg);
 	height: 100vh;
 }
 
 #url-box {
-	margin-top: 5px;
-	font-size: 20px;
-	border-radius: 100px;
-	width: 80vw;
-	height: 70vh;
-	background-color: var(--url-bg);
-	padding-left: 20px;
+	border: 1px solid var(--url-border-normal);
+	margin-top: 10px;
 	margin-left: 10px;
+	margin-bottom: 10px;
+	font-size: 18px;
+	border-radius: var(--border-radius);
+	height: 60vh;
+	background-color: var(--url-bg);
+	padding-left: 10px;
 	text-decoration: none;
+	color: var(--url-color);
+}
+
+#url-box:focus {
+	border: 1px solid var(--url-border-light);
+	outline: unset; /* disable orange outline when input is selected */
+}
+
+#start-button {
+	margin: 10px;
+	background-color: var(--button-bg-normal);
+	color: white;
+	padding: 2px;
+	border-radius: var(--border-radius);
+	border-width: 0px;
+	font-size: var(--button-font-size);
+	text-decoration: bold;
+}
+
+#start-button:hover {
+	background-color: var(--button-bg-dark);
+	cursor: pointer;
+}
+
+#start-button:active {
+	background-color: var(--button-bg-darkest);
+	cursor: pointer;
 }
