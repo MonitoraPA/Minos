@@ -39,16 +39,18 @@ const createWindow = () => {
 	// please see: https://www.electronjs.org/docs/latest/tutorial/spellchecker/#does-the-spellchecker-use-any-google-services
 	mainWindow.webContents.session.setSpellCheckerLanguages([]);
 	mainWindow.webContents.session.setSpellCheckerEnabled(false);
-	const topView = new BrowserView();
-	topView.webContents.loadFile('src/gui.html');
-	topView.setBounds({ x: 0, y: 0, width: 800, height: 50 });
-	topView.setAutoResize({ width: true });
-	const mainView = new BrowserView();
-	mainView.webContents.loadURL('https://electronjs.org');
-	mainView.setBounds({ x: 0, y: 50, width: 800, height: 600 });
-	mainView.setAutoResize({ width: true, height: true });
-	mainWindow.addBrowserView(topView);
-	mainWindow.addBrowserView(mainView);
+	const localView = new BrowserView();
+	localView.webContents.loadFile('src/main.html');
+	localView.setBounds({ x: 0, y: 0, width: 800, height: 600 });
+	localView.setAutoResize({ width: true });
+	mainWindow.setBackgroundColor("#EDEDED");
+	mainWindow.addBrowserView(localView);
+	// const webView = new BrowserView();
+	// webView.webContents.loadURL('https://electronjs.org');
+	// webView.setBounds({ x: 0, y: 50, width: 800, height: 600 });
+	// webView.setAutoResize({ width: true, height: true });
+	// mainWindow.addBrowserView(localView);
+	// mainWindow.addBrowserView(webView);
 };
 
 const onReadyApp = () => {

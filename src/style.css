@@ -8,21 +8,27 @@
  */
 
 :root {
+	--main-bg: #EDEDED;
 	--bar-bg: #222222;
 	--url-bg: #333333;
 	--url-color: #cccccc;
 	--url-border-normal: #111111;
 	--url-border-light: #555555;
-	--button-bg-normal: #FF8447;
-	--button-bg-dark: #e8773d;
-	--button-bg-darkest: #d95a33;
+	--button-bg-normal: #F0AD4E;
+	--button-bg-dark: #F0953A;
+	--button-bg-darkest: #F08000;
+	--button-padding-normal: 20px;
+	--button-margin-normal: 10px;
 	--border-radius: 10px;
 	--button-font-size: 16px;
+	--font-size-big: 60px;
+	--title-color: #4384CD;
 }
 
 body {
 	/* reset body margin which is put by default by chromium */
 	margin: 0;
+	background-color: var(--main-bg);
 }
 
 #bar {
@@ -52,6 +58,26 @@ body {
 	outline: unset; /* disable orange outline when input is selected */
 }
 
+.button {
+	margin: var(--button-margin-normal);
+	background-color: var(--button-bg-normal);
+	color: white;
+	padding: var(--button-padding-normal);
+	border-radius: var(--border-radius);
+	border-width: 0px;
+	font-size: var(--button-font-size);
+}
+
+.button:hover {
+	background-color: var(--button-bg-dark);
+	cursor: pointer;
+}
+
+.button:active {
+	background-color: var(--button-bg-darkest);
+	cursor: pointer;
+}
+
 #start-button {
 	margin: 10px;
 	background-color: var(--button-bg-normal);
@@ -60,7 +86,6 @@ body {
 	border-radius: var(--border-radius);
 	border-width: 0px;
 	font-size: var(--button-font-size);
-	text-decoration: bold;
 }
 
 #start-button:hover {
@@ -71,4 +96,18 @@ body {
 #start-button:active {
 	background-color: var(--button-bg-darkest);
 	cursor: pointer;
+}
+
+.main-title {
+	font-size: var(--font-size-big);
+	text-align: center;
+	font-family: sans-serif;
+	color: var(--title-color);
+}
+
+.center {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
