@@ -27,11 +27,12 @@ const registerForHeaders = (win) => {
 
 const createWindow = () => {
 	const mainWindow = new BrowserWindow({
-		width: 800, 
-		height: 600, 
+		width: 1280, 
+		height: 720, 
+		backgroundColor: "#EDEDED",
 		webPreferences: {
 			webViewTag: true,
-			nodeIntegration: true
+			nodeIntegration: true,
 		}
 	});
 	registerForHeaders(mainWindow);
@@ -41,9 +42,8 @@ const createWindow = () => {
 	mainWindow.webContents.session.setSpellCheckerEnabled(false);
 	const localView = new BrowserView();
 	localView.webContents.loadFile('src/main.html');
-	localView.setBounds({ x: 0, y: 0, width: 800, height: 600 });
+	localView.setBounds({ x: 0, y: 0, width: 1280, height: 720 });
 	localView.setAutoResize({ width: true });
-	mainWindow.setBackgroundColor("#EDEDED");
 	mainWindow.addBrowserView(localView);
 	// const webView = new BrowserView();
 	// webView.webContents.loadURL('https://electronjs.org');
@@ -51,6 +51,7 @@ const createWindow = () => {
 	// webView.setAutoResize({ width: true, height: true });
 	// mainWindow.addBrowserView(localView);
 	// mainWindow.addBrowserView(webView);
+	localView.webContents.openDevTools();
 };
 
 const onReadyApp = () => {

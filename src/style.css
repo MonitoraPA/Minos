@@ -28,10 +28,14 @@
 body {
 	/* reset body margin which is put by default by chromium */
 	margin: 0;
-	background-color: var(--main-bg);
+	/* background-color: var(--main-bg); */
 }
 
-#bar {
+.hidden {
+	visibility: hidden;
+}
+
+.top-bar {
 	display: grid;
 	column-gap: 10px;
 	grid-template-columns: 6fr 1fr;

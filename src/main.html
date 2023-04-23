@@ -13,13 +13,19 @@ conditions of the Hacking License (see licenses/HACK.txt)
 		<meta charset="UTF-8">
 		<title>Main</title>
 		<link rel="stylesheet" href="style.css">
+		<script src='renderer.js' defer></script>
 	</head>
 
 	<body>
+		<div class='top-bar hidden'>
+			<input type='text' id='url-box'></input >
+			<button id='start-button'>Inizia</button>
+		</div>
 		<div class='center'>
 			<h1 class='main-title'>Minos</h1>
-			<button class='button'>Verifica sito web</button>
+			<button class='button' id='verify-button'>Verifica sito web</button>
 		</div>
-		
+
 	</body>
+	
 </html>
