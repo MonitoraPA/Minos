@@ -10,5 +10,6 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
-	verify: () => ipcRenderer.send('verify')
+	verify: () => ipcRenderer.send('verify'),
+	start: (URL) => ipcRenderer.send('start', URL),
 });

@@ -12,17 +12,28 @@ const { appendFile } = require('fs');
 const { url } = require('url');
 const path = require('path');
 
+// TODO: put in configuration file
 const LOG_FILE = "./log.txt";
 
-const resizeViews = (event) => {
-	console.log('resize');
-	const webContents = event.sender;
+const getViews = (webContents) => {
 	const mainWindow = BrowserWindow.fromWebContents(webContents);
 	const views = mainWindow.getBrowserViews();
+	return views;
+};
+
+const verify = (event) => {
+	const views = getViews(event.sender);
 	const localView = views[0];
-	localView.setBounds({ x: 0, y: 0, width: 1280, height: 50 });
 	const webView = views[1];
-	webView.setBounds({x: 0, y: 60, width: 1280, height: 1230 });
+	// TODO: put views bounds into a json configuration file
+	localView.setBounds({ x: 0, y: 0, width: 1280, height: 50 });
+	webView.setBounds({x: 0, y: 50, width: 1280, height: 1230 });
+};
+
+const start = (event, URL) => {
+	const views = getViews(event.sender);
+	const webView = views[1];
+	webView.webContents.loadURL(URL);
 };
 
 const registerForHeaders = (win) => {
@@ -38,6 +49,7 @@ const registerForHeaders = (win) => {
 
 const createWindow = () => {
 	const mainWindow = new BrowserWindow({
+		// TODO: put bounds and bg color in configuration file
 		width: 1280, 
 		height: 720, 
 		backgroundColor: "#EDEDED",
@@ -59,19 +71,21 @@ const createWindow = () => {
 		}
 	);
 	localView.webContents.loadFile('src/main.html');
+	// TODO: put bounds in config file
 	localView.setBounds({ x: 0, y: 0, width: 1280, height: 720 });
 	localView.setAutoResize({ width: true });
 	const webView = new BrowserView();
-	// webView.webContents.loadURL('https://electronjs.org');
+	// TODO: put bounds in config file
 	webView.setBounds({ x: 0, y: 720, width: 1280, height: 0 });
 	webView.setAutoResize({ width: true, height: true });
 	mainWindow.addBrowserView(localView);
 	mainWindow.addBrowserView(webView);
 	// localView.webContents.openDevTools();
-	ipcMain.on('verify', resizeViews);
 };
 
 const onReadyApp = () => {
+	ipcMain.on('verify', verify);
+	ipcMain.on('start', start);
 	createWindow();
 	app.on('activate', () => {
 		if(BrowserWindow.getAllWindows().length === 0)	
