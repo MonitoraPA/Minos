@@ -1,8 +1,16 @@
-window.addEventListener('load', () => {
+/** 
+ * This file is part of Minos
+ *
+ * Copyright (C) 2023 ebmaj7 <ebmaj7@proton.me>
+ *
+ * Minos is a hack. You can use it according to the terms and
+ * conditions of the Hacking License (see licenses/HACK.txt)
+ */ 
+
+window.addEventListener('DOMContentLoaded', () => {
 	const topBar = document.getElementsByClassName('top-bar')[0];
-	const button = document.getElementById('verify-button');
-	button.addEventListener('click', () => {
-		// here I should use ipc in order to resize the view from the index.js (setBounds)
-		// topBar.classList.remove("hidden");
+	const verifyButton = document.getElementById('verify-button');
+	verifyButton.addEventListener('click', () => {
+		window.electronAPI.verify();
 	});
 });
