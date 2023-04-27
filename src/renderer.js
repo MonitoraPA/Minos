@@ -7,6 +7,12 @@
  * conditions of the Hacking License (see licenses/HACK.txt)
  */ 
 
+const disableInput = (input) => {
+	input.classList.remove('enabled');
+	input.classList.add('disabled');
+	input.disabled = true;
+}
+
 const showTopBar = () => {
 	const topBar = document.getElementsByClassName('top-bar')[0];
 	const main = document.getElementsByClassName('main')[0];
@@ -25,5 +31,8 @@ window.addEventListener('DOMContentLoaded', () => {
 	startButton.addEventListener('click', () => {
 		const URL = urlBox.value;
 		window.electronAPI.start(URL);
+		// TODO: move text inside some configuration file
+		startButton.innerText = "Analizza";
+		disableInput(urlBox);
 	});
 });

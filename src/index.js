@@ -7,13 +7,16 @@
  * conditions of the Hacking License (see licenses/HACK.txt)
  */ 
 
-const { session, BrowserWindow, BrowserView, app, ipcMain } = require('electron');
+/**
+ * Portions of this file are Copyright (C) 2023 Massimo Ghisalberti 
+ * (see licenses/MIT.txt)
+ */
+
+const { app, session, BrowserWindow, BrowserView, ipcMain } = require('electron');
 const { appendFile } = require('fs');
 const { url } = require('url');
 const path = require('path');
-
-// TODO: put in configuration file
-const LOG_FILE = "./log.txt";
+const config = require('./config.json');
 
 const getViews = (webContents) => {
 	const mainWindow = BrowserWindow.fromWebContents(webContents);
@@ -25,9 +28,8 @@ const verify = (event) => {
 	const views = getViews(event.sender);
 	const localView = views[0];
 	const webView = views[1];
-	// TODO: put views bounds into a json configuration file
-	localView.setBounds({ x: 0, y: 0, width: 1280, height: 50 });
-	webView.setBounds({x: 0, y: 50, width: 1280, height: 1230 });
+	localView.setBounds({ ...config.bounds.localView.small });
+	webView.setBounds({ ...config.bounds.webView.full });
 };
 
 const start = (event, URL) => {
@@ -39,7 +41,7 @@ const start = (event, URL) => {
 const registerForHeaders = (win) => {
 	// whenever a response is received, append it to the log file
 	win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-		appendFile(LOG_FILE, JSON.stringify(details.responseHeaders), err => {
+		appendFile(config.logFilePath, JSON.stringify(details.responseHeaders), err => {
 			if(err)
 				console.log(`Failed to write log: ${log}.`);
 		});
@@ -49,14 +51,12 @@ const registerForHeaders = (win) => {
 
 const createWindow = () => {
 	const mainWindow = new BrowserWindow({
-		// TODO: put bounds and bg color in configuration file
-		width: 1280, 
-		height: 720, 
-		backgroundColor: "#EDEDED",
+		width: config.bounds.browserWindow.width, 
+		height: config.bounds.browserWindow.height, 
+		backgroundColor: config.colors.background,
 		webPreferences: {
 			webViewTag: true,
 			nodeIntegration: true
-			// preload: path.join(__dirname, 'preload.js')
 		}
 	});
 	registerForHeaders(mainWindow);
@@ -71,12 +71,11 @@ const createWindow = () => {
 		}
 	);
 	localView.webContents.loadFile('src/main.html');
-	// TODO: put bounds in config file
-	localView.setBounds({ x: 0, y: 0, width: 1280, height: 720 });
+	localView.setBounds({ ...config.bounds.localView.full });
 	localView.setAutoResize({ width: true });
 	const webView = new BrowserView();
 	// TODO: put bounds in config file
-	webView.setBounds({ x: 0, y: 720, width: 1280, height: 0 });
+	webView.setBounds({ ...config.bounds.webView.hidden });
 	webView.setAutoResize({ width: true, height: true });
 	mainWindow.addBrowserView(localView);
 	mainWindow.addBrowserView(webView);
@@ -88,7 +87,7 @@ const onReadyApp = () => {
 	ipcMain.on('start', start);
 	createWindow();
 	app.on('activate', () => {
-		if(BrowserWindow.getAllWindows().length === 0)	
+		if(BrowserWindow.getAllWindows().length === 0)
 			createWindow();
 	});
 };

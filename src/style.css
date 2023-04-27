@@ -10,7 +10,8 @@
 :root {
 	--main-bg: #EDEDED;
 	--bar-bg: #222222;
-	--url-bg: #333333;
+	--url-bg-enabled: #333333;
+	--url-bg-disabled: #444444;
 	--url-color: #cccccc;
 	--url-border-normal: #111111;
 	--url-border-light: #555555;
@@ -51,7 +52,6 @@ body {
 	font-size: 18px;
 	border-radius: var(--border-radius);
 	height: 60vh;
-	background-color: var(--url-bg);
 	padding-left: 10px;
 	text-decoration: none;
 	color: var(--url-color);
@@ -60,6 +60,14 @@ body {
 #url-box:focus {
 	border: 1px solid var(--url-border-light);
 	outline: unset; /* disable orange outline when input is selected */
+}
+
+.enabled {
+	background-color: var(--url-bg-enabled);
+}
+
+.disabled {
+	background-color: var(--url-bg-disabled);
 }
 
 .button {
