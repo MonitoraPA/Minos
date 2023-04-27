@@ -11,7 +11,7 @@ const disableInput = (input) => {
 	input.classList.remove('enabled');
 	input.classList.add('disabled');
 	input.disabled = true;
-}
+};
 
 const showTopBar = () => {
 	const topBar = document.getElementsByClassName('top-bar')[0];
@@ -34,5 +34,9 @@ window.addEventListener('DOMContentLoaded', () => {
 		// TODO: move text inside some configuration file
 		startButton.innerText = "Analizza";
 		disableInput(urlBox);
+	});
+	// on page navigation, update the URL in the urlBox
+	window.electronAPI.onChangeURL((event, url) => {
+		urlBox.value = url;
 	});
 });

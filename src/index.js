@@ -38,14 +38,22 @@ const start = (event, URL) => {
 	webView.webContents.loadURL(URL);
 };
 
-const registerForHeaders = (win) => {
+const registerForEvents = (win) => {
 	// whenever a response is received, append it to the log file
+	// TODO: do the same for requests
 	win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
 		appendFile(config.logFilePath, JSON.stringify(details.responseHeaders), err => {
 			if(err)
 				console.log(`Failed to write log: ${log}.`);
 		});
 		callback(details);
+	});
+	// whenever the webView location changes, update the URL in the urlBox 
+	const views = win.getBrowserViews();
+	const localView = views[0];
+	const webView = views[1];
+	webView.webContents.on('did-navigate-in-page', (event, URL, httpResponseCode, httpStatusText) => {
+		localView.webContents.send('change-url', URL);
 	});
 };
 
@@ -59,7 +67,6 @@ const createWindow = () => {
 			nodeIntegration: true
 		}
 	});
-	registerForHeaders(mainWindow);
 	// disable spellchecker (by default electron will download languages from Google cdn)
 	// please see: https://www.electronjs.org/docs/latest/tutorial/spellchecker/#does-the-spellchecker-use-any-google-services
 	mainWindow.webContents.session.setSpellCheckerLanguages([]);
@@ -74,12 +81,13 @@ const createWindow = () => {
 	localView.setBounds({ ...config.bounds.localView.full });
 	localView.setAutoResize({ width: true });
 	const webView = new BrowserView();
-	// TODO: put bounds in config file
 	webView.setBounds({ ...config.bounds.webView.hidden });
 	webView.setAutoResize({ width: true, height: true });
 	mainWindow.addBrowserView(localView);
 	mainWindow.addBrowserView(webView);
-	// localView.webContents.openDevTools();
+	if(config.debug)
+		localView.webContents.openDevTools();
+	registerForEvents(mainWindow);
 };
 
 const onReadyApp = () => {
