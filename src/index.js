@@ -18,24 +18,33 @@ const { url } = require('url');
 const path = require('path');
 const config = require('./config.json');
 
+// handlers for events
+const handlers = {
+	verify: (event) =>  {
+		const views = getViews(event.sender);
+		const localView = views[0];
+		const webView = views[1];
+		localView.setBounds({ ...config.bounds.localView.small });
+		webView.setBounds({ ...config.bounds.webView.full });
+	},
+	start: (event, URL) => {
+		const views = getViews(event.sender);
+		const webView = views[1];
+		webView.webContents.loadURL(URL);
+	},
+	analyze: (event) => {
+		const views = getViews(event.sender);
+		const localView = views[0];
+		const webView = views[1];
+		webView.setBounds({ ...config.bounds.webView.hidden });
+		localView.setBounds({ ...config.bounds.localView.full });
+	}
+};
+
 const getViews = (webContents) => {
 	const mainWindow = BrowserWindow.fromWebContents(webContents);
 	const views = mainWindow.getBrowserViews();
 	return views;
-};
-
-const verify = (event) => {
-	const views = getViews(event.sender);
-	const localView = views[0];
-	const webView = views[1];
-	localView.setBounds({ ...config.bounds.localView.small });
-	webView.setBounds({ ...config.bounds.webView.full });
-};
-
-const start = (event, URL) => {
-	const views = getViews(event.sender);
-	const webView = views[1];
-	webView.webContents.loadURL(URL);
 };
 
 const registerForEvents = (win) => {
@@ -91,8 +100,9 @@ const createWindow = () => {
 };
 
 const onReadyApp = () => {
-	ipcMain.on('verify', verify);
-	ipcMain.on('start', start);
+	ipcMain.on('verify', handlers.verify);
+	ipcMain.on('start', handlers.start);
+	ipcMain.on('analyze', handlers.analyze);
 	createWindow();
 	app.on('activate', () => {
 		if(BrowserWindow.getAllWindows().length === 0)

@@ -34,7 +34,14 @@ window.addEventListener('DOMContentLoaded', () => {
 		// TODO: move text inside some configuration file
 		startButton.innerText = "Analizza";
 		disableInput(urlBox);
-	});
+		startButton.addEventListener('click', () => {
+			const divReport = document.getElementById('report');
+			divReport.classList.remove('hidden');
+			const topBar = document.getElementsByClassName('top-bar')[0];
+			topBar.classList.add('hidden');
+			window.electronAPI.analyze();
+		});
+	}, { once: true }); // run only once, then remove event listener
 	// on page navigation, update the URL in the urlBox
 	window.electronAPI.onChangeURL((event, url) => {
 		urlBox.value = url;

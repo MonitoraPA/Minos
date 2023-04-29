@@ -13,7 +13,7 @@
 	--url-bg-enabled: #333333;
 	--url-bg-disabled: #555555;
 	--url-color: #cccccc;
-	--url-border-normal: #111111;
+	--box-border-normal: #111111;
 	--url-border-light: #555555;
 	--button-bg-normal: #F0AD4E;
 	--button-bg-dark: #F0953A;
@@ -44,22 +44,28 @@ body {
 	height: 100vh;
 }
 
+.box {
+	border: 1px solid var(--box-border-normal);
+	text-decoration: none;
+}
+
+.box:focus {
+	outline: unset; /* disable orange outline when input is selected */
+}
+
 #url-box {
-	border: 1px solid var(--url-border-normal);
+	border-radius: var(--border-radius);
+	color: var(--url-color);
 	margin-top: 10px;
 	margin-left: 10px;
 	margin-bottom: 10px;
 	font-size: 18px;
-	border-radius: var(--border-radius);
 	height: 60vh;
 	padding-left: 10px;
-	text-decoration: none;
-	color: var(--url-color);
 }
 
 #url-box:focus {
 	border: 1px solid var(--url-border-light);
-	outline: unset; /* disable orange outline when input is selected */
 }
 
 .enabled {
@@ -122,4 +128,14 @@ body {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+}
+
+#report {
+	display: grid;
+	justify-items: center;
+}
+
+.report {
+	width: 80vw;
+	height: 60vh;
 }
