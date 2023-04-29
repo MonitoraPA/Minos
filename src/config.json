@@ -1,6 +1,6 @@
 {
 	"debug": false,
-	"logFilePath": "./log.txt",
+	"logFilePrefix": "log",
 	"bounds": {
 		"browserWindow": {
 			"x": 0,

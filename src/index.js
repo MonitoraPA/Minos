@@ -13,10 +13,13 @@
  */
 
 const { app, session, BrowserWindow, BrowserView, ipcMain } = require('electron');
-const { appendFile } = require('fs');
+const { appendFile, readFile } = require('fs');
 const { url } = require('url');
 const path = require('path');
 const config = require('./config.json');
+
+const dateString = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
+const LOG_FILE = config.logFilePrefix + dateString + ".txt"
 
 // handlers for events
 const handlers = {
@@ -38,6 +41,15 @@ const handlers = {
 		const webView = views[1];
 		webView.setBounds({ ...config.bounds.webView.hidden });
 		localView.setBounds({ ...config.bounds.localView.full });
+		// read report file
+		readFile(LOG_FILE, 'utf8', (err, data) => {
+			if(err){
+				console.log(err); 
+				return;
+			}
+			// send file content to the renderer
+			localView.webContents.send('report', data);
+		});
 	}
 };
 
@@ -51,10 +63,12 @@ const registerForEvents = (win) => {
 	// whenever a response is received, append it to the log file
 	// TODO: do the same for requests
 	win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-		appendFile(config.logFilePath, JSON.stringify(details.responseHeaders), err => {
-			if(err)
-				console.log(`Failed to write log: ${log}.`);
-		});
+	appendFile(LOG_FILE, JSON.stringify(details, null, 4), err => {
+		if(err){
+			console.log(`Failed to write log: ${log}.`);
+			return;
+		}
+	});
 		callback(details);
 	});
 	// whenever the webView location changes, update the URL in the urlBox 

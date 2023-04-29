@@ -46,4 +46,8 @@ window.addEventListener('DOMContentLoaded', () => {
 	window.electronAPI.onChangeURL((event, url) => {
 		urlBox.value = url;
 	});
+	const textarea = document.getElementsByTagName('textarea')[0];
+	window.electronAPI.onReport((event, report) => {
+		textarea.innerText = report;
+	});
 });

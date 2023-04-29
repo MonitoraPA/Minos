@@ -13,5 +13,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	verify: () => ipcRenderer.send('verify'),
 	start: (URL) => ipcRenderer.send('start', URL),
 	analyze: () => ipcRenderer.send('analyze'),
-	onChangeURL: (callback) => ipcRenderer.on('change-url', callback)
+	onChangeURL: (callback) => ipcRenderer.on('change-url', callback),
+	onReport: (callback) => ipcRenderer.on('report', callback)
 });
