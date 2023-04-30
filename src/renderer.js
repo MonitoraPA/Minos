@@ -20,6 +20,9 @@ const showTopBar = () => {
 	main.classList.add('hidden');
 };
 
+const report = [];
+
+
 window.addEventListener('DOMContentLoaded', () => {
 	const verifyButton = document.getElementById('verify-button');
 	verifyButton.addEventListener('click', () => {
@@ -27,27 +30,33 @@ window.addEventListener('DOMContentLoaded', () => {
 		showTopBar();
 	});
 	const urlBox = document.getElementById('url-box');
-	const startButton = document.getElementById('start-button');
-	startButton.addEventListener('click', () => {
-		const URL = urlBox.value;
+	const topButton = document.getElementById('top-button');
+	const textarea = document.getElementsByClassName('report')[0];
+	const onStart = (event) => {
+		// run only the 1st time
+		const URL = urlBox.value; 
 		window.electronAPI.start(URL);
-		// TODO: move text inside some configuration file
-		startButton.innerText = "Analizza";
+		const topButton = event.target;
+		topButton.innerText = "Analizza"; // TODO: move labels into config file
 		disableInput(urlBox);
-		startButton.addEventListener('click', () => {
-			const divReport = document.getElementById('report');
-			divReport.classList.remove('hidden');
-			const topBar = document.getElementsByClassName('top-bar')[0];
-			topBar.classList.add('hidden');
+		// clicked for the 2nd time (analyze)
+		topButton.addEventListener('click', () => {
+			console.log(report);
 			window.electronAPI.analyze();
+			document.getElementById('report').classList.remove('hidden');
+			document.getElementsByClassName('top-bar')[0].classList.add('hidden');
+			// TODO: change here, since it is too slow
+			for(const chunk of report){
+				textarea.innerHTML += chunk;
+			}
 		});
-	}, { once: true }); // run only once, then remove event listener
+	};
+	topButton.addEventListener('click', onStart, {once: true}); 
 	// on page navigation, update the URL in the urlBox
 	window.electronAPI.onChangeURL((event, url) => {
 		urlBox.value = url;
 	});
-	const textarea = document.getElementsByTagName('textarea')[0];
-	window.electronAPI.onReport((event, report) => {
-		textarea.innerText = report;
+	window.electronAPI.onReport((event, data) => {
+		report.push(data);
 	});
 });

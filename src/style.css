@@ -96,7 +96,7 @@ body {
 	cursor: pointer;
 }
 
-#start-button {
+#top-button {
 	margin: 10px;
 	background-color: var(--button-bg-normal);
 	color: white;

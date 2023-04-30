@@ -13,7 +13,7 @@
  */
 
 const { app, session, BrowserWindow, BrowserView, ipcMain } = require('electron');
-const { appendFile, readFile } = require('fs');
+const { appendFile, readFile, createReadStream } = require('fs');
 const { url } = require('url');
 const path = require('path');
 const config = require('./config.json');
@@ -41,15 +41,6 @@ const handlers = {
 		const webView = views[1];
 		webView.setBounds({ ...config.bounds.webView.hidden });
 		localView.setBounds({ ...config.bounds.localView.full });
-		// read report file
-		readFile(LOG_FILE, 'utf8', (err, data) => {
-			if(err){
-				console.log(err); 
-				return;
-			}
-			// send file content to the renderer
-			localView.webContents.send('report', data);
-		});
 	}
 };
 
@@ -60,21 +51,24 @@ const getViews = (webContents) => {
 };
 
 const registerForEvents = (win) => {
-	// whenever a response is received, append it to the log file
-	// TODO: do the same for requests
-	win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-	appendFile(LOG_FILE, JSON.stringify(details, null, 4), err => {
-		if(err){
-			console.log(`Failed to write log: ${log}.`);
-			return;
-		}
-	});
-		callback(details);
-	});
-	// whenever the webView location changes, update the URL in the urlBox 
 	const views = win.getBrowserViews();
 	const localView = views[0];
 	const webView = views[1];
+	// whenever a response is received, append it to the log file
+	// TODO: do the same for requests
+	win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+		// save log to LOG_FILE
+		appendFile(LOG_FILE, JSON.stringify(details, null, 4), err => {
+			if(err){
+				console.log(`Failed to write log: ${err}.`);
+				return;
+			}
+		});
+		// also send data to the renderer, which will display it later
+		localView.webContents.send('report', JSON.stringify(details, null, 4));
+		callback(details);
+	});
+	// whenever the webView location changes, update the URL in the urlBox 
 	webView.webContents.on('did-navigate-in-page', (event, URL, httpResponseCode, httpStatusText) => {
 		localView.webContents.send('change-url', URL);
 	});
