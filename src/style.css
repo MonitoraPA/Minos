@@ -18,8 +18,8 @@
 	--button-bg-normal: #F0AD4E;
 	--button-bg-dark: #F0953A;
 	--button-bg-darkest: #F08000;
-	--button-padding-normal: 20px;
-	--button-margin-normal: 10px;
+	--button-padding-normal: 10px;
+	--button-margin-normal: 5px;
 	--border-radius: 10px;
 	--button-font-size: 16px;
 	--font-size-big: 60px;
@@ -34,6 +34,7 @@ body {
 
 .hidden {
 	visibility: hidden;
+	display: none;
 }
 
 .top-bar {
@@ -77,13 +78,25 @@ body {
 }
 
 .button {
-	margin: var(--button-margin-normal);
 	background-color: var(--button-bg-normal);
 	color: white;
-	padding: var(--button-padding-normal);
 	border-radius: var(--border-radius);
 	border-width: 0px;
 	font-size: var(--button-font-size);
+}
+
+#top-button {
+	margin: 10px;
+	padding: 2px;
+	background-color: var(--button-bg-normal);
+	color: white;
+	border-radius: var(--border-radius);
+	border-width: 0px;
+	font-size: var(--button-font-size);
+}
+
+#top-button:hover {
+	background-color: var(--button-bg-dark);
 }
 
 .button:hover {
@@ -96,24 +109,9 @@ body {
 	cursor: pointer;
 }
 
-#top-button {
-	margin: 10px;
-	background-color: var(--button-bg-normal);
-	color: white;
-	padding: 2px;
-	border-radius: var(--border-radius);
-	border-width: 0px;
-	font-size: var(--button-font-size);
-}
-
-#start-button:hover {
-	background-color: var(--button-bg-dark);
-	cursor: pointer;
-}
-
-#start-button:active {
-	background-color: var(--button-bg-darkest);
-	cursor: pointer;
+.button.action {
+	padding: var(--button-padding-normal);
+	margin: var(--button-margin-normal);
 }
 
 .main-title {
@@ -138,4 +136,28 @@ body {
 .report {
 	width: 80vw;
 	height: 60vh;
+}
+
+textarea {
+	resize: none;
+}
+
+#form-fields {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+#form-buttons {
+	margin-top: 10px;
+	display: grid;
+}
+
+.label {
+	font-family: sans-serif;
+	padding-bottom: 20px;
+}
+
+.form-input {
+	padding: 5px;
+	margin: 10px;
 }

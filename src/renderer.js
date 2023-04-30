@@ -32,6 +32,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	const urlBox = document.getElementById('url-box');
 	const topButton = document.getElementById('top-button');
 	const textarea = document.getElementsByClassName('report')[0];
+	let index = 1;
 	const onStart = (event) => {
 		// run only the 1st time
 		const URL = urlBox.value; 
@@ -45,18 +46,23 @@ window.addEventListener('DOMContentLoaded', () => {
 			window.electronAPI.analyze();
 			document.getElementById('report').classList.remove('hidden');
 			document.getElementsByClassName('top-bar')[0].classList.add('hidden');
-			// TODO: change here, since it is too slow
-			for(const chunk of report){
-				textarea.innerHTML += chunk;
-			}
-		});
+			textarea.innerHTML += report[0];
+		}, { once: true });
 	};
-	topButton.addEventListener('click', onStart, {once: true}); 
+	topButton.addEventListener('click', onStart, { once: true }); 
 	// on page navigation, update the URL in the urlBox
 	window.electronAPI.onChangeURL((event, url) => {
 		urlBox.value = url;
 	});
+	const hiddenTextarea = document.getElementById('hidden-textarea');
 	window.electronAPI.onReport((event, data) => {
 		report.push(data);
+	});
+	const claimButton = document.getElementById('claim-button');
+	claimButton.addEventListener('click', () => {
+		const divReport = document.getElementById('report');
+		divReport.classList.add('hidden');
+		const divForm = document.getElementsByClassName('form')[0];
+		divForm.classList.remove('hidden');
 	});
 });

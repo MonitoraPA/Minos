@@ -41,7 +41,7 @@ const handlers = {
 		const webView = views[1];
 		webView.setBounds({ ...config.bounds.webView.hidden });
 		localView.setBounds({ ...config.bounds.localView.full });
-	}
+	},
 };
 
 const getViews = (webContents) => {

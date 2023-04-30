@@ -25,12 +25,27 @@ conditions of the Hacking License (see licenses/HACK.txt)
 		<!-- main page -->
 		<div class='main center'>
 			<h1 class='main-title'>Minos</h1>
-			<button class='button' id='verify-button'>Verifica sito web</button>
+			<button class='button action' id='verify-button'>Verifica sito web</button>
 		</div>
 		<!-- report -->
 		<div id='report' class='main hidden center'>
-			<textarea rows='40' cols='50' class='report box' readonly placeholder='Report'></textarea>
-			<button class='button' id='claim-button'>Reclama al Garante</button>
+			<textarea rows='40' cols='50' class='report box' autocomplete="off" autocapitalize="off" spellcheck="false" readonly placeholder='Report'></textarea>
+			<div id='textarea-report'></div >
+			<button class='button action' id='claim-button'>Reclama al Garante</button>
+		</div>
+		<!-- form -->
+		<div class='form hidden center'>
+			<div class='label' id='form-label'>Inserisci le informazioni necessarie per sporgere reclamo:</div>
+			<div id='form-fields'>
+				<input type='text' class='form-input' id='input-name' placeholder='name'></input>
+				<input type='text' class='form-input' id='input-surname' placeholder='surname'></input>
+				<input type='text' class='form-input' id='input-name' placeholder='name'></input>
+				<input type='text' class='form-input' id='input-surname' placeholder='surname'></input>
+			</div>
+			<div id='form-buttons'>
+				<button class='action button'>Carica documento d'identità (fronte/retro)</button>
+				<button class='action button'>Submit</button>
+			</div>
 		</div>
 
 	</body>
