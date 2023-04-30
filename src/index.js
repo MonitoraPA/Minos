@@ -12,7 +12,7 @@
  * (see licenses/MIT.txt)
  */
 
-const { app, session, BrowserWindow, BrowserView, ipcMain } = require('electron');
+const { app, session, BrowserWindow, BrowserView, ipcMain, dialog } = require('electron');
 const { appendFile, readFile, createReadStream } = require('fs');
 const { url } = require('url');
 const path = require('path');
@@ -42,6 +42,15 @@ const handlers = {
 		webView.setBounds({ ...config.bounds.webView.hidden });
 		localView.setBounds({ ...config.bounds.localView.full });
 	},
+	loadIDCard: (event) => {
+		dialog.showOpenDialog({ properties: ['openFile'] }).then((response) => {
+			if(!response.canceled){
+				console.log(response);
+			} else {
+				console.log("no file selected");
+			}
+		});
+	}
 };
 
 const getViews = (webContents) => {
@@ -111,6 +120,7 @@ const onReadyApp = () => {
 	ipcMain.on('verify', handlers.verify);
 	ipcMain.on('start', handlers.start);
 	ipcMain.on('analyze', handlers.analyze);
+	ipcMain.on('loadIDCard', handlers.loadIDCard);
 	createWindow();
 	app.on('activate', () => {
 		if(BrowserWindow.getAllWindows().length === 0)

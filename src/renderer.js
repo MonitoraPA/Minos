@@ -7,6 +7,10 @@
  * conditions of the Hacking License (see licenses/HACK.txt)
  */ 
 
+const onDOMContentLoaded = () => {
+
+};
+
 const disableInput = (input) => {
 	input.classList.remove('enabled');
 	input.classList.add('disabled');
@@ -21,7 +25,6 @@ const showTopBar = () => {
 };
 
 const report = [];
-
 
 window.addEventListener('DOMContentLoaded', () => {
 	const verifyButton = document.getElementById('verify-button');
@@ -64,5 +67,9 @@ window.addEventListener('DOMContentLoaded', () => {
 		divReport.classList.add('hidden');
 		const divForm = document.getElementsByClassName('form')[0];
 		divForm.classList.remove('hidden');
+	});
+	const loadIDCardButton = document.getElementById('idcard');
+	loadIDCardButton.addEventListener('click', () => {
+		window.electronAPI.loadIDCard();
 	});
 });
