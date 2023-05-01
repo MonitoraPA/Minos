@@ -21,26 +21,27 @@ const config = require('./config.json');
 const dateString = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
 const LOG_FILE = config.logFilePrefix + dateString + ".txt"
 
+const resizeViews = (mainWindow, localViewBounds, webViewBounds) => {
+	const winBounds = mainWindow.getBounds();
+	const views = mainWindow.getBrowserViews();
+	const localView = views[0];
+	const webView = views[1];
+	localView.setBounds({ ...localViewBounds, width: Math.min(localViewBounds.width, winBounds.width)});
+	webView.setBounds({ ...webViewBounds, width: Math.min(webViewBounds.width, winBounds.width)});
+};
+
 // handlers for events
 const handlers = {
 	verify: (event) =>  {
-		const views = getViews(event.sender);
-		const localView = views[0];
-		const webView = views[1];
-		localView.setBounds({ ...config.bounds.localView.small });
-		webView.setBounds({ ...config.bounds.webView.full });
+		resizeViews(getWin(event.sender), config.bounds.localView.small, config.bounds.webView.full);
 	},
 	start: (event, URL) => {
-		const views = getViews(event.sender);
+		const views = getViews(getWin(event.sender));
 		const webView = views[1];
 		webView.webContents.loadURL(URL);
 	},
 	analyze: (event) => {
-		const views = getViews(event.sender);
-		const localView = views[0];
-		const webView = views[1];
-		webView.setBounds({ ...config.bounds.webView.hidden });
-		localView.setBounds({ ...config.bounds.localView.full });
+		resizeViews(getWin(event.sender), config.bounds.localView.full, config.bounds.webView.hidden);
 	},
 	loadIDCard: (event) => {
 		dialog.showOpenDialog({ properties: ['openFile'] }).then((response) => {
@@ -53,11 +54,8 @@ const handlers = {
 	}
 };
 
-const getViews = (webContents) => {
-	const mainWindow = BrowserWindow.fromWebContents(webContents);
-	const views = mainWindow.getBrowserViews();
-	return views;
-};
+const getWin = (webContents) => BrowserWindow.fromWebContents(webContents);
+const getViews = (mainWindow) => mainWindow.getBrowserViews();
 
 const registerForEvents = (win) => {
 	const views = win.getBrowserViews();

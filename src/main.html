@@ -18,36 +18,40 @@ conditions of the Hacking License (see licenses/HACK.txt)
 
 	<body>
 		<!-- top-bar -->
-		<div class='top-bar hidden'>
+		<div id='top-bar' class='hidden'>
 			<input type='text' class='enabled box' id='url-box' placeholder="inserisci l'indirizzo"></input>
 			<button class='button' id='top-button'>Inizia</button>
 		</div>
 		<!-- main page -->
-		<div class='main center'>
+		<div id='main' class='center'>
 			<h1 class='main-title'>Minos</h1>
-			<button class='button action' id='verify-button'>Verifica sito web</button>
+			<button class='button' id='verify-button'>Verifica sito web</button>
 		</div>
 		<!-- report -->
-		<div id='report' class='main hidden center'>
-			<textarea rows='40' cols='50' class='report box' autocomplete="off" autocapitalize="off" spellcheck="false" readonly placeholder='Report'></textarea>
-			<div id='textarea-report'></div >
-			<button class='button action' id='claim-button'>Reclama al Garante</button>
+		<div id='report-container' class='main hidden center'>
+			<textarea rows='40' cols='50' id='report' class='box' autocomplete="off" autocapitalize="off" spellcheck="false" readonly placeholder='Report'></textarea>
+			<button class='button' id='claim-button'>Reclama al Garante</button>
 		</div>
 		<!-- form -->
-		<div class='form hidden center'>
-			<div class='label' id='form-label'>Inserisci le informazioni necessarie per sporgere reclamo:</div>
+		<div id='form-container' class='form hidden center'>
+			<div id='form-title'>Inserisci le informazioni necessarie per sporgere reclamo:</div>
 			<div id='form-fields'>
-				<input type='text' class='form-input' id='input-name' placeholder='name'></input>
-				<input type='text' class='form-input' id='input-surname' placeholder='surname'></input>
-				<input type='text' class='form-input' id='input-name' placeholder='name'></input>
-				<input type='text' class='form-input' id='input-surname' placeholder='surname'></input>
+				<label class='label'>Nome:</label>
+				<input type='text' class='form-input' placeholder='Nome'></input>
+				<label class='label'>Cognome:</label>
+				<input type='text' class='form-input' placeholder='Cognome'></input>
+				<label class='label'>Luogo di nascita:</label>
+				<input type='text' class='form-input' placeholder='Luogo di nascita'></input>
+				<label class='label'>Residenza:</label>
+				<input type='text' class='form-input' placeholder='Residenza'></input>
+				<label class='label'>Codice Fiscale:</label>
+				<input type='text' class='form-input' placeholder='Codice Fiscale'></input>
 			</div>
 			<div id='form-buttons'>
-				<button id='idcard' class='action button'>Carica documento d'identità (fronte/retro)</button>
-				<button id='submit' class='action button'>Submit</button>
+				<button id='idcard' class='button'>Carica documento d'identità (fronte/retro)</button>
+				<button id='submit' class='button'>Submit</button>
 			</div>
 		</div>
-
 	</body>
 	
 </html>

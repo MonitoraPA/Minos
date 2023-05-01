@@ -7,10 +7,6 @@
  * conditions of the Hacking License (see licenses/HACK.txt)
  */ 
 
-const onDOMContentLoaded = () => {
-
-};
-
 const disableInput = (input) => {
 	input.classList.remove('enabled');
 	input.classList.add('disabled');
@@ -18,15 +14,15 @@ const disableInput = (input) => {
 };
 
 const showTopBar = () => {
-	const topBar = document.getElementsByClassName('top-bar')[0];
-	const main = document.getElementsByClassName('main')[0];
+	const topBar = document.getElementById('top-bar');
+	const main = document.getElementById('main');
 	topBar.classList.remove('hidden');
 	main.classList.add('hidden');
 };
 
 const report = [];
 
-window.addEventListener('DOMContentLoaded', () => {
+const onDOMContentLoaded = () => {
 	const verifyButton = document.getElementById('verify-button');
 	verifyButton.addEventListener('click', () => {
 		window.electronAPI.verify(); // this will resize the localView and the webView
@@ -34,7 +30,7 @@ window.addEventListener('DOMContentLoaded', () => {
 	});
 	const urlBox = document.getElementById('url-box');
 	const topButton = document.getElementById('top-button');
-	const textarea = document.getElementsByClassName('report')[0];
+	const textarea = document.getElementById('report');
 	let index = 1;
 	const onStart = (event) => {
 		// run only the 1st time
@@ -47,8 +43,8 @@ window.addEventListener('DOMContentLoaded', () => {
 		topButton.addEventListener('click', () => {
 			console.log(report);
 			window.electronAPI.analyze();
-			document.getElementById('report').classList.remove('hidden');
-			document.getElementsByClassName('top-bar')[0].classList.add('hidden');
+			document.getElementById('report-container').classList.remove('hidden');
+			document.getElementById('top-bar').classList.add('hidden');
 			textarea.innerHTML += report[0];
 		}, { once: true });
 	};
@@ -57,19 +53,20 @@ window.addEventListener('DOMContentLoaded', () => {
 	window.electronAPI.onChangeURL((event, url) => {
 		urlBox.value = url;
 	});
-	const hiddenTextarea = document.getElementById('hidden-textarea');
 	window.electronAPI.onReport((event, data) => {
 		report.push(data);
 	});
 	const claimButton = document.getElementById('claim-button');
 	claimButton.addEventListener('click', () => {
-		const divReport = document.getElementById('report');
+		const divReport = document.getElementById('report-container');
 		divReport.classList.add('hidden');
-		const divForm = document.getElementsByClassName('form')[0];
+		const divForm = document.getElementById('form-container');
 		divForm.classList.remove('hidden');
 	});
 	const loadIDCardButton = document.getElementById('idcard');
 	loadIDCardButton.addEventListener('click', () => {
 		window.electronAPI.loadIDCard();
 	});
-});
+};
+
+window.addEventListener('DOMContentLoaded', onDOMContentLoaded);
