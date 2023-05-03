@@ -33,23 +33,30 @@ conditions of the Hacking License (see licenses/HACK.txt)
 			<button class='button' id='claim-button'>Reclama al Garante</button>
 		</div>
 		<!-- form -->
-		<div id='form-container' class='form hidden center'>
+		<div id='form-container' class='hidden center'>
 			<div id='form-title'>Inserisci le informazioni necessarie per sporgere reclamo:</div>
+			<div id='form-label-page'>
+				Dati anagrafici
+				<hr></hr>
+			</div>
 			<div id='form-fields'>
-				<label class='label'>Nome:</label>
+				<label class='label'>Nome</label>
 				<input type='text' class='form-input' placeholder='Nome'></input>
-				<label class='label'>Cognome:</label>
+				<label class='label'>Cognome</label>
 				<input type='text' class='form-input' placeholder='Cognome'></input>
-				<label class='label'>Luogo di nascita:</label>
+				<label class='label'>Data di nascita</label>
+				<input type='text' class='form-input' placeholder='Data di nascita'></input>
+				<label class='label'>Luogo di nascita</label>
 				<input type='text' class='form-input' placeholder='Luogo di nascita'></input>
-				<label class='label'>Residenza:</label>
-				<input type='text' class='form-input' placeholder='Residenza'></input>
-				<label class='label'>Codice Fiscale:</label>
+				<label class='label'>Codice Fiscale</label>
 				<input type='text' class='form-input' placeholder='Codice Fiscale'></input>
+				<label class='label'>Residenza</label>
+				<input type='text' class='form-input' placeholder='Residenza'></input>
 			</div>
 			<div id='form-buttons'>
-				<button id='idcard' class='button'>Carica documento d'identità (fronte/retro)</button>
-				<button id='submit' class='button'>Submit</button>
+				<button id='next' class='button disabled' disabled>Avanti</button>
+<!-- 				<button id='idcard' class='button'>Carica documento d'identità (fronte/retro)</button> -->
+<!-- 				<button id='submit' class='button'>Submit</button> -->
 			</div>
 		</div>
 	</body>

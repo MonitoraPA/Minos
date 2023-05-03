@@ -10,8 +10,8 @@
 :root {
 	--main-bg: #EDEDED;
 	--bar-bg: #222222;
-	--url-bg-enabled: #333333;
-	--url-bg-disabled: #555555;
+	--bg-enabled: #333333;
+	--bg-disabled: #666666;
 	--url-color: #cccccc;
 	--border-normal: #111111;
 	--border-light: #555555;
@@ -19,17 +19,20 @@
 	--button-bg-normal: #F0AD4E;
 	--button-bg-dark: #F0953A;
 	--button-bg-darkest: #F08000;
-	--button-padding-normal: 10px;
-	--button-padding-big: 15px;
-	--button-margin-normal: 5px;
 	--border-radius: 10px;
 	--button-font-size: 16px;
 	--font-size-huge: 60px;
 	--font-size-big: 24px;
-	--font-size-small: 14px;
+	--font-size-normal: 18px;
+	--font-size-small: 13px;
+	--font-family: sans-serif;
 	--title-color: #4384CD;
-	--form-input-padding: 10px;
+	--form-input-padding: 8px;
 	--form-input-margin: 10px;
+	--distance-small: 5px;
+	--distance-normal: 8px;
+	--distance-big: 10px;
+	--distance-huge: 15px;
 }
 
 body {
@@ -78,22 +81,14 @@ body {
 	border: 1px solid var(--border-light);
 }
 
-.enabled {
-	background-color: var(--url-bg-enabled);
-}
-
-.disabled {
-	background-color: var(--url-bg-disabled);
-}
-
 .button {
 	background-color: var(--button-bg-normal);
 	color: white;
 	border-radius: var(--border-radius);
 	border-width: 0px;
 	font-size: var(--button-font-size);
-	padding: var(--button-padding-normal);
-	margin: var(--button-margin-normal);
+	padding: var(--distance-big);
+	margin: var(--distance-small);
 }
 
 .button:hover {
@@ -106,8 +101,16 @@ body {
 	cursor: pointer;
 }
 
+.enabled {
+	background-color: var(--bg-enabled);
+}
+
+.disabled {
+	background-color: var(--bg-disabled);
+}
+
 #verify-button {
-	padding: var(--button-padding-big);
+	padding: var(--distance-huge);
 }
 
 #top-button {
@@ -131,7 +134,7 @@ body {
 .main-title {
 	font-size: var(--font-size-huge);
 	text-align: center;
-	font-family: sans-serif;
+	font-family: var(--font-family);
 	color: var(--title-color);
 }
 
@@ -164,13 +167,14 @@ body {
 
 #form-title {
 	font-size: var(--font-size-big);
-	font-family: sans-serif;
+	font-family: var(--font-family);
 	padding-bottom: 20px;
 }
 
 .label {
-	font-family: sans-serif;
+	font-family: var(--font-family);
 	font-size: var(--font-size-small);
+	font-weight: bold;
 	padding-bottom: 5px;
 }
 
@@ -179,4 +183,9 @@ body {
 	margin-bottom: var(--form-input-margin);
 	border-radius: var(--border-radius);
 	border: 1px solid var(--border-lighter);
+}
+
+#form-label-page {
+	font-family: var(--font-family);
+	font-size: var(--font-size-normal);
 }

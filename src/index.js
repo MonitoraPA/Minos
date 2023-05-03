@@ -71,8 +71,8 @@ const registerForEvents = (win) => {
 				return;
 			}
 		});
-		// also send data to the renderer, which will display it later
-		localView.webContents.send('report', JSON.stringify(details, null, 4));
+		// TODO: do not send whole data to the renderer, only "forbidden" domains (which have to be filtered here)
+		// localView.webContents.send('report', JSON.stringify(details, null, 4));
 		callback(details);
 	});
 	// whenever the webView location changes, update the URL in the urlBox 
