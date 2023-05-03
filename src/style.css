@@ -41,16 +41,10 @@ body {
 }
 
 #main {
-	display: grid;
 	justify-items: center;
 }
 
-.hidden {
-	visibility: hidden;
-}
-
 #top-bar {
-	display: grid;
 	column-gap: 10px;
 	grid-template-columns: 6fr 1fr;
 	background-color: var(--bar-bg);
@@ -146,7 +140,6 @@ body {
 }
 
 #report-container {
-	display: grid;
 	justify-items: center;
 }
 
@@ -156,13 +149,8 @@ body {
 	resize: none;
 }
 
-#form-fields {
-	display: grid;
-}
-
 #form-buttons {
 	margin-top: 10px;
-	display: grid;
 }
 
 #form-title {
@@ -188,4 +176,12 @@ body {
 #form-label-page {
 	font-family: var(--font-family);
 	font-size: var(--font-size-normal);
+}
+
+.grid {
+	display: grid;
+}
+
+.hidden {
+	display: none;
 }

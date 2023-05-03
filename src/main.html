@@ -18,17 +18,17 @@ conditions of the Hacking License (see licenses/HACK.txt)
 
 	<body>
 		<!-- top-bar -->
-		<div id='top-bar' class='hidden'>
+		<div id='top-bar' class='hidden grid'>
 			<input type='text' class='enabled box' id='url-box' placeholder="inserisci l'indirizzo"></input>
 			<button class='button' id='top-button'>Inizia</button>
 		</div>
 		<!-- main page -->
-		<div id='main' class='center'>
+		<div id='main' class='center grid'>
 			<h1 class='main-title'>Minos</h1>
 			<button class='button' id='verify-button'>Verifica sito web</button>
 		</div>
 		<!-- report -->
-		<div id='report-container' class='main hidden center'>
+		<div id='report-container' class='hidden center grid'>
 			<textarea rows='40' cols='50' id='report' class='box' autocomplete="off" autocapitalize="off" spellcheck="false" readonly placeholder='Report'></textarea>
 			<button class='button' id='claim-button'>Reclama al Garante</button>
 		</div>
@@ -39,7 +39,7 @@ conditions of the Hacking License (see licenses/HACK.txt)
 				Dati anagrafici
 				<hr></hr>
 			</div>
-			<div id='form-fields'>
+			<div id='form-fields' class='grid'>
 				<label class='label'>Nome</label>
 				<input type='text' class='form-input' placeholder='Nome'></input>
 				<label class='label'>Cognome</label>
@@ -53,7 +53,7 @@ conditions of the Hacking License (see licenses/HACK.txt)
 				<label class='label'>Residenza</label>
 				<input type='text' class='form-input' placeholder='Residenza'></input>
 			</div>
-			<div id='form-buttons'>
+			<div id='form-buttons' class='grid'>
 				<button id='next' class='button disabled' disabled>Avanti</button>
 <!-- 				<button id='idcard' class='button'>Carica documento d'identità (fronte/retro)</button> -->
 <!-- 				<button id='submit' class='button'>Submit</button> -->
