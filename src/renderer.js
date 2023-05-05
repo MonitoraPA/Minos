@@ -33,7 +33,6 @@ const report = [];
 const onDOMContentLoaded = () => {
 	const verifyButton = document.getElementById('verify-button');
 	verifyButton.addEventListener('click', () => {
-		window.electronAPI.verify(); // this will resize the localView and the webView
 		hideComponent(document.getElementById('main'));
 		showComponent(document.getElementById('top-bar'));
 	});

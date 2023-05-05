@@ -32,10 +32,8 @@ const resizeViews = (mainWindow, localViewBounds, webViewBounds) => {
 
 // handlers for events
 const handlers = {
-	verify: (event) =>  {
-		resizeViews(getWin(event.sender), config.bounds.localView.small, config.bounds.webView.full);
-	},
 	start: (event, URL) => {
+		resizeViews(getWin(event.sender), config.bounds.localView.small, config.bounds.webView.full);
 		const views = getViews(getWin(event.sender));
 		const webView = views[1];
 		webView.webContents.loadURL(URL);
@@ -114,7 +112,6 @@ const createWindow = () => {
 };
 
 const onReadyApp = () => {
-	ipcMain.on('verify', handlers.verify);
 	ipcMain.on('start', handlers.start);
 	ipcMain.on('analyze', handlers.analyze);
 	ipcMain.on('loadIDCard', handlers.loadIDCard);
