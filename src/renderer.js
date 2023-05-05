@@ -20,11 +20,11 @@ const showTopBar = () => {
 	main.classList.add('hidden');
 };
 
-const hide = (component) => {
+const hideComponent = (component) => {
 	component.classList.add('hidden');
 };
 
-const show = (component) => {
+const showComponent = (component) => {
 	component.classList.remove('hidden');
 };
 
@@ -34,8 +34,8 @@ const onDOMContentLoaded = () => {
 	const verifyButton = document.getElementById('verify-button');
 	verifyButton.addEventListener('click', () => {
 		window.electronAPI.verify(); // this will resize the localView and the webView
-		hide(document.getElementById('main'));
-		show(document.getElementById('top-bar'));
+		hideComponent(document.getElementById('main'));
+		showComponent(document.getElementById('top-bar'));
 	});
 	const urlBox = document.getElementById('url-box');
 	const topButton = document.getElementById('top-button');

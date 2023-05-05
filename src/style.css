@@ -22,7 +22,7 @@
 	--hsl-s-gray: 0%;
 	--hsl-l-gray: 70%;
 	--color-gray-lighter: hsl(var(--hsl-h-gray), var(--hsl-s-gray), var(--hsl-l-gray));
-	--color-gray-light: hsl(var(--hsl-h-gray), var(--hsl-s-gray), calc(var(--hsl-l-gray) * 0.7));
+	--color-gray-light: hsl(var(--hsl-h-gray), var(--hsl-s-gray), calc(var(--hsl-l-gray) * 0.6));
 	--color-gray: hsl(var(--hsl-h-gray), var(--hsl-s-gray), calc(var(--hsl-l-gray) * 0.4));
 	--color-gray-dark: hsl(var(--hsl-h-gray), var(--hsl-s-gray), calc(var(--hsl-l-gray) * 0.3));
 	--color-gray-darker: hsl(calc(var(--hsl-h-gray) - 3), var(--hsl-s-gray), calc(var(--hsl-l-gray) * 0.2));
@@ -127,19 +127,10 @@ body {
 #top-button {
 	margin: 10px;
 	padding: 2px;
-	background-color: var(--color-main);
 	color: white;
 	border-radius: var(--border-radius);
 	border-width: 0px;
 	font-size: var(--font-size-normal);
-}
-
-#top-button:hover {
-	background-color: var(--color-main-dark);
-}
-
-#top-button:active {
-	background-color: var(--color-main-darker);
 }
 
 .main-title {

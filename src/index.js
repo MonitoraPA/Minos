@@ -64,7 +64,6 @@ const registerForEvents = (win) => {
 	// whenever a response is received, append it to the log file
 	// TODO: do the same for requests
 	win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-		// save log to LOG_FILE
 		appendFile(LOG_FILE, JSON.stringify(details, null, 4), err => {
 			if(err){
 				console.log(`Failed to write log: ${err}.`);
