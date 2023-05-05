@@ -8,31 +8,39 @@
  */
 
 :root {
-	--main-bg: #EDEDED;
-	--bar-bg: #222222;
-	--bg-enabled: #333333;
-	--bg-disabled: #666666;
-	--url-color: #cccccc;
-	--border-normal: #111111;
-	--border-light: #555555;
-	--border-lighter: #aaaaaa;
-	--button-bg-normal: #F0AD4E;
-	--button-bg-dark: #F0953A;
-	--button-bg-darkest: #F08000;
+	/* colors */
+	/* main (orange) */
+	--hsl-h-main: 35;
+	--hsl-s-main: 80%;
+	--hsl-l-main: 70%;
+	--color-main-light: hsl(var(--hsl-h-main), var(--hsl-s-main), var(--hsl-l-main));
+	--color-main: hsl(var(--hsl-h-main), var(--hsl-s-main), calc(var(--hsl-l-main) * 0.85));
+	--color-main-dark: hsl(var(--hsl-h-main), var(--hsl-s-main), calc(var(--hsl-l-main) * 0.7));
+	--color-main-darker: hsl(calc(var(--hsl-h-main) - 3), var(--hsl-s-main), calc(var(--hsl-l-main) * 0.68));
+	/* gray */
+	--hsl-h-gray: 0;
+	--hsl-s-gray: 0%;
+	--hsl-l-gray: 70%;
+	--color-gray-lighter: hsl(var(--hsl-h-gray), var(--hsl-s-gray), var(--hsl-l-gray));
+	--color-gray-light: hsl(var(--hsl-h-gray), var(--hsl-s-gray), calc(var(--hsl-l-gray) * 0.7));
+	--color-gray: hsl(var(--hsl-h-gray), var(--hsl-s-gray), calc(var(--hsl-l-gray) * 0.4));
+	--color-gray-dark: hsl(var(--hsl-h-gray), var(--hsl-s-gray), calc(var(--hsl-l-gray) * 0.3));
+	--color-gray-darker: hsl(calc(var(--hsl-h-gray) - 3), var(--hsl-s-gray), calc(var(--hsl-l-gray) * 0.2));
+	--color-gray-darkest: hsl(calc(var(--hsl-h-gray) - 3), var(--hsl-s-gray), calc(var(--hsl-l-gray) * 0.1));
+	/* title */
+	--color-title: #4384CD;
+	/* distances and sizes */
 	--border-radius: 10px;
-	--button-font-size: 16px;
 	--font-size-huge: 60px;
 	--font-size-big: 24px;
-	--font-size-normal: 18px;
+	--font-size-normal: 16px;
 	--font-size-small: 13px;
-	--font-family: sans-serif;
-	--title-color: #4384CD;
-	--form-input-padding: 8px;
-	--form-input-margin: 10px;
 	--distance-small: 5px;
 	--distance-normal: 8px;
 	--distance-big: 10px;
 	--distance-huge: 15px;
+	/* others */
+	--font-family: sans-serif;
 }
 
 body {
@@ -47,12 +55,12 @@ body {
 #top-bar {
 	column-gap: 10px;
 	grid-template-columns: 6fr 1fr;
-	background-color: var(--bar-bg);
+	background-color: var(--color-gray-darker);
 	height: 100vh;
 }
 
 .box {
-	border: 1px solid var(--border-normal);
+	border: 1px solid var(--color-gray-darkest);
 	text-decoration: none;
 }
 
@@ -61,8 +69,9 @@ body {
 }
 
 #url-box {
+	background-color: var(--color-gray-dark);
 	border-radius: var(--border-radius);
-	color: var(--url-color);
+	color: var(--color-gray-lighter);
 	margin-top: 10px;
 	margin-left: 10px;
 	margin-bottom: 10px;
@@ -72,35 +81,43 @@ body {
 }
 
 #url-box:focus {
-	border: 1px solid var(--border-light);
+	border: 1px solid var(--color-gray);
+}
+
+#url-box.disabled {
+	background-color: var(--color-gray);
 }
 
 .button {
-	background-color: var(--button-bg-normal);
+	background-color: var(--color-main);
 	color: white;
 	border-radius: var(--border-radius);
 	border-width: 0px;
-	font-size: var(--button-font-size);
+	font-size: var(--font-size-normal);
 	padding: var(--distance-big);
 	margin: var(--distance-small);
 }
 
 .button:hover {
-	background-color: var(--button-bg-dark);
+	background-color: var(--color-main-dark);
 	cursor: pointer;
 }
 
 .button:active {
-	background-color: var(--button-bg-darkest);
+	background-color: var(--color-main-darker);
 	cursor: pointer;
 }
 
 .enabled {
-	background-color: var(--bg-enabled);
+	background-color: var(--color-gray-darker);
 }
 
 .disabled {
-	background-color: var(--bg-disabled);
+	background-color: var(--color-gray);
+}
+
+.disabled:hover {
+	background-color: var(--color-gray-light);
 }
 
 #verify-button {
@@ -110,26 +127,26 @@ body {
 #top-button {
 	margin: 10px;
 	padding: 2px;
-	background-color: var(--button-bg-normal);
+	background-color: var(--color-main);
 	color: white;
 	border-radius: var(--border-radius);
 	border-width: 0px;
-	font-size: var(--button-font-size);
+	font-size: var(--font-size-normal);
 }
 
 #top-button:hover {
-	background-color: var(--button-bg-dark);
+	background-color: var(--color-main-dark);
 }
 
 #top-button:active {
-	background-color: var(--button-bg-darkest);
+	background-color: var(--color-main-darker);
 }
 
 .main-title {
 	font-size: var(--font-size-huge);
 	text-align: center;
 	font-family: var(--font-family);
-	color: var(--title-color);
+	color: var(--color-title);
 }
 
 .center {
@@ -151,6 +168,15 @@ body {
 
 #form-buttons {
 	margin-top: 10px;
+	grid-template-columns: 1fr 1fr 1fr;
+}
+
+#button-prev {
+	grid-column: 1;
+}
+
+#button-next {
+	grid-column: 3;
 }
 
 #form-title {
@@ -167,15 +193,16 @@ body {
 }
 
 .form-input {
-	padding: var(--form-input-padding);
-	margin-bottom: var(--form-input-margin);
+	padding: var(--distance-normal);
+	margin-bottom: var(--distance-big);
 	border-radius: var(--border-radius);
-	border: 1px solid var(--border-lighter);
+	border: 1px solid var(--color-gray-light);
 }
 
 #form-label-page {
 	font-family: var(--font-family);
 	font-size: var(--font-size-normal);
+	font-weight: bold;
 }
 
 .grid {
