@@ -39,7 +39,6 @@ const onDOMContentLoaded = () => {
 	const urlBox = document.getElementById('url-box');
 	const topButton = document.getElementById('top-button');
 	const textarea = document.getElementById('report');
-	let index = 1;
 	const onStart = (event) => {
 		// run only the 1st time
 		const URL = urlBox.value; 
@@ -51,8 +50,8 @@ const onDOMContentLoaded = () => {
 		topButton.addEventListener('click', () => {
 			console.log(report);
 			window.electronAPI.analyze();
-			document.getElementById('report-container').classList.remove('hidden');
-			document.getElementById('top-bar').classList.add('hidden');
+			hideComponent(document.getElementById('top-bar'));
+			showComponent(document.getElementById('report-container'));
 			textarea.innerHTML += report[0];
 		}, { once: true });
 	};
@@ -66,10 +65,8 @@ const onDOMContentLoaded = () => {
 	});
 	const claimButton = document.getElementById('claim-button');
 	claimButton.addEventListener('click', () => {
-		const divReport = document.getElementById('report-container');
-		divReport.classList.add('hidden');
-		const divForm = document.getElementById('form-container');
-		divForm.classList.remove('hidden');
+		hideComponent(document.getElementById('report-container'));
+		showComponent(document.getElementById('form-container'))
 	});
 	const loadIDCardButton = document.getElementById('idcard');
 	loadIDCardButton.addEventListener('click', () => {
