@@ -88,5 +88,5 @@ typings/
 # Electron-Forge
 out/
 
-# log file 
-log.txt
+# log file (used only for debugging purposes)
+log*.txt

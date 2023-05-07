@@ -47,7 +47,6 @@ const onDOMContentLoaded = () => {
 	const topButton = document.getElementById('top-button');
 	const topTooltip = document.getElementById('top-tooltip');
 	const urlBox = document.getElementById('url-box');
-	/* the first child inside a button is always the #text node */
 	topButton.addEventListener('mouseenter', () => {
 		if(urlBox.value.length <= 0)
 			showComponent(topTooltip);
@@ -58,23 +57,26 @@ const onDOMContentLoaded = () => {
 		hideComponent(topTooltip);
 	});
 	const textarea = document.getElementById('report');
-	const onStart = (event) => {
+	const onClickStart = (event) => {
 		// run only the 1st time
 		const URL = urlBox.value; 
-		window.electronAPI.start(URL);
-		const topButton = event.target;
-		topButton.innerText = "Analizza"; // TODO: move labels into config file
-		disableInput(urlBox);
-		// clicked for the 2nd time (analyze)
-		topButton.addEventListener('click', () => {
-			console.log(report);
-			window.electronAPI.analyze();
-			hideComponent(document.getElementById('top-bar'));
-			showComponent(document.getElementById('report-container'));
-			textarea.innerHTML += report[0];
-		}, { once: true });
+		if(URL.length !== 0){
+			window.electronAPI.start(URL);
+			const topButton = event.target;
+			topButton.innerText = "Analizza"; // TODO: move labels into config file
+			disableInput(urlBox);
+			// clicked for the 2nd time (analyze)
+			topButton.addEventListener('click', () => {
+				console.log(report);
+				window.electronAPI.analyze();
+				hideComponent(document.getElementById('top-bar'));
+				showComponent(document.getElementById('report-container'));
+				textarea.innerHTML += report[0];
+			}, { once: true });
+			topButton.removeEventListener('click', onClickStart);
+		}
 	};
-	topButton.addEventListener('click', onStart, { once: true }); 
+	topButton.addEventListener('click', onClickStart); 
 	// on page navigation, update the URL in the urlBox
 	window.electronAPI.onChangeURL((event, url) => {
 		urlBox.value = url;
@@ -87,10 +89,6 @@ const onDOMContentLoaded = () => {
 		hideComponent(document.getElementById('report-container'));
 		showComponent(document.getElementById('form-container'))
 	});
-	// const loadIDCardButton = document.getElementById('idcard');
-	// loadIDCardButton.addEventListener('click', () => {
-	// 	window.electronAPI.loadIDCard();
-	// });
 };
 
 window.addEventListener('DOMContentLoaded', onDOMContentLoaded);
