@@ -47,6 +47,12 @@ const onDOMContentLoaded = () => {
 	const topButton = document.getElementById('top-button');
 	const topTooltip = document.getElementById('top-tooltip');
 	const urlBox = document.getElementById('url-box');
+	urlBox.addEventListener('input', (event) => {
+		if(event.target.value.length === 0)
+			topButton.classList.add('disabled');
+		else 
+			topButton.classList.remove('disabled');
+	});
 	topButton.addEventListener('mouseenter', () => {
 		if(urlBox.value.length <= 0)
 			showComponent(topTooltip);
