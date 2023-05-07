@@ -7,6 +7,13 @@
  * conditions of the Hacking License (see licenses/HACK.txt)
  */ 
 
+const createTooltip = (text) => {
+	const tooltip = document.createElement('div');
+	tooltip.classList.add('tooltip');
+	tooltip.innerText = text;
+	return tooltip;
+};
+
 const disableInput = (input) => {
 	input.classList.remove('enabled');
 	input.classList.add('disabled');
@@ -35,9 +42,21 @@ const onDOMContentLoaded = () => {
 	verifyButton.addEventListener('click', () => {
 		hideComponent(document.getElementById('main'));
 		showComponent(document.getElementById('top-bar'));
+		const topButton = document.getElementById('top-button');
 	});
-	const urlBox = document.getElementById('url-box');
 	const topButton = document.getElementById('top-button');
+	const topTooltip = document.getElementById('top-tooltip');
+	const urlBox = document.getElementById('url-box');
+	/* the first child inside a button is always the #text node */
+	topButton.addEventListener('mouseenter', () => {
+		if(urlBox.value.length <= 0)
+			showComponent(topTooltip);
+		else 
+			hideComponent(topTooltip);
+	});
+	topButton.addEventListener('mouseleave', () => {
+		hideComponent(topTooltip);
+	});
 	const textarea = document.getElementById('report');
 	const onStart = (event) => {
 		// run only the 1st time
@@ -68,10 +87,10 @@ const onDOMContentLoaded = () => {
 		hideComponent(document.getElementById('report-container'));
 		showComponent(document.getElementById('form-container'))
 	});
-	const loadIDCardButton = document.getElementById('idcard');
-	loadIDCardButton.addEventListener('click', () => {
-		window.electronAPI.loadIDCard();
-	});
+	// const loadIDCardButton = document.getElementById('idcard');
+	// loadIDCardButton.addEventListener('click', () => {
+	// 	window.electronAPI.loadIDCard();
+	// });
 };
 
 window.addEventListener('DOMContentLoaded', onDOMContentLoaded);

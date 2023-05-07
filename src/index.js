@@ -21,6 +21,15 @@ const config = require('./config.json');
 const dateString = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
 const LOG_FILE = config.logFilePrefix + dateString + ".txt"
 
+const cropViewsToWindowSize = (mainWindow) => {
+	const winBounds = mainWindow.getBounds();
+	const views = mainWindow.getBrowserViews();
+	const localView = views[0];
+	const webView = views[1];
+	localView.setBounds({ ...localView.getBounds(), width: Math.min(localView.getBounds().width, winBounds.width)});
+	webView.setBounds({ ...webView.getBounds(), width: Math.min(webView.getBounds().width, winBounds.width)});
+};
+
 const resizeViews = (mainWindow, localViewBounds, webViewBounds) => {
 	const winBounds = mainWindow.getBounds();
 	const views = mainWindow.getBrowserViews();
@@ -71,6 +80,9 @@ const registerForEvents = (win) => {
 		// TODO: do not send whole data to the renderer, only "forbidden" domains (which have to be filtered here)
 		// localView.webContents.send('report', JSON.stringify(details, null, 4));
 		callback(details);
+	});
+	win.on('resize', () => {
+		cropViewsToWindowSize(win);
 	});
 	// whenever the webView location changes, update the URL in the urlBox 
 	webView.webContents.on('did-navigate-in-page', (event, URL, httpResponseCode, httpStatusText) => {

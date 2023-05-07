@@ -216,7 +216,7 @@ body {
 	background-color: var(--color-warning-darker);
 	padding: var(--distance-normal);
 	position: absolute;
-	top: 30px;
-	left: -50px;
+	top: 20px;
+	left: -30px;
 	border-radius: 5px;
 }
