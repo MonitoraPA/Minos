@@ -17,6 +17,7 @@ const { appendFile, readFile, createReadStream } = require('fs');
 const { url } = require('url');
 const path = require('path');
 const config = require('./config.json');
+const har = require('./har.json'); // create a new empty har object
 
 const dateString = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
 const LOG_FILE = config.logFilePrefix + dateString + ".txt"
@@ -68,19 +69,29 @@ const registerForEvents = (win) => {
 	const views = win.getBrowserViews();
 	const localView = views[0];
 	const webView = views[1];
-	// whenever a response is received, append it to the log file
-	// TODO: do the same for requests
-	win.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-		appendFile(LOG_FILE, JSON.stringify(details, null, 4), err => {
-			if(err){
-				console.log(`Failed to write log: ${err}.`);
-				return;
-			}
-		});
-		// TODO: do not send whole data to the renderer, only "forbidden" domains (which have to be filtered here)
-		// localView.webContents.send('report', JSON.stringify(details, null, 4));
-		callback(details);
+
+	try {
+		webView.webContents.debugger.attach('1.3');
+		console.log(`Debugger attached`);
+	} catch(err) {
+		console.log(`Debugger attach failed: ${err}.`);
+	}
+
+	webView.webContents.debugger.on('detach', (event, reason) => {
+		console.log(`Debugger detached due to: ${reason}`);
 	});
+
+	webView.webContents.debugger.on('message', (event, method, params) => {
+		if(method === 'Network.requestWillBeSent'){
+			console.log(params.request);
+		}
+		if(method === 'Network.responseReceived'){
+			console.log(params.response);
+		}
+	});
+
+	webView.webContents.debugger.sendCommand('Network.enable');
+
 	win.on('resize', () => {
 		cropViewsToWindowSize(win);
 	});
