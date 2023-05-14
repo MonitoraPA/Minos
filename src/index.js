@@ -81,7 +81,7 @@ const registerForEvents = (win) => {
 
 	webView.webContents.debugger.on('detach', (event, reason) => {
 		console.log(`Debugger detached due to: ${reason}`);
-		console.log(JSON.stringify(requests, null, 4));
+		// console.log(JSON.stringify(requests, null, 4));
 	});
 
 	const protocols = {
@@ -92,7 +92,6 @@ const registerForEvents = (win) => {
 
 	const actions = {
 		'Network.requestWillBeSent': function(params) {
-			// console.log(params);
 			requests[params.requestId] = { 
 				'startedDateTime': (new Date(params.wallTime * 1000)).toISOString(), // date in UTC
 				'time0': params.timestamp,
@@ -100,9 +99,9 @@ const registerForEvents = (win) => {
 					'method': params.request.method,
 					'url': params.request.url,
 					'headers': params.request.headers,
-				}
+				},
 				'postData': params.request.hasPostData ? { 'mimeType': 'multipart/form-data', 'params': [] } : {},
-			}; 
+			}
 		},
 		'Network.dataReceived': function(params) {
 		},
