@@ -40,7 +40,6 @@ const resizeViews = (mainWindow, localViewBounds, webViewBounds) => {
 	webView.setBounds({ ...webViewBounds, width: Math.min(webViewBounds.width, winBounds.width)});
 };
 
-// handlers for events
 const handlers = {
 	start: (event, URL) => {
 		resizeViews(getWin(event.sender), config.bounds.localView.small, config.bounds.webView.full);
