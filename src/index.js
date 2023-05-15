@@ -46,6 +46,9 @@ const handlers = {
 		resizeViews(getWin(event.sender), config.bounds.localView.small, config.bounds.webView.full);
 		const views = getViews(getWin(event.sender));
 		const webView = views[1];
+		if(!URL.startsWith('https://')){
+			URL = 'https://' + URL;
+		}
 		webView.webContents.loadURL(URL);
 	},
 	analyze: (event) => {
@@ -88,7 +91,7 @@ const registerForEvents = (win) => {
 		'h2': 'HTTP/2',
 		'h1': 'HTTP/1.1',
 		'h3': 'HTTP/3'
-	}
+	};
 
 	const actions = {
 		'Network.requestWillBeSent': function(params) {
@@ -113,11 +116,11 @@ const registerForEvents = (win) => {
 		},
 		'Network.responseReceived': function(params) {
 			if(requests[params.requestId]){
-				requests[params.requestId].request['httpVersion'] = protocols[params.response.protocol]
+				requests[params.requestId].request['httpVersion'] = protocols[params.response.protocol];
 				requests[params.requestId]['response'] = {
 					'status': params.response.status,
 					'statusText': params.response.statusText,
-				}
+				};
 			}
 		}
 		// 'Network.responseReceivedExtraInfo': (params) => {}
