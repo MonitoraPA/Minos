@@ -66,23 +66,19 @@ const handlers = {
 const getWin = (webContents) => BrowserWindow.fromWebContents(webContents);
 const getViews = (mainWindow) => mainWindow.getBrowserViews();
 
-const registerForEvents = (win) => {
-	const views = win.getBrowserViews();
-	const localView = views[0];
-	const webView = views[1];
-
+const attachDebugger = (view) => {
 	try {
-		webView.webContents.debugger.attach('1.3');
-		console.log(`Debugger attached`);
+		view.webContents.debugger.attach('1.3');
+		console.log(`debugger: attached`);
 	} catch(err) {
-		console.log(`Debugger attach failed: ${err}.`);
+		console.log(`debugger: attach failed due to: ${err}.`);
 	}
 
-	webView.webContents.debugger.on('detach', (event, reason) => {
-		console.log(`Debugger detached due to: ${reason}`);
+	// webView.webContents.debugger.on('detach', (event, reason) => {
+		// console.log(`Debugger detached due to: ${reason}`);
 		// console.log(JSON.stringify(requests, null, 4));
-	});
-
+	// });
+	
 	const actions = {
 		'Network.requestWillBeSent': function(params) {
 		},
@@ -99,12 +95,24 @@ const registerForEvents = (win) => {
 		// 'Network.responseReceivedExtraInfo': (params) => {}
 	};
 
-	webView.webContents.debugger.on('message', (event, method, params) => {
-		if(actions.hasOwnProperty(method))
-			actions[method](params);
-	});
+	// webView.webContents.debugger.on('message', (event, method, params) => {
+	// 	// if(actions.hasOwnProperty(method))
+	// 	// 	actions[method](params);
+	// });
 
-	webView.webContents.debugger.sendCommand('Network.enable');
+	// do not forget to catch error
+	view.webContents.debugger.sendCommand('Network.enable').then(() => {
+		console.log(`debugger: network enabled.`);
+	}).catch((err) => {
+		console.log(`debugger: network could not be enabled due to: ${err}.`);
+	});
+	// webView.webContents.debugger.sendCommand('Page.enable');
+};
+
+const registerForEvents = (win) => {
+	const views = win.getBrowserViews();
+	const localView = views[0];
+	const webView = views[1];
 
 	win.on('resize', () => {
 		cropViewsToWindowSize(win);
@@ -146,6 +154,7 @@ const createWindow = () => {
 	if(config.debug)
 		localView.webContents.openDevTools();
 	registerForEvents(mainWindow);
+	attachDebugger(webView);
 };
 
 const onReadyApp = () => {
