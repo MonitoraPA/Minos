@@ -67,6 +67,7 @@ const getWin = (webContents) => BrowserWindow.fromWebContents(webContents);
 const getViews = (mainWindow) => mainWindow.getBrowserViews();
 
 const attachDebugger = (view) => {
+
 	try {
 		view.webContents.debugger.attach('1.3');
 		console.log(`debugger: attached`);
@@ -74,10 +75,10 @@ const attachDebugger = (view) => {
 		console.log(`debugger: attach failed due to: ${err}.`);
 	}
 
-	// webView.webContents.debugger.on('detach', (event, reason) => {
-		// console.log(`Debugger detached due to: ${reason}`);
+	view.webContents.debugger.on('detach', (event, reason) => {
+		console.log(`debugger: detached due to: ${reason}`);
 		// console.log(JSON.stringify(requests, null, 4));
-	// });
+	});
 	
 	const actions = {
 		'Network.requestWillBeSent': function(params) {
@@ -95,10 +96,10 @@ const attachDebugger = (view) => {
 		// 'Network.responseReceivedExtraInfo': (params) => {}
 	};
 
-	// webView.webContents.debugger.on('message', (event, method, params) => {
-	// 	// if(actions.hasOwnProperty(method))
-	// 	// 	actions[method](params);
-	// });
+	view.webContents.debugger.on('message', (event, method, params) => {
+		if(actions.hasOwnProperty(method))
+			actions[method](params);
+	});
 
 	// do not forget to catch error
 	view.webContents.debugger.sendCommand('Network.enable').then(() => {
@@ -106,7 +107,7 @@ const attachDebugger = (view) => {
 	}).catch((err) => {
 		console.log(`debugger: network could not be enabled due to: ${err}.`);
 	});
-	// webView.webContents.debugger.sendCommand('Page.enable');
+	// view.webContents.debugger.sendCommand('Page.enable');
 };
 
 const registerForEvents = (win) => {
