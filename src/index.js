@@ -78,31 +78,13 @@ const registerForEvents = (win) => {
 		console.log(`Debugger attach failed: ${err}.`);
 	}
 
-	const requests = {};
-
 	webView.webContents.debugger.on('detach', (event, reason) => {
 		console.log(`Debugger detached due to: ${reason}`);
 		// console.log(JSON.stringify(requests, null, 4));
 	});
 
-	const protocols = {
-		'h2': 'HTTP/2',
-		'h1': 'HTTP/1.1',
-		'h3': 'HTTP/3'
-	};
-
 	const actions = {
 		'Network.requestWillBeSent': function(params) {
-			requests[params.requestId] = { 
-				'startedDateTime': (new Date(params.wallTime * 1000)).toISOString(), // date in UTC
-				'time0': params.timestamp,
-				'request': {
-					'method': params.request.method,
-					'url': params.request.url,
-					'headers': params.request.headers,
-				},
-				'postData': params.request.hasPostData ? { 'mimeType': 'multipart/form-data', 'params': [] } : {},
-			}
 		},
 		'Network.dataReceived': function(params) {
 		},
@@ -113,13 +95,6 @@ const registerForEvents = (win) => {
 		'Network.requestWillBeSentExtraInfo': function(params) {
 		},
 		'Network.responseReceived': function(params) {
-			if(requests[params.requestId]){
-				requests[params.requestId].request['httpVersion'] = protocols[params.response.protocol];
-				requests[params.requestId]['response'] = {
-					'status': params.response.status,
-					'statusText': params.response.statusText,
-				};
-			}
 		}
 		// 'Network.responseReceivedExtraInfo': (params) => {}
 	};
