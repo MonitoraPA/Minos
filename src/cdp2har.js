@@ -11,3 +11,22 @@
  * Portions of this file are Copyright (C) 2020 Andrea Cardaci <cyrus.and@gmail.com>
  * (see licenses/MIT.txt)
  */
+
+const createHAR = () => {
+    // HAR template
+    const packageInfo = require('../package');
+    const har = {
+        log: {
+            version: '1.2',
+            creator: {
+                name: 'Minos',
+                version: packageInfo.version
+            },
+            pages: [],
+            entries: []
+        }
+    };
+	return har;
+}
+
+module.exports = createHAR;

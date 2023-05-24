@@ -17,6 +17,7 @@ const { appendFile, readFile, createReadStream } = require('fs');
 const { url } = require('url');
 const path = require('path');
 const config = require('./config.json');
+const createHAR = require('./cdp2har');
 
 const dateString = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
 const LOG_FILE = config.logFilePrefix + dateString + ".txt"
@@ -77,6 +78,7 @@ const attachDebugger = (view) => {
 
 	view.webContents.debugger.on('detach', (event, reason) => {
 		console.log(`debugger: detached due to: ${reason}`);
+		console.log(createHAR());
 		// console.log(JSON.stringify(requests, null, 4));
 	});
 	
@@ -94,6 +96,8 @@ const attachDebugger = (view) => {
 		'Network.responseReceived': function(params) {
 		}
 		// 'Network.responseReceivedExtraInfo': (params) => {}
+		//
+		// TODO: add Page events
 	};
 
 	view.webContents.debugger.on('message', (event, method, params) => {
@@ -107,7 +111,11 @@ const attachDebugger = (view) => {
 	}).catch((err) => {
 		console.log(`debugger: network could not be enabled due to: ${err}.`);
 	});
-	// view.webContents.debugger.sendCommand('Page.enable');
+	view.webContents.debugger.sendCommand('Page.enable').then(() => {
+		console.log(`debugger: page enabled.`);
+	}).catch((err) => {
+		console.log(`debugger: page could not be enabled due to: ${err}.`);
+	});
 };
 
 const registerForEvents = (win) => {
