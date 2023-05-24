@@ -17,7 +17,6 @@ const { appendFile, readFile, createReadStream } = require('fs');
 const { url } = require('url');
 const path = require('path');
 const config = require('./config.json');
-const har = require('./har.json'); // create a new empty har object
 
 const dateString = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
 const LOG_FILE = config.logFilePrefix + dateString + ".txt"
