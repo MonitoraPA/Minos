@@ -48,6 +48,7 @@ const handlers = {
 		if(!URL.startsWith('https://')){
 			URL = 'https://' + URL;
 		}
+		attachDebugger(webView);
 		webView.webContents.loadURL(URL);
 	},
 	analyze: (event) => {
@@ -163,7 +164,6 @@ const createWindow = () => {
 	if(config.debug)
 		localView.webContents.openDevTools();
 	registerForEvents(mainWindow);
-	attachDebugger(webView);
 };
 
 const onReadyApp = () => {
