@@ -25,7 +25,6 @@ class Page {
 	}
 
 	processEvent(method, params){
-		console.log(this);
 		const methodName = `_${method.replace('.', '_')}`;
 		if(methodName in Page.prototype){
 			const handler = Page.prototype[methodName];
