@@ -18,9 +18,12 @@ const { url } = require('url');
 const path = require('path');
 const config = require('./config.json');
 const createHAR = require('./cdp2har');
+const Page = require('./page');
 
 const dateString = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
 const LOG_FILE = config.logFilePrefix + dateString + ".txt"
+
+const page = new Page();
 
 const cropViewsToWindowSize = (mainWindow) => {
 	const winBounds = mainWindow.getBounds();
@@ -53,6 +56,7 @@ const handlers = {
 	},
 	analyze: (event) => {
 		resizeViews(getWin(event.sender), config.bounds.localView.full, config.bounds.webView.hidden);
+		console.log(page);
 	},
 	loadIDCard: (event) => {
 		dialog.showOpenDialog({ properties: ['openFile'] }).then((response) => {
@@ -79,11 +83,17 @@ const attachDebugger = (view) => {
 
 	view.webContents.debugger.on('detach', (event, reason) => {
 		console.log(`debugger: detached due to: ${reason}`);
-		console.log(createHAR());
-		// console.log(JSON.stringify(requests, null, 4));
 	});
 
 	view.webContents.debugger.on('message', (event, method, params) => {
+		const methodName = `_${method.replace('.', '_')}`;
+		if(methodName in Page.prototype){
+			try {
+				page.processEvent(method, params);
+			} catch(err){
+				console.log(`err: ${err}`);
+			}
+		}
 	});
 
 	const enableCmds = ['Network', 'Page'];
@@ -116,8 +126,13 @@ const registerForEvents = (win) => {
 	win.on('resize', () => {
 		cropViewsToWindowSize(win);
 	});
+	webView.webContents.on('did-navigate', (event, URL, httpResponseCode, httpStatusText) => {
+		// TODO check if navigation ok
+		page.url = URL;
+	});
 	// whenever the webView location changes, update the URL in the urlBox 
 	webView.webContents.on('did-navigate-in-page', (event, URL, httpResponseCode, httpStatusText) => {
+		// TODO check if navigation ok
 		localView.webContents.send('change-url', URL);
 	});
 };
