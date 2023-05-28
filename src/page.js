@@ -1,5 +1,4 @@
-function Page(url, options){
-	this._options = options;
+function Page(url){
 	this._responseBodyCounter = 0;
 	this.url = url;
 	this.firstRequestId = undefined;
