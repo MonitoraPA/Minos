@@ -82,28 +82,8 @@ const attachDebugger = (view) => {
 		console.log(createHAR());
 		// console.log(JSON.stringify(requests, null, 4));
 	});
-	
-	const actions = {
-		'Network.requestWillBeSent': function(params) {
-		},
-		'Network.dataReceived': function(params) {
-		},
-		'Network.loadingFinished': function(params) {
-		},
-		'Network.requestServedFromCache': function(params) {
-		},
-		'Network.requestWillBeSentExtraInfo': function(params) {
-		},
-		'Network.responseReceived': function(params) {
-		}
-		// 'Network.responseReceivedExtraInfo': (params) => {}
-		//
-		// TODO: add Page events
-	};
 
 	view.webContents.debugger.on('message', (event, method, params) => {
-		if(actions.hasOwnProperty(method))
-			actions[method](params);
 	});
 
 	// do not forget to catch error
