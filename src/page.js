@@ -74,6 +74,15 @@ class Page {
 		});
 	}
 
+	_Network_dataReceived(params) {
+			const {requestId, dataLength} = params;
+		const entry = this.entries.get(requestId);
+		if (!entry) {
+		    return;
+		}
+		entry.responseLength += dataLength;
+	}
+
 }
 
 
