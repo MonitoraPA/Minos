@@ -86,7 +86,16 @@ const attachDebugger = (view) => {
 	view.webContents.debugger.on('message', (event, method, params) => {
 	});
 
-	// do not forget to catch error
+	const enableCmds = ['Network', 'Page'];
+
+	for(const cmd of enableCmds){
+		view.webContents.debugger.sendCommand(`${cmd}.enable`).then(() => {
+			console.log(`debugger: ${cmd} enabled.`);
+		}).catch((err) => {
+			console.log(`debugger: ${cmd} could not be enabled due to: ${err}.`);
+		});
+	}
+
 	view.webContents.debugger.sendCommand('Network.enable').then(() => {
 		console.log(`debugger: network enabled.`);
 	}).catch((err) => {
