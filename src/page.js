@@ -91,6 +91,27 @@ class Page {
 		entry.responseParams = params;
 	}
 
+	_Network_resourceChangedPriority(params) {
+		const {requestId, newPriority} = params;
+		const entry = this.entries.get(requestId);
+		if (!entry) {
+			return;
+		}
+		entry.newPriority = newPriority;
+	}
+
+	_Network_loadingFinished(params) {
+		const {requestId, timestamp, encodedDataLength} = params;
+		const entry = this.entries.get(requestId);
+		if (!entry) {
+			return;
+		}
+		entry.encodedResponseLength = encodedDataLength;
+		entry.responseFinishedS = timestamp;
+		// check termination condition
+		this._responseBodyCounter++;
+	}
+
 }
 
 
