@@ -83,6 +83,14 @@ class Page {
 		entry.responseLength += dataLength;
 	}
 
+	_Network_responseReceived(params) {
+		const entry = this.entries.get(params.requestId);
+		if (!entry) {
+			return;
+		}
+		entry.responseParams = params;
+	}
+
 }
 
 
