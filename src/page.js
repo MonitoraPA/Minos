@@ -112,6 +112,33 @@ class Page {
 		this._responseBodyCounter++;
 	}
 
+	_Network_loadingFailed(params) {
+		const {requestId, errorText, canceled, timestamp} = params;
+		const entry = this.entries.get(requestId);
+		if (!entry) {
+			return;
+		}
+		entry.responseFailedS = timestamp;
+		// abort the whole page if the first request fails
+		if (requestId === this.firstRequestId) {
+			const message = errorText || canceled && 'Canceled';
+			throw new Error(`first request failed due to: ${message}`);
+		}
+	}
+
+	_Network_getResponseBody(fulfill, reject, params) {
+		const {requestId, body, base64Encoded} = params;
+		const entry = this.entries.get(requestId);
+		if (!entry) {
+			return;
+		}
+		entry.responseBody = body;
+		entry.responseBodyIsBase64 = base64Encoded;
+		// check termination condition
+		this._responseBodyCounter--;
+		this._checkFinished(fulfill);
+	}
+
 }
 
 
