@@ -126,7 +126,7 @@ class Page {
 		}
 	}
 
-	_Network_getResponseBody(fulfill, reject, params) {
+	_Network_getResponseBody(params) {
 		const {requestId, body, base64Encoded} = params;
 		const entry = this.entries.get(requestId);
 		if (!entry) {
@@ -136,7 +136,6 @@ class Page {
 		entry.responseBodyIsBase64 = base64Encoded;
 		// check termination condition
 		this._responseBodyCounter--;
-		this._checkFinished(fulfill);
 	}
 
 }

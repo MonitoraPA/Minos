@@ -96,6 +96,17 @@ const attachDebugger = (view) => {
 				console.log(`err: ${err}`);
 			}
 		}
+		// we need to explicitly fetch the response body, since the 
+		// responseReceived params do not contain the response body
+		if(method === 'Network.responseReceived'){
+			view.webContents.debugger.sendCommand('Network.getResponseBody', {
+				requestId = params.requestId;
+			}, (err, result) => {
+				if(!err){
+					page.processEvent('_Network_getResponseBody', result);
+				}
+			});
+		}
 	});
 
 	const enableCmds = ['Network', 'Page'];
