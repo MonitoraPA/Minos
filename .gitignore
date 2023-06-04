@@ -90,3 +90,6 @@ out/
 
 # log file (used only for debugging purposes)
 log*.txt
+
+# vscode directory
+.vscode
