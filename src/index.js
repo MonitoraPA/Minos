@@ -96,16 +96,21 @@ const attachDebugger = (view) => {
 				console.log(`err: ${err}`);
 			}
 		}
-		// we need to explicitly fetch the response body, since the 
-		// responseReceived params do not contain the response body
-		if(method === 'Network.responseReceived'){
-			view.webContents.debugger.sendCommand('Network.getResponseBody', {
-				requestId = params.requestId;
-			}, (err, result) => {
-				if(!err){
-					page.processEvent('_Network_getResponseBody', result);
-				}
-			});
+		// we need to explicitly fetch the response body, since the
+		// loadingFinished params do not contain the response body
+		if(method === 'Network.loadingFinished'){
+			// only if entry is being tracked (e.g. no cached items)
+			const entry = page.entries.get(params.requestId);
+			if(page.entries.get(params.requestId)){
+				view.webContents.debugger.sendCommand('Network.getResponseBody', {
+					requestId: params.requestId
+				}).then((result) => {
+					page.processEvent('Network.getResponseBody', {requestId: params.requestId, ...result});
+				}).catch((err) => {
+					// console.log(params.requestId);
+					console.log(`getResponseBody error: ${err} on request ${requestId}.`);
+				});
+			}
 		}
 	});
 
