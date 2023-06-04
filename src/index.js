@@ -56,6 +56,8 @@ const handlers = {
 	},
 	analyze: (event) => {
 		resizeViews(getWin(event.sender), config.bounds.localView.full, config.bounds.webView.hidden);
+		const HAR = createHAR([page]);
+		console.log(JSON.stringify(HAR, null, 4));
 	},
 	loadIDCard: (event) => {
 		dialog.showOpenDialog({ properties: ['openFile'] }).then((response) => {
