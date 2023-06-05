@@ -61,9 +61,8 @@ const handlers = {
 		resizeViews(getWin(event.sender), config.bounds.localView.full, config.bounds.webView.hidden);
 		const webView = getViews(getWin(event.sender))[1];
 		const HAR = createHAR([page]);
-		const dateString = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
-		const LOG_FILE = config.logFilePrefix + dateString + ".txt"
 		detachDebugger(webView);
+		writeLog(HAR);
 	},
 	loadIDCard: (event) => {
 		dialog.showOpenDialog({ properties: ['openFile'] }).then((response) => {
@@ -78,6 +77,15 @@ const handlers = {
 
 const getWin = (webContents) => BrowserWindow.fromWebContents(webContents);
 const getViews = (mainWindow) => mainWindow.getBrowserViews();
+
+const writeLog = (HAR) => {
+	const timestamp = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
+	const LOG_FILE = config.logFilePrefix + "_" + timestamp + ".txt"
+	appendFile(LOG_FILE, JSON.stringify(HAR, null, 4), (err) => {
+		if(err)
+			console.error(`error: writing log file failed due to: ${err}.`);
+	});
+};
 
 const attachDebugger = (view) => {
 
