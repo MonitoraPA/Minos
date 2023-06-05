@@ -138,6 +138,16 @@ class Page {
 		this._responseBodyCounter--;
 	}
 
+	_Page_domContentEventFired(params) {
+		const {timestamp} = params;
+		this.domContentEventFiredMs = timestamp * 1000;
+	}
+
+	_Page_loadEventFired(fulfill, reject, params) {
+		const {timestamp} = params;
+		this.loadEventFiredMs = timestamp * 1000;
+	}
+
 }
 
 
