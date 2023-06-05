@@ -143,7 +143,7 @@ class Page {
 		this.domContentEventFiredMs = timestamp * 1000;
 	}
 
-	_Page_loadEventFired(fulfill, reject, params) {
+	_Page_loadEventFired(params) {
 		const {timestamp} = params;
 		this.loadEventFiredMs = timestamp * 1000;
 	}
