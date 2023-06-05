@@ -59,10 +59,11 @@ const handlers = {
 	},
 	analyze: (event) => {
 		resizeViews(getWin(event.sender), config.bounds.localView.full, config.bounds.webView.hidden);
+		const webView = getViews(getWin(event.sender))[1];
 		const HAR = createHAR([page]);
 		const dateString = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
 		const LOG_FILE = config.logFilePrefix + dateString + ".txt"
-
+		detachDebugger(webView);
 	},
 	loadIDCard: (event) => {
 		dialog.showOpenDialog({ properties: ['openFile'] }).then((response) => {
@@ -137,6 +138,14 @@ const attachDebugger = (view) => {
 	}).catch((err) => {
 		console.log(`debugger: page could not be enabled due to: ${err}.`);
 	});
+};
+
+const detachDebugger = (view) => {
+	try {
+		view.webContents.debugger.detach();
+	} catch(err) {
+		console.log(`debugger: detach failed due to: ${err}.`);
+	}
 };
 
 const registerForEvents = (win) => {
