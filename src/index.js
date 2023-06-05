@@ -16,12 +16,15 @@ const { app, session, BrowserWindow, BrowserView, ipcMain, dialog } = require('e
 const { appendFile, readFile, createReadStream } = require('fs');
 const { url } = require('url');
 const path = require('path');
-const config = require('./config.json');
 const createHAR = require('./cdp2har');
 const Page = require('./page');
 
-const dateString = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
-const LOG_FILE = config.logFilePrefix + dateString + ".txt"
+const MODE_IS_DEV = !app.isPackaged;
+const APP_PATH = app.getAppPath();
+const CONF_PATH = MODE_IS_DEV
+  ? path.join(app.getAppPath(), "config")
+  : path.dirname(APP_PATH);
+const config = require(path.join(CONF_PATH, 'conf.json'));
 
 const page = new Page();
 
@@ -57,7 +60,9 @@ const handlers = {
 	analyze: (event) => {
 		resizeViews(getWin(event.sender), config.bounds.localView.full, config.bounds.webView.hidden);
 		const HAR = createHAR([page]);
-		console.log(JSON.stringify(HAR, null, 4));
+		const dateString = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
+		const LOG_FILE = config.logFilePrefix + dateString + ".txt"
+
 	},
 	loadIDCard: (event) => {
 		dialog.showOpenDialog({ properties: ['openFile'] }).then((response) => {
