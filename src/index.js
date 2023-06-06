@@ -16,8 +16,8 @@ const { app, session, BrowserWindow, BrowserView, ipcMain, dialog } = require('e
 const { appendFile, readFile, createReadStream } = require('fs');
 const { url } = require('url');
 const path = require('path');
-const createHAR = require('./cdp2har');
-const Page = require('./page');
+const createHAR = require('./har/cdp2har');
+const Page = require('./har/page');
 
 const MODE_IS_DEV = !app.isPackaged;
 const APP_PATH = app.getAppPath();

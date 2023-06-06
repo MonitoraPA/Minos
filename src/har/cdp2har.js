@@ -17,7 +17,7 @@ const querystring = require('querystring');
 
 const createHAR = (page) => {
 	// HAR template
-	const packageInfo = require('../package');
+	const packageInfo = require('../../package');
 	const har = {
 		log: {
 			version: '1.2',
