@@ -29,6 +29,7 @@ const config = require(path.join(CONF_PATH, 'conf.json'));
 const page = new Page();
 
 const hosts = require('../hosts.json');
+const badRequests = [];
 
 const cropViewsToWindowSize = (mainWindow) => {
 	const winBounds = mainWindow.getBounds();
@@ -103,6 +104,16 @@ const attachDebugger = (view) => {
 	});
 
 	view.webContents.debugger.on('message', (event, method, params) => {
+		// identify requests to "bad" hosts (sooner is better!)
+		if(method === 'Network.requestWillBeSent'){
+			const {url} = params.request;	
+			const {timestamp} = params.timestamp;
+			badRequests.push(Object.entries(hosts)
+					.map(h => [h[0], h[1]
+					.filter(u => url.indexOf(u) >= 0)]).filter(h => h[1].length > 0)
+					.reduce((obj, [k, v]) => { obj[k] = v; obj['timestamp'] = timestamp; return obj }, {})
+				);
+		}
 		const methodName = `_${method.replace('.', '_')}`;
 		if(methodName in Page.prototype){
 			try {
