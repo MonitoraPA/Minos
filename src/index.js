@@ -111,7 +111,7 @@ const attachDebugger = (view) => {
 			matching = Object.entries(hosts)
 					.map(h => [h[0], h[1]
 					.filter(u => url.indexOf(u.slice(1)) >= 0)]).filter(h => h[1].length > 0)
-					.reduce((obj, [k, v]) => { obj['host'] = {k: v}; obj['timestamp'] = timestamp; return obj }, {});
+					.reduce((obj, [k, v]) => { obj['url'] = url; obj['host'] = {k: v}; obj['timestamp'] = timestamp; return obj }, {});
 			if(Object.entries(matching).length > 0)
 				badRequests.push(matching);
 		}
