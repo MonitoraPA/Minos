@@ -16,7 +16,6 @@ class Page {
 
 	constructor(){
 		this._responseBodyCounter = 0;
-		this.url = undefined;
 		this.firstRequestId = undefined;
 		this.firstRequestMs = undefined;
 		this.domContentEventFiredMs = undefined;
@@ -34,10 +33,6 @@ class Page {
 
 	_Network_requestWillBeSent(params){
 		const {requestId, initiator, timestamp, redirectResponse} = params;
-		// skip data URI
-		if (params.request.url.match('^data:')) {
-			return;
-		}
 		// the first is the first request
 		if (!this.firstRequestId && initiator.type === 'other') {
 			this.firstRequestMs = timestamp * 1000;
