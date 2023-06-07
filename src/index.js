@@ -28,6 +28,8 @@ const config = require(path.join(CONF_PATH, 'conf.json'));
 
 const page = new Page();
 
+const hosts = require('../hosts.json');
+
 const cropViewsToWindowSize = (mainWindow) => {
 	const winBounds = mainWindow.getBounds();
 	const views = mainWindow.getBrowserViews();
