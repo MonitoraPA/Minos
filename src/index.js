@@ -107,10 +107,10 @@ const attachDebugger = (view) => {
 		// identify requests to "bad" hosts (sooner is better!)
 		if(method === 'Network.requestWillBeSent'){
 			const {url} = params.request;	
-			const {timestamp} = params.timestamp;
+			const timestamp = new Date(params.wallTime * 1000).toISOString();
 			matching = Object.entries(hosts)
 					.map(h => [h[0], h[1]
-					.filter(u => url.indexOf(u) >= 0)]).filter(h => h[1].length > 0)
+					.filter(u => url.indexOf(u.slice(1)) >= 0)]).filter(h => h[1].length > 0)
 					.reduce((obj, [k, v]) => { obj[k] = v; obj['timestamp'] = timestamp; return obj }, {});
 			if(Object.entries(matching).length > 0)
 				badRequests.push(matching);
