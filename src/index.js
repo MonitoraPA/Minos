@@ -108,11 +108,12 @@ const attachDebugger = (view) => {
 		if(method === 'Network.requestWillBeSent'){
 			const {url} = params.request;	
 			const {timestamp} = params.timestamp;
-			badRequests.push(Object.entries(hosts)
+			matching = Object.entries(hosts)
 					.map(h => [h[0], h[1]
 					.filter(u => url.indexOf(u) >= 0)]).filter(h => h[1].length > 0)
-					.reduce((obj, [k, v]) => { obj[k] = v; obj['timestamp'] = timestamp; return obj }, {})
-				);
+					.reduce((obj, [k, v]) => { obj[k] = v; obj['timestamp'] = timestamp; return obj }, {});
+			if(Object.entries(matching).length > 0)
+				badRequests.push(matching);
 		}
 		const methodName = `_${method.replace('.', '_')}`;
 		if(methodName in Page.prototype){
