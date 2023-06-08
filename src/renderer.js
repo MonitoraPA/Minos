@@ -86,7 +86,7 @@ const onDOMContentLoaded = () => {
 	window.electronAPI.onChangeURL((event, url) => {
 		urlBox.value = url;
 	});
-	window.electronAPI.onReport((event, data) => {
+	window.electronAPI.onBadRequests((event, data) => {
 		report.push(data);
 	});
 	const claimButton = document.getElementById('claim-button');
