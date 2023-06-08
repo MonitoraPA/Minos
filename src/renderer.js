@@ -42,7 +42,6 @@ const onDOMContentLoaded = () => {
 	verifyButton.addEventListener('click', () => {
 		hideComponent(document.getElementById('main'));
 		showComponent(document.getElementById('top-bar'));
-		const topButton = document.getElementById('top-button');
 	});
 	const topButton = document.getElementById('top-button');
 	const topTooltip = document.getElementById('top-tooltip');
