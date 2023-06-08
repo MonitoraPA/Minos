@@ -69,7 +69,7 @@ const handlers = {
 		if(badRequests.length > 0){
 			localView.webContents.send('bad-requests', badRequests);
 		} else {
-			console.log(`no bad requests.`);
+			localView.webContents.send('no-bad-requests');
 		}
 	},
 	loadIDCard: (event) => {
