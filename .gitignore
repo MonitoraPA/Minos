@@ -88,8 +88,8 @@ typings/
 # Electron-Forge
 out/
 
-# log file (used only for debugging purposes)
-log*.txt
+# log files
+log*.har
 
 # vscode directory
 .vscode
