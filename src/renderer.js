@@ -79,9 +79,6 @@ const onDOMContentLoaded = () => {
 			// clicked for the 2nd time (analyze)
 			topButton.addEventListener('click', () => {
 				window.electronAPI.analyze();
-				hideComponent(document.getElementById('top-bar'));
-				showComponent(document.getElementById('report-container'));
-				textarea.value = report.map(d => d.url).reduce((a, b) => a + b + "\r\n", "");
 			}, { once: true });
 			topButton.removeEventListener('click', onClickStart);
 		}
@@ -92,8 +89,9 @@ const onDOMContentLoaded = () => {
 		urlBox.value = url;
 	});
 	window.electronAPI.onBadRequests((event, data) => {
-		for(const d of data)
-			report.push(d);
+		hideComponent(document.getElementById('top-bar'));
+		showComponent(document.getElementById('report-container'));
+		textarea.value = data.map(d => d.url).reduce((a, b) => a + b + "\r\n", "");
 	});
 	claimButton.addEventListener('click', () => {
 		hideComponent(document.getElementById('report-container'));
