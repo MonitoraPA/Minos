@@ -62,10 +62,15 @@ const handlers = {
 	},
 	analyze: (event) => {
 		resizeViews(getWin(event.sender), config.bounds.localView.full, config.bounds.webView.hidden);
-		const webView = getViews(getWin(event.sender))[1];
+		const [localView, webView] = getViews(getWin(event.sender));
 		const HAR = createHAR([page]);
 		detachDebugger(webView);
 		writeLog(HAR);
+		if(badRequests.length > 0){
+			localView.webContents.send('bad-requests', badRequests);
+		} else {
+			console.log(`no bad requests.`);
+		}
 	},
 	loadIDCard: (event) => {
 		dialog.showOpenDialog({ properties: ['openFile'] }).then((response) => {

@@ -38,7 +38,7 @@ const showComponent = (component) => {
 // convenience function to get more elements at once
 const getElementsByIds = (names) => {
 	result = [];
-	for(n of names){
+	for(const n of names){
 		result.push(document.getElementById(n));
 	}
 	return result;
@@ -82,7 +82,9 @@ const onDOMContentLoaded = () => {
 				window.electronAPI.analyze();
 				hideComponent(document.getElementById('top-bar'));
 				showComponent(document.getElementById('report-container'));
-				textarea.innerHTML += report[0];
+				for(const data of report){
+					textarea.innerText += data['url'];
+				}
 			}, { once: true });
 			topButton.removeEventListener('click', onClickStart);
 		}
