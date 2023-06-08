@@ -35,17 +35,24 @@ const showComponent = (component) => {
 	component.classList.remove('hidden');
 };
 
+// convenience function to get more elements at once
+const getElementsByIds = (names) => {
+	result = [];
+	for(n of names){
+		result.push(document.getElementById(n));
+	}
+	return result;
+}
+
 const report = [];
 
 const onDOMContentLoaded = () => {
-	const verifyButton = document.getElementById('verify-button');
+	const [verifyButton, topButton, topTooltip, urlBox, textarea, claimButton] = getElementsByIds('verify-button', 'top-button', 'top-tooltip', 'url-box', 'report', 'claim-button');
+	// const verifyButton = document.getElementById('verify-button');
 	verifyButton.addEventListener('click', () => {
 		hideComponent(document.getElementById('main'));
 		showComponent(document.getElementById('top-bar'));
 	});
-	const topButton = document.getElementById('top-button');
-	const topTooltip = document.getElementById('top-tooltip');
-	const urlBox = document.getElementById('url-box');
 	urlBox.addEventListener('input', (event) => {
 		if(event.target.value.length === 0)
 			topButton.classList.add('disabled');
@@ -61,7 +68,6 @@ const onDOMContentLoaded = () => {
 	topButton.addEventListener('mouseleave', () => {
 		hideComponent(topTooltip);
 	});
-	const textarea = document.getElementById('report');
 	const onClickStart = (event) => {
 		// run only the 1st time
 		const URL = urlBox.value; 
@@ -89,7 +95,6 @@ const onDOMContentLoaded = () => {
 	window.electronAPI.onBadRequests((event, data) => {
 		report.push(data);
 	});
-	const claimButton = document.getElementById('claim-button');
 	claimButton.addEventListener('click', () => {
 		hideComponent(document.getElementById('report-container'));
 		showComponent(document.getElementById('form-container'))
