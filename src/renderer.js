@@ -47,7 +47,7 @@ const getElementsByIds = (names) => {
 const report = [];
 
 const onDOMContentLoaded = () => {
-	const [verifyButton, topButton, topTooltip, urlBox, textarea, claimButton] = getElementsByIds('verify-button', 'top-button', 'top-tooltip', 'url-box', 'report', 'claim-button');
+	const [verifyButton, topButton, topTooltip, urlBox, textarea, claimButton] = getElementsByIds(['verify-button', 'top-button', 'top-tooltip', 'url-box', 'report', 'claim-button']);
 	// const verifyButton = document.getElementById('verify-button');
 	verifyButton.addEventListener('click', () => {
 		hideComponent(document.getElementById('main'));
@@ -83,6 +83,7 @@ const onDOMContentLoaded = () => {
 				hideComponent(document.getElementById('top-bar'));
 				showComponent(document.getElementById('report-container'));
 				for(const data of report){
+					console.log(data);
 					textarea.innerText += data['url'];
 				}
 			}, { once: true });
