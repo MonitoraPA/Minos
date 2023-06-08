@@ -83,7 +83,7 @@ const getViews = (mainWindow) => mainWindow.getBrowserViews();
 
 const writeLog = (HAR) => {
 	const timestamp = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
-	const LOG_FILE = config.logFilePrefix + "_" + timestamp + ".txt"
+	const LOG_FILE = config.logFilePrefix + "_" + timestamp + ".har"
 	appendFile(LOG_FILE, JSON.stringify(HAR, null, 4), (err) => {
 		if(err)
 			console.error(`error: writing log file failed due to: ${err}.`);
