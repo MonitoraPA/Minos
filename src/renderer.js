@@ -7,12 +7,6 @@
  * conditions of the Hacking License (see licenses/HACK.txt)
  */ 
 
-const createTooltip = (text) => {
-	const tooltip = document.createElement('div');
-	tooltip.classList.add('tooltip');
-	tooltip.innerText = text;
-	return tooltip;
-};
 
 const disableInput = (input) => {
 	input.classList.remove('enabled');
