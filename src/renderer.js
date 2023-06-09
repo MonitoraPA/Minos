@@ -91,7 +91,10 @@ const onDOMContentLoaded = () => {
 	window.electronAPI.onBadRequests((event, data) => {
 		hideComponent(document.getElementById('top-bar'));
 		showComponent(document.getElementById('report-container'));
-		textarea.value = data.map(d => d.url).reduce((a, b) => a + b + "\r\n", "");
+		textarea.value = data
+			.map(d => d.hosts.source + ": " + d.hosts.host)
+			.filter((val, idx, arr) => arr.indexOf(val) === idx) // remove duplicates
+			.reduce((a, b) => a + b + "\r\n", "");
 	});
 	claimButton.addEventListener('click', () => {
 		hideComponent(document.getElementById('report-container'));

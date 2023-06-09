@@ -114,9 +114,9 @@ const attachDebugger = (view) => {
 			const {url} = params.request;	
 			const timestamp = new Date(params.wallTime * 1000).toISOString();
 			matching = Object.entries(hosts)
-					.map(h => [h[0], h[1]
-					.filter(u => url.indexOf(u.slice(1)) >= 0)]).filter(h => h[1].length > 0)
-					.reduce((obj, [k, v]) => { obj['url'] = url; obj['hosts'] = Object.fromEntries([[k, v]]); obj['timestamp'] = timestamp; return obj }, {});
+					.map(([source, host]) => [source, host.filter(u => url.indexOf(u.slice(1)) >= 0)]) // identify matching hosts
+					.filter(([source, matching]) => matching.length > 0)
+					.reduce((obj, [k, v]) => { obj['url'] = url; obj['hosts'] = {'source': k, 'host': v}; obj['timestamp'] = timestamp; return obj }, {});
 			if(Object.entries(matching).length > 0)
 				badRequests.push(matching);
 		}
