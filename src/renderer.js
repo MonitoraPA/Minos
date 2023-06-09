@@ -92,7 +92,7 @@ const onDOMContentLoaded = () => {
 		hideComponent(document.getElementById('top-bar'));
 		showComponent(document.getElementById('report-container'));
 		textarea.value = data
-			.map(d => d.hosts.source + d.hosts.values.map(v => String(v)).join()) // transform into string
+			.map(d => d.hosts.source + ": " + d.hosts.values.map(v => String(v)).join()) // transform into string
 			.filter((val, idx, arr) => arr.indexOf(val) === idx) // remove duplicates
 			.reduce((a, b) => a + b + "\r\n", ""); // add cr and newline
 	});
