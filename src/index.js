@@ -66,11 +66,7 @@ const handlers = {
 		const HAR = createHAR([page]);
 		detachDebugger(webView);
 		writeLog(HAR);
-		if(badRequests.length > 0){
-			localView.webContents.send('bad-requests', badRequests);
-		} else {
-			localView.webContents.send('no-bad-requests');
-		}
+		localView.webContents.send('bad-requests', badRequests);
 	},
 	loadIDCard: (event) => {
 		dialog.showOpenDialog({ properties: ['openFile'] }).then((response) => {
