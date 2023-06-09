@@ -161,6 +161,8 @@ body {
 }
 
 #report {
+	font-size: var(--font-size-normal);
+	color: red;
 	width: 80vw;
 	height: 60vh;
 	resize: none;
@@ -189,7 +191,7 @@ body {
 	font-family: var(--font-family);
 	font-size: var(--font-size-small);
 	font-weight: bold;
-	padding-bottom: 5px;
+	padding-bottom: var(--distance-normal);
 }
 
 .form-input {
