@@ -47,7 +47,7 @@ const getElementsByIds = (names) => {
 const report = [];
 
 const onDOMContentLoaded = () => {
-	const [verifyButton, topButton, topTooltip, urlBox, textarea, claimButton] = getElementsByIds(['verify-button', 'top-button', 'top-tooltip', 'url-box', 'report', 'claim-button']);
+	const [verifyButton, topButton, topTooltip, urlBox, textarea, reportButton] = getElementsByIds(['verify-button', 'top-button', 'top-tooltip', 'url-box', 'report', 'report-button']);
 	// const verifyButton = document.getElementById('verify-button');
 	verifyButton.addEventListener('click', () => {
 		hideComponent(document.getElementById('main'));
@@ -96,7 +96,7 @@ const onDOMContentLoaded = () => {
 			.filter((val, idx, arr) => arr.indexOf(val) === idx) // remove duplicates
 			.reduce((a, b) => a + b + "\r\n", ""); // add cr and newline
 	});
-	claimButton.addEventListener('click', () => {
+	reportButton.addEventListener('click', () => {
 		hideComponent(document.getElementById('report-container'));
 		showComponent(document.getElementById('form-container'))
 	});
