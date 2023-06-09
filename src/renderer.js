@@ -20,13 +20,6 @@ const disableInput = (input) => {
 	input.disabled = true;
 };
 
-const showTopBar = () => {
-	const topBar = document.getElementById('top-bar');
-	const main = document.getElementById('main');
-	topBar.classList.remove('hidden');
-	main.classList.add('hidden');
-};
-
 const hideComponent = (component) => {
 	component.classList.add('hidden');
 };
@@ -42,7 +35,7 @@ const getElementsByIds = (names) => {
 		result.push(document.getElementById(n));
 	}
 	return result;
-}
+};
 
 const report = [];
 
