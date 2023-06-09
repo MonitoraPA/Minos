@@ -29,7 +29,7 @@ const config = require(path.join(CONF_PATH, 'conf.json'));
 const page = new Page();
 
 const hosts = require('../hosts.json');
-const badRequests = [];
+const badRequests = {'requests': []};
 
 const cropViewsToWindowSize = (mainWindow) => {
 	const winBounds = mainWindow.getBounds();
@@ -85,6 +85,7 @@ const getViews = (mainWindow) => mainWindow.getBrowserViews();
 const writeLog = (HAR) => {
 	const timestamp = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
 	const LOG_FILE = config.logFilePrefix + "_" + timestamp + ".har"
+	badRequests['logfile'] = LOG_FILE;
 	appendFile(LOG_FILE, JSON.stringify(HAR, null, 4), (err) => {
 		if(err)
 			console.error(`error: writing log file failed due to: ${err}.`);
@@ -119,7 +120,7 @@ const attachDebugger = (view) => {
 						return obj }
 					, {});
 			if(Object.entries(matching).length > 0)
-				badRequests.push(matching);
+				badRequests.requests.push(matching);
 		}
 		const methodName = `_${method.replace('.', '_')}`;
 		if(methodName in Page.prototype){

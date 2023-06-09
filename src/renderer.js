@@ -20,6 +20,12 @@ const disableInput = (input) => {
 	input.disabled = true;
 };
 
+const enableInput = (input) => {
+	input.classList.add('enabled');
+	input.classList.remove('disabled');
+	input.disabled = false;
+}
+
 const hideComponent = (component) => {
 	component.classList.add('hidden');
 };
@@ -84,8 +90,10 @@ const onDOMContentLoaded = () => {
 	window.electronAPI.onBadRequests((event, data) => {
 		hideComponent(document.getElementById('top-bar'));
 		showComponent(document.getElementById('report-container'));
-		if(data.length > 0){
-			textarea.value = data
+		reportLabel.innerText += " " + data.logfile + ". ";
+		if(data.requests.length > 0){
+			reportLabel.innerText += "\r\nDurante la navigazione sono stati individuati trasferimenti illeciti verso questi hosts:"
+			textarea.value = data.requests
 				.map(d => d.hosts.source + ": " + d.hosts.values.map(v => String(v)).join()) // transform into string
 				.filter((val, idx, arr) => arr.indexOf(val) === idx) // remove duplicates
 				.reduce((a, b) => a + b + "\r\n", ""); // add cr and newline
@@ -94,9 +102,9 @@ const onDOMContentLoaded = () => {
 				showComponent(document.getElementById('form-container'))
 			});
 		} else {
+			reportLabel.innerText += "\r\nNon sono stati individuati trasferimenti illeciti durante la navigazione."
 			hideComponent(textarea);
-			reportButton.innerText = "Verifica un nuovo sito web";
-			reportLabel.innerText = "Non sono stati individuati trasferimenti illeciti.";
+			hideComponent(reportButton);
 		}
 	});
 };

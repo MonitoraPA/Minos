@@ -168,6 +168,11 @@ body {
 	resize: none;
 }
 
+#report-label {
+	text-align: center;
+	font-size: var(--font-size-normal);
+}
+
 #form-buttons {
 	margin-top: 10px;
 	grid-template-columns: 1fr 1fr 1fr;
