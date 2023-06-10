@@ -37,9 +37,36 @@ const getElementsByIds = (names) => {
 	return result;
 };
 
-const report = [];
+const setupTooltips = () => {
+	for(const button of document.getElementsByTagName('button')){
+		const ttext = button.getAttribute('tooltip');
+		if(ttext){
+			// add tooltip to DOM
+			const tooltip = document.createElement('div');
+			hideComponent(tooltip);
+			tooltip.classList.add('tooltip');
+			tooltip.innerText = ttext;
+			document.getElementsByTagName('body')[0].appendChild(tooltip);
+			// setup event listeners
+			button.addEventListener('mouseenter', (event) => {
+				if(button.classList.contains('disabled') && tooltip.classList.contains('hidden')){ // show tooltip only when button is disabled
+					const {x, y, width, height} = event.target.getBoundingClientRect();
+					tooltip.style.left = `${x - 30}px`;
+					tooltip.style.top = `${y + height + 5}px`;
+					showComponent(tooltip);
+				}
+				else 
+					hideComponent(tooltip);
+			});
+			button.addEventListener('mouseleave', (event) => {
+				hideComponent(tooltip);
+			});
+		}
+	}
+};
 
 const onDOMContentLoaded = () => {
+	setupTooltips();
 	const [verifyButton, topButton, topTooltip, urlBox, textarea, reportButton, reportLabel] = getElementsByIds(['verify-button', 'top-button', 'top-tooltip', 'url-box', 'report', 'report-button', 'report-label']);
 	// const verifyButton = document.getElementById('verify-button');
 	verifyButton.addEventListener('click', () => {
@@ -51,15 +78,6 @@ const onDOMContentLoaded = () => {
 			topButton.classList.add('disabled');
 		else 
 			topButton.classList.remove('disabled');
-	});
-	topButton.addEventListener('mouseenter', () => {
-		if(urlBox.value.length <= 0)
-			showComponent(topTooltip);
-		else 
-			hideComponent(topTooltip);
-	});
-	topButton.addEventListener('mouseleave', () => {
-		hideComponent(topTooltip);
 	});
 	const onClickStart = (event) => {
 		// run only the 1st time

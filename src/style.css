@@ -51,6 +51,8 @@
 	--distance-huge: 15px;
 	/* others */
 	--font-family: sans-serif;
+	/* tooltip */
+	--tooltip-width: 100px;
 }
 
 body {
@@ -228,4 +230,19 @@ body {
 	font-family: var(--font-family);
 	color: white;
 	border-radius: 5px;
+	width: var(--tooltip-width);
+	text-align: center;
+}
+
+.tooltip::before {
+	content: "";
+	position: absolute;
+	border-top: 10px solid transparent;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 10px solid var(--color-warning-darkest);
+	left: calc(0.45 * var(--tooltip-width));
+	top: -20px;
+	width: 0;
+	height: 0;
 }
