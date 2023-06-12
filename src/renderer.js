@@ -67,7 +67,7 @@ const setupTooltips = () => {
 
 const onDOMContentLoaded = () => {
 	setupTooltips();
-	const [verifyButton, topButton, topTooltip, urlBox, textarea, reportButton, reportLabel] = getElementsByIds(['verify-button', 'top-button', 'top-tooltip', 'url-box', 'report', 'report-button', 'report-label']);
+	const [verifyButton, topButton, urlBox, textarea, reportButton, reportLabel] = getElementsByIds(['verify-button', 'top-button', 'url-box', 'report', 'report-button', 'report-label']);
 	// const verifyButton = document.getElementById('verify-button');
 	verifyButton.addEventListener('click', () => {
 		hideComponent(document.getElementById('main'));
