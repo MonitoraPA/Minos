@@ -209,6 +209,10 @@ body {
 	border: 1px solid var(--color-gray-light);
 }
 
+.form-input.invalid {
+	border: 2px solid red;
+}
+
 #form-label-page {
 	font-family: var(--font-family);
 	font-size: var(--font-size-normal);
