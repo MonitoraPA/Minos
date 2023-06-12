@@ -97,41 +97,49 @@ const onDOMContentLoaded = () => {
 	};
 	topButton.addEventListener('click', onClickStart); 
 
+	let page = 1;
+
 	const validateForm = () => {
 		const showTooltip = (err) => { nextButton.classList.add('disabled'); nextButton.setAttribute('tooltip', err); }
 		const hideTooltip = () => { nextButton.classList.remove('disabled'); }
-		// first remove invalid from all form elements
-		[formName, formSurname, formBirthdate, formBirthplace, formFisccode, formAddress].forEach(target => target.classList.remove('invalid'));
-		// then possibly re-add invalid and display error tooltip above next button
-		let err = "";
-		if(formAddress.value.length === 0){
-			formAddress.classList.add('invalid');
-			err = "Riempi tutti i campi prima di procedere";
+		switch(page){
+			case 1:
+				// first remove invalid from all form elements
+				[formName, formSurname, formBirthdate, formBirthplace, formFisccode, formAddress].forEach(target => target.classList.remove('invalid'));
+				// then possibly re-add invalid and display error tooltip above next button
+				let err = "";
+				if(formAddress.value.length === 0){
+					formAddress.classList.add('invalid');
+					err = "Riempi tutti i campi prima di procedere";
+				}
+				if(!formFisccode.value.match(/[A-Z]{3}[A-Z]{3}[0-9]{2}[ABCDEHLMPRST]((0[1-9]|[1-2][0-9]|3[0-1])|([4-6][1-9]|7[0-1]))[A-Z][0-9]{3}[A-Z]/g)){
+					formFisccode.classList.add('invalid');
+					err = "Inserisci un codice fiscale valido";
+				}
+				if(formBirthplace.value.length === 0){
+					formBirthplace.classList.add('invalid');
+					err = "Riempi tutti i campi prima di procedere";
+				}
+				if(!formBirthdate.value.match(/((0[1-9]|1[0-9]|2[0-9]|30)\/(04|06|09|11)\/([1-2][0-9]{3}))|((0[1-9]|1[0-9]|2[0-9])\/02\/([1-2][0-9]{3}))|((0[1-9]|1[0-9]|2[0-9]|3[0-1])\/(01|03|05|07|08|10|12)\/([1-2][0-9]{3}))/g)){
+					formBirthdate.classList.add('invalid');
+					err = "Inserisci una data di nascita valida";
+				}
+				if(formSurname.value.length === 0){
+					formSurname.classList.add('invalid');
+					err = "Riempi tutti i campi prima di procedere";
+				}
+				if(formName.value.length === 0){
+					formName.classList.add('invalid');
+					err = "Riempi tutti i campi prima di procedere";
+				}
+				if(err.length === 0)
+					hideTooltip();
+				else 
+					showTooltip(err);
+				break;
+			case 2:
+			case 3:
 		}
-		if(!formFisccode.value.match(/[A-Z]{3}[A-Z]{3}[0-9]{2}[ABCDEHLMPRST]((0[1-9]|[1-2][0-9]|3[0-1])|([4-6][1-9]|7[0-1]))[A-Z][0-9]{3}[A-Z]/g)){
-			formFisccode.classList.add('invalid');
-			err = "Inserisci un codice fiscale valido";
-		}
-		if(formBirthplace.value.length === 0){
-			formBirthplace.classList.add('invalid');
-			err = "Riempi tutti i campi prima di procedere";
-		}
-		if(!formBirthdate.value.match(/((0[1-9]|1[0-9]|2[0-9]|30)\/(04|06|09|11)\/([1-2][0-9]{3}))|((0[1-9]|1[0-9]|2[0-9])\/02\/([1-2][0-9]{3}))|((0[1-9]|1[0-9]|2[0-9]|3[0-1])\/(01|03|05|07|08|10|12)\/([1-2][0-9]{3}))/g)){
-			formBirthdate.classList.add('invalid');
-			err = "Inserisci una data di nascita valida";
-		}
-		if(formSurname.value.length === 0){
-			formSurname.classList.add('invalid');
-			err = "Riempi tutti i campi prima di procedere";
-		}
-		if(formName.value.length === 0){
-			formName.classList.add('invalid');
-			err = "Riempi tutti i campi prima di procedere";
-		}
-		if(err.length === 0)
-			hideTooltip();
-		else 
-			showTooltip(err);
 	};
 
 	formName.addEventListener('blur', validateForm);
