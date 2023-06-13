@@ -246,3 +246,7 @@ body {
 	width: 0;
 	height: 0;
 }
+
+#form-checkboxes {
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+}

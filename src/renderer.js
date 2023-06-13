@@ -68,7 +68,7 @@ const setupTooltips = () => {
 const onDOMContentLoaded = () => {
 	setupTooltips();
 	const [verifyButton, topButton, urlBox, textarea, reportButton, reportLabel, nextButton, prevButton] = getElementsByIds(['verify-button', 'top-button', 'url-box', 'report', 'report-button', 'report-label',  'button-next', 'button-prev']);
-	const [formName, formSurname, formBirthdate, formBirthplace, formFisccode, formAddress] = getElementsByIds(['form-name', 'form-surname', 'form-birthdate', 'form-birthplace', 'form-fisccode', 'form-address']);
+	const [formLabel, formName, formSurname, formBirthdate, formBirthplace, formFisccode, formAddress] = getElementsByIds(['form-label', 'form-name', 'form-surname', 'form-birthdate', 'form-birthplace', 'form-fisccode', 'form-address']);
 	// const verifyButton = document.getElementById('verify-button');
 	verifyButton.addEventListener('click', () => {
 		hideComponent(document.getElementById('main'));
@@ -138,7 +138,11 @@ const onDOMContentLoaded = () => {
 					showTooltip(err);
 				break;
 			case 2:
+				break;
 			case 3:
+				break;
+			case 4:
+				break;
 		}
 	};
 
@@ -148,16 +152,23 @@ const onDOMContentLoaded = () => {
 	formBirthplace.addEventListener('blur', validateForm);
 	formAddress.addEventListener('blur', validateForm);
 	formBirthdate.addEventListener('blur', validateForm);
+	formFisccode.addEventListener('keydown', (event) => {
+		const current = event.target.value;
+		event.target.value = current.toUpperCase();
+	});
 	formBirthdate.addEventListener('keydown', (event) => {
 		event.preventDefault();
 		const current = event.target.value;
-		if(event.keyCode === 8){
+		if(event.keyCode === 8){ // backspace
 			if([0,1,4,7,8,9,10].some(x => x === current.length))
 				event.target.value = current.slice(0, -1);
 			else if([3,6].some(x => x === current.length))
 				event.target.value = current.slice(0, -2);
 		}
-		if([0,1,2,3,4,5,6,7,8,9].some(x => x == event.key) && current.length < 10){
+		else if(event.keyCode === 9){ // tab
+			formBirthplace.focus();
+		}
+		else if([0,1,2,3,4,5,6,7,8,9].some(x => x == event.key) && current.length < 10){
 			// simply insert letter
 			if([0,3,6,7,8,9].some(x => x === current.length))
 				event.target.value = current + event.key;
@@ -168,6 +179,25 @@ const onDOMContentLoaded = () => {
 	});
 
 	nextButton.addEventListener('mouseenter', validateForm);
+
+	nextButton.addEventListener('click', (event) => {
+		if(event.target.classList.contains('disabled'))
+			return;
+		switch(page){
+			case 1:
+				document.getElementById('form-fields-1').classList.add('hidden');
+				document.getElementById('form-fields-2').classList.remove('hidden');
+				formLabel.innerText = "Recapito"
+				page++;
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+		}
+	});
 
 	// on page navigation, update the URL in the urlBox
 	window.electronAPI.onChangeURL((event, url) => {

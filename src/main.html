@@ -38,13 +38,13 @@ conditions of the Hacking License (see licenses/HACK.txt)
 		<!-- form -->
 		<div id='form-container' class='hidden center'>
 			<div id='form-title'>Inserisci le informazioni necessarie per sporgere reclamo:</div>
-			<div id='form-label-page'>
-				Dati anagrafici
+			<div>
+				<span id='form-label'>Dati anagrafici</span>
 				<hr></hr>
 			</div>
-			<div id='form-fields' class='grid'>
+			<div id='form-fields-1' class='grid'>
 				<label class='label'>Nome</label>
-				<input id='form-name' type='text' class='form-input' placeholder='Nome' required invalid></input>
+				<input id='form-name' type='text' class='form-input' placeholder='Nome'></input>
 				<label class='label'>Cognome</label>
 				<input id='form-surname' type='text' class='form-input' placeholder='Cognome'></input>
 				<label class='label'>Data di nascita</label>
@@ -55,6 +55,34 @@ conditions of the Hacking License (see licenses/HACK.txt)
 				<input id='form-fisccode' type='text' class='form-input' placeholder='Codice Fiscale'></input>
 				<label class='label'>Residenza</label>
 				<input id='form-address' type='text' class='form-input' placeholder='Residenza'></input>
+			</div>
+			<div id='form-fields-2' class='grid hidden'>
+				<span id='form-checkboxes' class='grid'>
+					<span>
+						<input type='checkbox' id='check-phone' name='check-phone' value='Telefono'>
+						<label for='check-phone'>Telefono</label>
+					</span>
+					<span>
+						<input type='checkbox' id='check-paddr' name='check-paddr' value='Indirizzo fisico'>
+						<label for='check-paddr'>Indirizzo</label>
+					</span>
+					<span>
+						<input type='checkbox' id='check-email' name='check-email' value='Email'>
+						<label for='check-email'>Email</label>
+					</span>
+					<span>
+						<input type='checkbox' id='check-fax' name='check-fax' value='Fax'>
+						<label for='check-fax'>Fax</label>
+					</span>
+				</span>
+				<label class='label'>Telefono</label>
+				<input id='form-phone' type='text' class='form-input' placeholder='Telefono'></input>
+				<label class='label'>Indirizzo fisico</label>
+				<input id='form-paddr' type='text' class='form-input' placeholder='Indirizzo fisico'></input>
+				<label class='label'>Email</label>
+				<input id='form-email' type='text' class='form-input' placeholder='Email'></input>
+				<label class='label'>Fax</label>
+				<input id='form-fax' type='text' class='form-input' placeholder='Fax'></input>
 			</div>
 			<div id='form-buttons' class='grid'>
 				<button id='button-prev' class='button disabled hidden'>
