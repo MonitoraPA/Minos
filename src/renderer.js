@@ -160,13 +160,13 @@ const onDOMContentLoaded = () => {
 	formBirthdate.addEventListener('keydown', (event) => {
 		event.preventDefault();
 		const current = event.target.value;
-		if(event.keyCode === 8){ // backspace
+		if(event.code === "Backspace"){ // backspace
 			if([0,1,4,7,8,9,10].some(x => x === current.length))
 				event.target.value = current.slice(0, -1);
 			else if([3,6].some(x => x === current.length))
 				event.target.value = current.slice(0, -2);
 		}
-		else if(event.keyCode === 9){ // tab
+		else if(event.code === "Tab"){ // tab
 			formBirthplace.focus();
 		}
 		else if([0,1,2,3,4,5,6,7,8,9].some(x => x == event.key) && current.length < 10){
