@@ -58,6 +58,7 @@
 body {
 	/* reset body margin which is put by default by chromium */
 	margin: 0;
+	font-family: var(--font-family);
 }
 
 #main {
@@ -148,7 +149,6 @@ body {
 .main-title {
 	font-size: var(--font-size-huge);
 	text-align: center;
-	font-family: var(--font-family);
 	color: var(--color-title);
 }
 
@@ -191,12 +191,10 @@ body {
 
 #form-title {
 	font-size: var(--font-size-big);
-	font-family: var(--font-family);
 	padding-bottom: 20px;
 }
 
 .label {
-	font-family: var(--font-family);
 	font-size: var(--font-size-small);
 	font-weight: bold;
 	padding-bottom: var(--distance-normal);
@@ -210,11 +208,10 @@ body {
 }
 
 .form-input.invalid {
-	border: 2px solid red;
+	border: 1px solid red;
 }
 
 #form-label-page {
-	font-family: var(--font-family);
 	font-size: var(--font-size-normal);
 	font-weight: bold;
 }
@@ -231,7 +228,6 @@ body {
 	background-color: var(--color-warning-darkest);
 	padding: var(--distance-normal);
 	position: absolute;
-	font-family: var(--font-family);
 	color: white;
 	border-radius: 5px;
 	width: var(--tooltip-width);
