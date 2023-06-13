@@ -28,6 +28,9 @@ const showComponent = (component) => {
 	component.classList.remove('hidden');
 };
 
+const enable = (component) => { component.classList.remove('disabled'); }
+const disable = (component) => { component.classList.add('disabled'); }
+
 // convenience function to get more elements at once
 const getElementsByIds = (names) => {
 	result = [];
@@ -69,16 +72,15 @@ const onDOMContentLoaded = () => {
 	setupTooltips();
 	const [verifyButton, topButton, urlBox, textarea, reportButton, reportLabel, nextButton, prevButton] = getElementsByIds(['verify-button', 'top-button', 'url-box', 'report', 'report-button', 'report-label',  'button-next', 'button-prev']);
 	const [formLabel, formName, formSurname, formBirthdate, formBirthplace, formFisccode, formAddress] = getElementsByIds(['form-label', 'form-name', 'form-surname', 'form-birthdate', 'form-birthplace', 'form-fisccode', 'form-address']);
-	// const verifyButton = document.getElementById('verify-button');
 	verifyButton.addEventListener('click', () => {
 		hideComponent(document.getElementById('main'));
 		showComponent(document.getElementById('top-bar'));
 	});
 	urlBox.addEventListener('input', (event) => {
 		if(event.target.value.length === 0)
-			topButton.classList.add('disabled');
+			disable(topButton);
 		else 
-			topButton.classList.remove('disabled');
+			enable(topButton);
 	});
 	const onClickStart = (event) => {
 		// run only the 1st time
@@ -100,8 +102,7 @@ const onDOMContentLoaded = () => {
 	let page = 1;
 
 	const validateForm = () => {
-		const showTooltip = (err) => { nextButton.classList.add('disabled'); nextButton.setAttribute('tooltip', err); }
-		const hideTooltip = () => { nextButton.classList.remove('disabled'); }
+		const showTooltip = (err) => { disable(nextButton); nextButton.setAttribute('tooltip', err); }
 		switch(page){
 			case 1:
 				// first remove invalid from all form elements
@@ -133,7 +134,7 @@ const onDOMContentLoaded = () => {
 					err = "Riempi tutti i campi prima di procedere";
 				}
 				if(err.length === 0)
-					hideTooltip();
+					enable(nextButton);
 				else 
 					showTooltip(err);
 				break;
@@ -185,8 +186,8 @@ const onDOMContentLoaded = () => {
 			return;
 		switch(page){
 			case 1:
-				document.getElementById('form-fields-1').classList.add('hidden');
-				document.getElementById('form-fields-2').classList.remove('hidden');
+				hideComponent(document.getElementById('form-fields-1'));
+				showComponent(document.getElementById('form-fields-2'));
 				formLabel.innerText = "Recapito"
 				page++;
 				break;
