@@ -75,14 +75,22 @@ conditions of the Hacking License (see licenses/HACK.txt)
 						<label for='check-fax'>Fax</label>
 					</span>
 				</span>
-				<label class='label'>Telefono</label>
-				<input id='form-phone' type='text' class='form-input' placeholder='Telefono'></input>
-				<label class='label'>Indirizzo fisico</label>
-				<input id='form-paddr' type='text' class='form-input' placeholder='Indirizzo fisico'></input>
-				<label class='label'>Email</label>
-				<input id='form-email' type='text' class='form-input' placeholder='Email'></input>
-				<label class='label'>Fax</label>
-				<input id='form-fax' type='text' class='form-input' placeholder='Fax'></input>
+				<div class='grid hidden' id='phone-container'>
+					<label class='label'>Telefono</label>
+					<input id='form-phone' type='text' class='form-input' placeholder='Telefono'></input>
+				</div>
+				<div class='grid hidden' id='paddr-container'>
+					<label class='label'>Indirizzo fisico</label>
+					<input id='form-paddr' type='text' class='form-input' placeholder='Indirizzo fisico'></input>
+				</div>
+				<div class='grid hidden' id='email-container'>
+					<label class='label'>Email</label>
+					<input id='form-email' type='text' class='form-input' placeholder='Email'></input>
+				</div>
+				<div class='grid hidden' id='fax-container'>
+					<label class='label'>Fax</label>
+					<input id='form-fax' type='text' class='form-input' placeholder='Fax'></input>
+				</div>
 			</div>
 			<div id='form-buttons' class='grid'>
 				<button id='button-prev' class='button disabled hidden'>

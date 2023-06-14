@@ -249,4 +249,5 @@ body {
 
 #form-checkboxes {
 	grid-template-columns: 1fr 1fr 1fr 1fr;
+	padding-bottom: var(--distance-big);
 }
