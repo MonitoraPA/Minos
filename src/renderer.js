@@ -72,6 +72,8 @@ const onDOMContentLoaded = () => {
 	setupTooltips();
 	const [verifyButton, topButton, urlBox, textarea, reportButton, reportLabel, nextButton, prevButton] = getElementsByIds(['verify-button', 'top-button', 'url-box', 'report', 'report-button', 'report-label',  'button-next', 'button-prev']);
 	const [formLabel, formName, formSurname, formBirthdate, formBirthplace, formFisccode, formAddress] = getElementsByIds(['form-label', 'form-name', 'form-surname', 'form-birthdate', 'form-birthplace', 'form-fisccode', 'form-address']);
+	const [formPhone, formPaddr, formEmail, formFax] = getElementsByIds(['form-phone', 'form-paddr', 'form-email', 'form-fax']);
+	const [checkPhone, checkPaddr, checkEmail, checkFax] = getElementsByIds(['check-phone', 'check-paddr', 'check-email', 'check-fax']);
 	verifyButton.addEventListener('click', () => {
 		hideComponent(document.getElementById('main'));
 		showComponent(document.getElementById('top-bar'));
@@ -146,6 +148,18 @@ const onDOMContentLoaded = () => {
 				break;
 		}
 	};
+
+	['phone', 'paddr', 'email', 'fax'].forEach((field) => {
+		const checkBox = document.getElementById(`check-${field}`);	
+		const container = document.getElementById(`${field}-container`);
+		checkBox.addEventListener('change', (event) => {
+			if(event.target.checked){
+				showComponent(container);
+			} else {
+				hideComponent(container);
+			}
+		});
+	});
 
 	formName.addEventListener('blur', validateForm);
 	formSurname.addEventListener('blur', validateForm);
