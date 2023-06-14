@@ -110,19 +110,19 @@ const onDOMContentLoaded = () => {
 	};
 	topButton.addEventListener('click', onClickStart); 
 
-	let page = 1;
+	let page = 0;
+	const pageValid = [false, false, false, false];
 
 	const validateForm = () => {
-		const showTooltip = (err) => { disable(nextButton); nextButton.setAttribute('tooltip', err); }
 		switch(page){
-			case 1:
+			case 0:
 				// first remove invalid from all form elements
 				[formName, formSurname, formBirthdate, formBirthplace, formFisccode, formAddress].forEach(target => target.classList.remove('invalid'));
 				// then possibly re-add invalid and display error tooltip above next button
 				let err = "";
 				if(formAddress.value.length === 0){
 					formAddress.classList.add('invalid');
-					err = "Riempi tutti i campi prima di procedere";
+					err = "Riempi tutti i campi";
 				}
 				if(!formFisccode.value.match(/[A-Z]{3}[A-Z]{3}[0-9]{2}[ABCDEHLMPRST]((0[1-9]|[1-2][0-9]|3[0-1])|([4-6][1-9]|7[0-1]))[A-Z][0-9]{3}[A-Z]/g)){
 					formFisccode.classList.add('invalid');
@@ -130,7 +130,7 @@ const onDOMContentLoaded = () => {
 				}
 				if(formBirthplace.value.length === 0){
 					formBirthplace.classList.add('invalid');
-					err = "Riempi tutti i campi prima di procedere";
+					err = "Riempi tutti i campi";
 				}
 				if(!formBirthdate.value.match(/((0[1-9]|1[0-9]|2[0-9]|30)\/(04|06|09|11)\/([1-2][0-9]{3}))|((0[1-9]|1[0-9]|2[0-9])\/02\/([1-2][0-9]{3}))|((0[1-9]|1[0-9]|2[0-9]|3[0-1])\/(01|03|05|07|08|10|12)\/([1-2][0-9]{3}))/g)){
 					formBirthdate.classList.add('invalid');
@@ -138,22 +138,27 @@ const onDOMContentLoaded = () => {
 				}
 				if(formSurname.value.length === 0){
 					formSurname.classList.add('invalid');
-					err = "Riempi tutti i campi prima di procedere";
+					err = "Riempi tutti i campi";
 				}
 				if(formName.value.length === 0){
 					formName.classList.add('invalid');
-					err = "Riempi tutti i campi prima di procedere";
+					err = "Riempi tutti i campi";
 				}
-				if(err.length === 0)
+				if(err.length === 0){
+					pageValid[0] = true;
 					enable(nextButton);
-				else 
-					showTooltip(err);
+				}
+				else {
+					pageValid[0] = false;
+					disable(nextButton);
+					nextButton.setAttribute('tooltip', err);
+				}
+				break;
+			case 1:
 				break;
 			case 2:
 				break;
 			case 3:
-				break;
-			case 4:
 				break;
 		}
 	};
@@ -215,20 +220,47 @@ const onDOMContentLoaded = () => {
 	nextButton.addEventListener('click', (event) => {
 		if(event.target.classList.contains('disabled'))
 			return;
+		if(pageValid[page + 1])
+			enable(nextButton);
+		else
+			disable(nextButton);
 		switch(page){
-			case 1:
+			case 0:
 				hideComponent(document.getElementById('form-fields-1'));
 				showComponent(document.getElementById('form-fields-2'));
+				showComponent(prevButton);
+				enable(prevButton);
 				formLabel.innerText = "Recapito"
-				nextButton.setAttribute('tooltip', 'seleziona almeno un recapito prima di procedere');
-				disable(nextButton);
+				nextButton.setAttribute('tooltip', 'Seleziona almeno un recapito');
 				page++;
+				break;
+			case 1:
 				break;
 			case 2:
 				break;
 			case 3:
 				break;
-			case 4:
+		}
+	});
+
+	prevButton.addEventListener('click', (event) => {
+		if(event.target.classList.contains('disabled'))
+			return;
+		if(pageValid[page - 1])
+			enable(nextButton);
+		else
+			disable(nextButton);
+		switch(page){
+			case 1:
+				hideComponent(document.getElementById('form-fields-2'));
+				showComponent(document.getElementById('form-fields-1'));
+				hideComponent(prevButton);
+				formLabel.innerText = "Dati anagrafici";
+				page--;
+				break;
+			case 2:
+				break;
+			case 3:
 				break;
 		}
 	});
