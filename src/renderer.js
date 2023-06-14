@@ -154,8 +154,12 @@ const onDOMContentLoaded = () => {
 	formAddress.addEventListener('blur', validateForm);
 	formBirthdate.addEventListener('blur', validateForm);
 	formFisccode.addEventListener('keydown', (event) => {
-		const current = event.target.value;
-		event.target.value = current.toUpperCase();
+		// insert only uppercase letters
+		if(event.key.length === 1 && (event.key.charCodeAt(0) >= 'a'.charCodeAt(0) && event.key.charCodeAt(0) <= 'z'.charCodeAt(0) || 
+		event.key.charCodeAt(0) >= 'A'.charCodeAt(0) && event.key.charCodeAt(0) <= 'Z'.charCodeAt(0))){
+			event.preventDefault();
+			event.target.value = event.target.value + event.key.toUpperCase();
+		}
 	});
 	formBirthdate.addEventListener('keydown', (event) => {
 		event.preventDefault();
