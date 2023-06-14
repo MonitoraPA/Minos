@@ -149,6 +149,7 @@ const onDOMContentLoaded = () => {
 		}
 	};
 
+	// add event listeners to checkboxes
 	['phone', 'paddr', 'email', 'fax'].forEach((field) => {
 		const checkBox = document.getElementById(`check-${field}`);	
 		const container = document.getElementById(`${field}-container`);
@@ -161,6 +162,9 @@ const onDOMContentLoaded = () => {
 		});
 	});
 
+	const isLetter = (key) => { return key.length === 1 && (key.charCodeAt(0) >= 'A'.charCodeAt(0) && key.charCodeAt(0) <= 'Z'.charCodeAt(0)) || (key.charCodeAt(0) >= 'a'.charCodeAt(0) && key.charCodeAt(0) <= 'z'.charCodeAt(0)) };
+	const isDigit = (key) => { return key.length === 1 && (key.charCodeAt(0) >= '0'.charCodeAt(0) && key.charCodeAt(0) <= '9'.charCodeAt(0)) };
+
 	formName.addEventListener('blur', validateForm);
 	formSurname.addEventListener('blur', validateForm);
 	formFisccode.addEventListener('blur', validateForm);
@@ -169,11 +173,14 @@ const onDOMContentLoaded = () => {
 	formBirthdate.addEventListener('blur', validateForm);
 	formFisccode.addEventListener('keydown', (event) => {
 		// insert only uppercase letters
-		if(event.key.length === 1 && (event.key.charCodeAt(0) >= 'a'.charCodeAt(0) && event.key.charCodeAt(0) <= 'z'.charCodeAt(0) || 
-		event.key.charCodeAt(0) >= 'A'.charCodeAt(0) && event.key.charCodeAt(0) <= 'Z'.charCodeAt(0))){
-			event.preventDefault();
-			event.target.value = event.target.value + event.key.toUpperCase();
-		}
+		if(event.code !== "Tab" && event.code !== "Backspace"){
+			if(event.target.value.length < 16 && (isLetter(event.key) || isDigit(event.key))){
+				event.preventDefault();
+				event.target.value = event.target.value + event.key.toUpperCase();
+			} else {
+				event.preventDefault();
+			}
+		} 
 	});
 	formBirthdate.addEventListener('keydown', (event) => {
 		event.preventDefault();
