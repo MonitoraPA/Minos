@@ -52,7 +52,7 @@
 	/* others */
 	--font-family: sans-serif;
 	/* tooltip */
-	--tooltip-width: 100px;
+	--tooltip-width: 125px;
 }
 
 body {
@@ -226,7 +226,7 @@ body {
 
 .tooltip {
 	background-color: var(--color-warning-darkest);
-	padding: var(--distance-normal);
+	padding: var(--distance-small);
 	position: absolute;
 	color: white;
 	border-radius: 5px;
@@ -234,6 +234,7 @@ body {
 	text-align: center;
 }
 
+/* design the little triangle above tooltip */
 .tooltip::before {
 	content: "";
 	position: absolute;
@@ -242,7 +243,7 @@ body {
 	border-right: 10px solid transparent;
 	border-bottom: 10px solid var(--color-warning-darkest);
 	left: calc(0.45 * var(--tooltip-width));
-	top: -20px;
+	top: -18px;
 	width: 0;
 	height: 0;
 }

@@ -31,6 +31,9 @@ const showComponent = (component) => {
 const enable = (component) => { component.classList.remove('disabled'); }
 const disable = (component) => { component.classList.add('disabled'); }
 
+const isLetter = (key) => { return key.length === 1 && (key.charCodeAt(0) >= 'A'.charCodeAt(0) && key.charCodeAt(0) <= 'Z'.charCodeAt(0)) || (key.charCodeAt(0) >= 'a'.charCodeAt(0) && key.charCodeAt(0) <= 'z'.charCodeAt(0)) };
+const isDigit = (key) => { return key.length === 1 && (key.charCodeAt(0) >= '0'.charCodeAt(0) && key.charCodeAt(0) <= '9'.charCodeAt(0)) };
+
 // convenience function to get more elements at once
 const getElementsByIds = (names) => {
 	result = [];
@@ -64,6 +67,12 @@ const setupTooltips = () => {
 			button.addEventListener('mouseleave', (event) => {
 				hideComponent(tooltip);
 			});
+			tooltip.addEventListener('mouseenter', (event) => {
+				showComponent(tooltip);
+			});
+			tooltip.addEventListener('mouseleave', (event) => {
+				hideComponent(tooltip);
+			})
 		}
 	}
 };
@@ -162,9 +171,6 @@ const onDOMContentLoaded = () => {
 		});
 	});
 
-	const isLetter = (key) => { return key.length === 1 && (key.charCodeAt(0) >= 'A'.charCodeAt(0) && key.charCodeAt(0) <= 'Z'.charCodeAt(0)) || (key.charCodeAt(0) >= 'a'.charCodeAt(0) && key.charCodeAt(0) <= 'z'.charCodeAt(0)) };
-	const isDigit = (key) => { return key.length === 1 && (key.charCodeAt(0) >= '0'.charCodeAt(0) && key.charCodeAt(0) <= '9'.charCodeAt(0)) };
-
 	formName.addEventListener('blur', validateForm);
 	formSurname.addEventListener('blur', validateForm);
 	formFisccode.addEventListener('blur', validateForm);
@@ -214,6 +220,8 @@ const onDOMContentLoaded = () => {
 				hideComponent(document.getElementById('form-fields-1'));
 				showComponent(document.getElementById('form-fields-2'));
 				formLabel.innerText = "Recapito"
+				nextButton.setAttribute('tooltip', 'seleziona almeno un recapito prima di procedere');
+				disable(nextButton);
 				page++;
 				break;
 			case 2:
