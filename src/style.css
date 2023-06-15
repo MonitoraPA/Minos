@@ -211,7 +211,7 @@ body {
 	border: 1px solid red;
 }
 
-#form-label-page {
+#form-label {
 	font-size: var(--font-size-normal);
 	font-weight: bold;
 }
