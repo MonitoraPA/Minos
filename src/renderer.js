@@ -215,11 +215,10 @@ const onDOMContentLoaded = () => {
 		// remove slashes
 		const curDate = curText.replaceAll('/', '');
 		const datePos = textPos >= 6 ? textPos - 2 : (textPos >= 3 ? textPos - 1 : textPos);
-		let newDate = curDate;
 		// if there's a backspace delete backspace + number
 		if(event.code === "Backspace"){
 			event.preventDefault();
-			newDate = curDate.slice(0, datePos - 1) + curDate.slice(datePos);	
+			const newDate = curDate.slice(0, datePos - 1) + curDate.slice(datePos);	
 			event.target.value = addSlashes(newDate);
 			const nextPos = [3,6].some(x => x === textPos) ? textPos - 2 : textPos - 1;
 			event.target.selectionStart = nextPos;
@@ -229,7 +228,7 @@ const onDOMContentLoaded = () => {
 			// only allow numbers
 			if(Array.from(Array(10).keys()).map(x => String(x)).some(x => x === event.key) && curDate.length < 8){
 				// compute new date
-				newDate = curDate.slice(0, datePos) + event.key + curDate.slice(datePos);
+				const newDate = curDate.slice(0, datePos) + event.key + curDate.slice(datePos);
 				event.target.value = addSlashes(newDate);
 				const nextPos = [1,2,4,5].some(x => x === textPos) ? textPos + 2 : textPos + 1;
 				event.target.selectionStart = nextPos;
