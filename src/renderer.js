@@ -79,20 +79,15 @@ const setupTooltips = () => {
 
 const onDOMContentLoaded = () => {
 	setupTooltips();
+	/* variables */
+	let page = 0;
 	const [verifyButton, topButton, urlBox, textarea, reportButton, reportLabel, nextButton, prevButton] = getElementsByIds(['verify-button', 'top-button', 'url-box', 'report', 'report-button', 'report-label',  'button-next', 'button-prev']);
 	const [formLabel, formName, formSurname, formBirthdate, formBirthplace, formFisccode, formAddress] = getElementsByIds(['form-label', 'form-name', 'form-surname', 'form-birthdate', 'form-birthplace', 'form-fisccode', 'form-address']);
 	const [formPhone, formPaddr, formEmail, formFax] = getElementsByIds(['form-phone', 'form-paddr', 'form-email', 'form-fax']);
 	const [checkPhone, checkPaddr, checkEmail, checkFax] = getElementsByIds(['check-phone', 'check-paddr', 'check-email', 'check-fax']);
-	verifyButton.addEventListener('click', () => {
-		hideComponent(document.getElementById('main'));
-		showComponent(document.getElementById('top-bar'));
-	});
-	urlBox.addEventListener('input', (event) => {
-		if(event.target.value.length === 0)
-			disable(topButton);
-		else 
-			enable(topButton);
-	});
+	const pageValid = [false, false, false, false];
+
+	/* functions */
 	const onClickStart = (event) => {
 		// run only the 1st time
 		const URL = urlBox.value; 
@@ -108,10 +103,6 @@ const onDOMContentLoaded = () => {
 			topButton.removeEventListener('click', onClickStart);
 		}
 	};
-	topButton.addEventListener('click', onClickStart); 
-
-	let page = 0;
-	const pageValid = [false, false, false, false];
 
 	const validateForm = () => {
 		switch(page){
@@ -154,6 +145,33 @@ const onDOMContentLoaded = () => {
 		}
 	};
 
+	const formHandler = () => {
+		const err = validateForm();
+		if(err){
+			pageValid[page] = false;
+			disable(nextButton);
+			nextButton.setAttribute('tooltip', err);
+		} else {
+			pageValid[page] = true;
+			enable(nextButton);
+		}
+	};
+
+	/* event listeners */
+	verifyButton.addEventListener('click', () => {
+		hideComponent(document.getElementById('main'));
+		showComponent(document.getElementById('top-bar'));
+	});
+
+	urlBox.addEventListener('input', (event) => {
+		if(event.target.value.length === 0)
+			disable(topButton);
+		else 
+			enable(topButton);
+	});
+
+	topButton.addEventListener('click', onClickStart); 
+
 	// add event listeners to checkboxes
 	['phone', 'paddr', 'email', 'fax'].forEach((field) => {
 		const checkBox = document.getElementById(`check-${field}`);	
@@ -166,18 +184,6 @@ const onDOMContentLoaded = () => {
 			}
 		});
 	});
-
-	const formHandler = () => {
-		const err = validateForm();
-		if(err){
-			pageValid[page] = false;
-			disable(nextButton);
-			nextButton.setAttribute('tooltip', err);
-		} else {
-			pageValid[page] = true;
-			enable(nextButton);
-		}
-	};
 
 	formName.addEventListener('input', formHandler);
 	formSurname.addEventListener('input', formHandler);
