@@ -105,12 +105,12 @@ const onDOMContentLoaded = () => {
 	};
 
 	const validateForm = () => {
+		let err = undefined;
 		switch(page){
 			case 0:
 				// first remove invalid from all form elements
 				[formName, formSurname, formBirthdate, formBirthplace, formFisccode, formAddress].forEach(target => target.classList.remove('invalid'));
 				// then possibly re-add invalid and display error tooltip above next button
-				let err = undefined;
 				if(formAddress.value.length === 0){
 					formAddress.classList.add('invalid');
 					err = "Riempi tutti i campi";
@@ -137,11 +137,13 @@ const onDOMContentLoaded = () => {
 				}
 				return err;
 			case 1:
-				break;
+				return err;
 			case 2:
-				break;
+				return err;
 			case 3:
-				break;
+				return err;
+			default:
+				return err;
 		}
 	};
 
