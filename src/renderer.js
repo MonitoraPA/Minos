@@ -7,42 +7,8 @@
  * conditions of the Hacking License (see licenses/HACK.txt)
  */ 
 
-import {strings} from './strings.js';
-
-const disableInput = (input) => {
-	input.classList.remove('enabled');
-	input.classList.add('disabled');
-	input.disabled = true;
-};
-
-const enableInput = (input) => {
-	input.classList.add('enabled');
-	input.classList.remove('disabled');
-	input.disabled = false;
-}
-
-const hideComponent = (component) => {
-	component.classList.add('hidden');
-};
-
-const showComponent = (component) => {
-	component.classList.remove('hidden');
-};
-
-const enable = (component) => { component.classList.remove('disabled'); }
-const disable = (component) => { component.classList.add('disabled'); }
-
-const isLetter = (key) => { return key.length === 1 && (key.charCodeAt(0) >= 'A'.charCodeAt(0) && key.charCodeAt(0) <= 'Z'.charCodeAt(0)) || (key.charCodeAt(0) >= 'a'.charCodeAt(0) && key.charCodeAt(0) <= 'z'.charCodeAt(0)) };
-const isDigit = (key) => { return key.length === 1 && (key.charCodeAt(0) >= '0'.charCodeAt(0) && key.charCodeAt(0) <= '9'.charCodeAt(0)) };
-
-// convenience function to get more elements at once
-const getElementsByIds = (names) => {
-	const result = [];
-	for(const n of names){
-		result.push(document.getElementById(n));
-	}
-	return result;
-};
+import { strings } from './modules/strings.js';
+import { enable, disable, isLetter, isDigit, disableInput, hideComponent, showComponent, getElementsByIds } from './modules/util.js';
 
 const setupTooltips = () => {
 	for(const button of document.getElementsByTagName('button')){
@@ -82,7 +48,7 @@ const onDOMContentLoaded = () => {
 	setupTooltips();
 	/* variables */
 	let page = 0;
-	const [verifyButton, topButton, urlBox, textarea, reportButton, reportLabel, nextButton, prevButton] = getElementsByIds(['verify-button', 'top-button', 'url-box', 'report', 'report-button', 'report-label',  'button-next', 'button-prev']);
+	const [mainButton, topButton, urlBox, textarea, reportButton, reportLabel, nextButton, prevButton] = getElementsByIds(['main-button', 'top-button', 'url-box', 'report', 'report-button', 'report-label',  'button-next', 'button-prev']);
 	const [formLabel, formName, formSurname, formBirthdate, formBirthplace, formFisccode, formAddress] = getElementsByIds(['form-label', 'form-name', 'form-surname', 'form-birthdate', 'form-birthplace', 'form-fisccode', 'form-address']);
 	const [formPhone, formPaddr, formEmail, formFax] = getElementsByIds(['form-phone', 'form-paddr', 'form-email', 'form-fax']);
 	const [checkPhone, checkPaddr, checkEmail, checkFax] = getElementsByIds(['check-phone', 'check-paddr', 'check-email', 'check-fax']);
@@ -94,17 +60,20 @@ const onDOMContentLoaded = () => {
 		const URL = urlBox.value; 
 		if(URL.length !== 0){
 			window.electronAPI.start(URL);
-			const topButton = event.target;
-			topButton.innerText = strings.buttons.topButton.analyze;
+			const button = event.target;
+			button.innerText = strings.components.topBar.button.analyze;
 			disableInput(urlBox);
 			// clicked for the 2nd time (analyze)
-			topButton.addEventListener('click', () => {
+			button.addEventListener('click', () => {
 				window.electronAPI.analyze();
 			}, { once: true });
-			topButton.removeEventListener('click', onClickStart);
+			button.removeEventListener('click', onClickStart);
 		}
 	};
 
+	// return err, which is used to determine whether a given 
+	// page is valid or not and possibly it is displayed as tooltip
+	// above the nextButton
 	const validateForm = () => {
 		let err = undefined;
 		switch(page){
@@ -169,7 +138,7 @@ const onDOMContentLoaded = () => {
 	};
 
 	/* event listeners */
-	verifyButton.addEventListener('click', () => {
+	mainButton.addEventListener('click', () => {
 		hideComponent(document.getElementById('main'));
 		showComponent(document.getElementById('top-bar'));
 	});
@@ -270,7 +239,7 @@ const onDOMContentLoaded = () => {
 				showComponent(document.getElementById('form-fields-2'));
 				showComponent(prevButton);
 				enable(prevButton);
-				formLabel.innerText = strings.formPageTitles[1];
+				formLabel.innerText = strings.components.form.pages[1];
 				nextButton.setAttribute('tooltip', strings.err.missingContact);
 				page++;
 				break;
@@ -295,7 +264,7 @@ const onDOMContentLoaded = () => {
 				hideComponent(document.getElementById('form-fields-2'));
 				showComponent(document.getElementById('form-fields-1'));
 				hideComponent(prevButton);
-				formLabel.innerText = strings.pages.page1;
+				formLabel.innerText = strings.components.form.pages[0];
 				page--;
 				break;
 			case 2:
@@ -314,7 +283,7 @@ const onDOMContentLoaded = () => {
 		showComponent(document.getElementById('report-container'));
 		reportLabel.innerText += " " + data.logfile + ". ";
 		if(data.requests.length > 0){
-			reportLabel.innerText += `\r\n${strings.report.badHostsDetected}`
+			reportLabel.innerText += `\r\n${strings.components.report.badHostsDetected}`
 			textarea.value = data.requests
 				.map(d => d.hosts.source + ": " + d.hosts.values.map(v => String(v)).join()) // transform into string
 				.filter((val, idx, arr) => arr.indexOf(val) === idx) // remove duplicates
@@ -324,7 +293,7 @@ const onDOMContentLoaded = () => {
 				showComponent(document.getElementById('form-container'))
 			});
 		} else {
-			reportLabel.innerText += `\r\n${strings.report.noBadHostsDetected}`
+			reportLabel.innerText += `\r\n${strings.components.report.noBadHostsDetected}`
 			hideComponent(textarea);
 			hideComponent(reportButton);
 		}

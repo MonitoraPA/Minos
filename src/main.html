@@ -13,6 +13,7 @@ conditions of the Hacking License (see licenses/HACK.txt)
 		<meta charset="UTF-8">
 		<title>Main</title>
 		<link rel="stylesheet" href="style.css">
+		<script type='module' src='textsetup.js' defer></script>
 		<script type='module' src='renderer.js' defer></script>
 	</head>
 
@@ -20,85 +21,79 @@ conditions of the Hacking License (see licenses/HACK.txt)
 		<!-- top-bar -->
 		<div id='top-bar' class='hidden grid'>
 			<input type='text' class='enabled box' id='url-box' placeholder="inserisci l'indirizzo"></input>
-			<button class='button disabled' id='top-button' tooltip='Inserisci un URL per proseguire'>
-				Inizia
-			</button>
+			<button class='button disabled' id='top-button'></button>
 		</div>
 		<!-- main page -->
 		<div id='main' class='center grid'>
-			<h1 class='main-title'>Minos</h1>
-			<button class='button' id='verify-button'>Verifica sito web</button>
+			<h1 id='main-title'></h1>
+			<button class='button' id='main-button'></button>
 		</div>
 		<!-- report -->
 		<div id='report-container' class='hidden center grid'>
-			<div class='label' id='report-label'>Il log della navigazione è stato salvato nel file: </div>
+			<div class='label' id='report-label'></div>
 			<textarea rows='40' cols='50' id='report' class='box' autocomplete="off" autocapitalize="off" spellcheck="false" readonly placeholder='Report'></textarea>
-			<button class='button' id='report-button'>Reclama al Garante</button>
+			<button class='button' id='report-button'></button>
 		</div>
 		<!-- form -->
 		<div id='form-container' class='hidden center'>
-			<div id='form-title'>Inserisci le informazioni necessarie per sporgere reclamo:</div>
+			<div id='form-title'></div>
 			<div>
-				<span id='form-label'>Dati anagrafici</span>
+				<span id='form-label'></span>
 				<hr></hr>
 			</div>
 			<div id='form-fields-1' class='grid'>
-				<label class='label'>Nome</label>
+				<label id='form-name-label' class='label'></label>
 				<input id='form-name' type='text' class='form-input' placeholder='Nome'></input>
-				<label class='label'>Cognome</label>
+				<label id='form-surname-label' class='label'></label>
 				<input id='form-surname' type='text' class='form-input' placeholder='Cognome'></input>
-				<label class='label'>Data di nascita</label>
+				<label id='form-birthdate-label' class='label'></label>
 				<input id='form-birthdate' type='text' class='form-input' placeholder='GG/MM/AAAA'></input>
-				<label class='label'>Luogo di nascita</label>
+				<label id='form-birthplace-label' class='label'></label>
 				<input id='form-birthplace' type='text' class='form-input' placeholder='Luogo di nascita'></input>
-				<label class='label'>Codice Fiscale</label>
+				<label id='form-fisccode-label' class='label'></label>
 				<input id='form-fisccode' type='text' class='form-input' placeholder='Codice Fiscale'></input>
-				<label class='label'>Residenza</label>
+				<label id='form-address-label' class='label'></label>
 				<input id='form-address' type='text' class='form-input' placeholder='Residenza'></input>
 			</div>
 			<div id='form-fields-2' class='grid hidden'>
 				<span id='form-checkboxes' class='grid'>
 					<span>
-						<input type='checkbox' id='check-phone' name='check-phone' value='Telefono'>
-						<label for='check-phone'>Telefono</label>
+						<input type='checkbox' id='check-phone' name='check-phone' value='phone'>
+						<label id='check-phone-label' for='check-phone'></label>
 					</span>
 					<span>
-						<input type='checkbox' id='check-paddr' name='check-paddr' value='Indirizzo fisico'>
-						<label for='check-paddr'>Indirizzo</label>
+						<input type='checkbox' id='check-paddr' name='check-paddr' value='paddr'>
+						<label id='check-paddr-label' for='check-paddr'></label>
 					</span>
 					<span>
-						<input type='checkbox' id='check-email' name='check-email' value='Email'>
-						<label for='check-email'>Email</label>
+						<input type='checkbox' id='check-email' name='check-email' value='email'>
+						<label id='check-email-label' for='check-email'></label>
 					</span>
 					<span>
-						<input type='checkbox' id='check-fax' name='check-fax' value='Fax'>
-						<label for='check-fax'>Fax</label>
+						<input type='checkbox' id='check-fax' name='check-fax' value='fax'>
+						<label id='check-fax-label' for='check-fax'></label>
 					</span>
 				</span>
 				<div class='grid hidden' id='phone-container'>
-					<label class='label'>Telefono</label>
+					<label id='form-phone-label' class='label'></label>
 					<input id='form-phone' type='text' class='form-input' placeholder='Telefono'></input>
 				</div>
 				<div class='grid hidden' id='paddr-container'>
-					<label class='label'>Indirizzo fisico</label>
+					<label id='form-paddr-label' class='label'></label>
 					<input id='form-paddr' type='text' class='form-input' placeholder='Indirizzo fisico'></input>
 				</div>
 				<div class='grid hidden' id='email-container'>
-					<label class='label'>Email</label>
+					<label id='form-email-label' class='label'></label>
 					<input id='form-email' type='text' class='form-input' placeholder='Email'></input>
 				</div>
 				<div class='grid hidden' id='fax-container'>
-					<label class='label'>Fax</label>
+					<label id='form-fax-label' class='label'></label>
 					<input id='form-fax' type='text' class='form-input' placeholder='Fax'></input>
 				</div>
 			</div>
 			<div id='form-buttons' class='grid'>
-				<button id='button-prev' class='button disabled hidden'>
-					Indietro
-				</button>
-				<button id='button-next' class='button disabled' tooltip='completa il form con i dati mancanti'>
-					Avanti
-				</button>
+				<button id='button-prev' class='button disabled hidden'></button>
+				<button id='button-next' class='button disabled'></button>
 			</div>
 		</div>
 	</body>
