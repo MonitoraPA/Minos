@@ -7,6 +7,7 @@
  * conditions of the Hacking License (see licenses/HACK.txt)
  */ 
 
+import {strings} from './strings.js';
 
 const disableInput = (input) => {
 	input.classList.remove('enabled');
@@ -36,7 +37,7 @@ const isDigit = (key) => { return key.length === 1 && (key.charCodeAt(0) >= '0'.
 
 // convenience function to get more elements at once
 const getElementsByIds = (names) => {
-	result = [];
+	const result = [];
 	for(const n of names){
 		result.push(document.getElementById(n));
 	}
@@ -94,7 +95,7 @@ const onDOMContentLoaded = () => {
 		if(URL.length !== 0){
 			window.electronAPI.start(URL);
 			const topButton = event.target;
-			topButton.innerText = "Analizza"; // TODO: move labels into config file
+			topButton.innerText = strings.buttons.topButton.analyze;
 			disableInput(urlBox);
 			// clicked for the 2nd time (analyze)
 			topButton.addEventListener('click', () => {
@@ -113,30 +114,38 @@ const onDOMContentLoaded = () => {
 				// then possibly re-add invalid and display error tooltip above next button
 				if(formAddress.value.length === 0){
 					formAddress.classList.add('invalid');
-					err = "Riempi tutti i campi";
+					err = strings.err.emptyField;
 				}
 				if(!formFisccode.value.match(/[A-Z]{3}[A-Z]{3}[0-9]{2}[ABCDEHLMPRST]((0[1-9]|[1-2][0-9]|3[0-1])|([4-6][1-9]|7[0-1]))[A-Z][0-9]{3}[A-Z]/g)){
 					formFisccode.classList.add('invalid');
-					err = "Inserisci un codice fiscale valido";
+					err = strings.err.invalidFiscCode;
 				}
 				if(formBirthplace.value.length === 0){
 					formBirthplace.classList.add('invalid');
-					err = "Riempi tutti i campi";
+					err = strings.err.emptyField;
 				}
 				if(!formBirthdate.value.match(/((0[1-9]|1[0-9]|2[0-9]|30)\/(04|06|09|11)\/([1-2][0-9]{3}))|((0[1-9]|1[0-9]|2[0-9])\/02\/([1-2][0-9]{3}))|((0[1-9]|1[0-9]|2[0-9]|3[0-1])\/(01|03|05|07|08|10|12)\/([1-2][0-9]{3}))/g)){
 					formBirthdate.classList.add('invalid');
-					err = "Inserisci una data di nascita valida";
+					err = strings.err.invalidBirthDate;
 				}
 				if(formSurname.value.length === 0){
 					formSurname.classList.add('invalid');
-					err = "Riempi tutti i campi";
+					err = strings.err.emptyField;
 				}
 				if(formName.value.length === 0){
 					formName.classList.add('invalid');
-					err = "Riempi tutti i campi";
+					err = strings.err.emptyField;
 				}
 				return err;
 			case 1:
+				// if none checked => error
+				if([checkPhone, checkPaddr, checkEmail, checkFax].every(checkbox => !checkbox.checked))
+					err = strings.err.missingContact;
+				['phone', 'paddr', 'email', 'fax'].forEach((field) => {
+					const checkBox = document.getElementById(`check-${field}`);	
+					const formComponent = document.getElementById(`form-${field}`);
+
+				});
 				return err;
 			case 2:
 				return err;
@@ -261,8 +270,8 @@ const onDOMContentLoaded = () => {
 				showComponent(document.getElementById('form-fields-2'));
 				showComponent(prevButton);
 				enable(prevButton);
-				formLabel.innerText = "Recapito"
-				nextButton.setAttribute('tooltip', 'Seleziona almeno un recapito');
+				formLabel.innerText = strings.formPageTitles[1];
+				nextButton.setAttribute('tooltip', strings.err.missingContact);
 				page++;
 				break;
 			case 1:
@@ -286,7 +295,7 @@ const onDOMContentLoaded = () => {
 				hideComponent(document.getElementById('form-fields-2'));
 				showComponent(document.getElementById('form-fields-1'));
 				hideComponent(prevButton);
-				formLabel.innerText = "Dati anagrafici";
+				formLabel.innerText = strings.pages.page1;
 				page--;
 				break;
 			case 2:
@@ -305,7 +314,7 @@ const onDOMContentLoaded = () => {
 		showComponent(document.getElementById('report-container'));
 		reportLabel.innerText += " " + data.logfile + ". ";
 		if(data.requests.length > 0){
-			reportLabel.innerText += "\r\nDurante la navigazione sono stati individuati trasferimenti illeciti verso questi hosts:"
+			reportLabel.innerText += `\r\n${strings.report.badHostsDetected}`
 			textarea.value = data.requests
 				.map(d => d.hosts.source + ": " + d.hosts.values.map(v => String(v)).join()) // transform into string
 				.filter((val, idx, arr) => arr.indexOf(val) === idx) // remove duplicates
@@ -315,7 +324,7 @@ const onDOMContentLoaded = () => {
 				showComponent(document.getElementById('form-container'))
 			});
 		} else {
-			reportLabel.innerText += "\r\nNon sono stati individuati trasferimenti illeciti durante la navigazione."
+			reportLabel.innerText += `\r\n${strings.report.noBadHostsDetected}`
 			hideComponent(textarea);
 			hideComponent(reportButton);
 		}
