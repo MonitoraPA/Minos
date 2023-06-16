@@ -9,6 +9,7 @@
 
 import { strings } from './modules/strings.js';
 import { enable, disable, isLetter, isDigit, disableInput, hideComponent, showComponent, getElementsByIds } from './modules/util.js';
+import { setupText } from './modules/setuptext.js';
 
 const setupTooltips = () => {
 	for(const button of document.getElementsByTagName('button')){
@@ -45,6 +46,7 @@ const setupTooltips = () => {
 };
 
 const onDOMContentLoaded = () => {
+	setupText();
 	setupTooltips();
 	/* variables */
 	let page = 0;
