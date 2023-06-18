@@ -8,6 +8,7 @@
  */ 
 
 import { strings } from './strings.js';
+import { getElementsByIds } from './util.js';
 
 export const setupText = () => {
 	// setup text within the whole page
@@ -55,6 +56,10 @@ export const setupText = () => {
 	document.getElementById('form-email').setAttribute('placeholder', strings.components.form.fields.email.placeholder);
 	document.getElementById('form-fax').setAttribute('placeholder', strings.components.form.fields.fax.placeholder);
 
-	document.getElementById('button-next').innerText = strings.components.form.buttons.next;
-	document.getElementById('button-prev').innerText = strings.components.form.buttons.prev;
+	const [nextButton, prevButton] = getElementsByIds(['button-next', 'button-prev']);
+	nextButton.innerText = strings.components.form.buttons.next;
+	prevButton.innerText = strings.components.form.buttons.prev;
+
+	nextButton.setAttribute('tooltip', strings.err.emptyField);
+
 };
