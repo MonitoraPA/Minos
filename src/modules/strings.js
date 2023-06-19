@@ -57,6 +57,9 @@ export const strings = {
 		emptyField: "Riempi tutti i campi",
 		invalidFiscCode: "Inserisci un codice fiscale valido",
 		invalidBirthDate: "Inserisci una data di nascita valida",
-		missingContact: "Seleziona almeno un recapito"
+		missingContact: "Seleziona almeno un recapito",
+		invalidPhone: "Inserisci un numero di telefono valido",
+		invalidEmail: "Inserisci un indirizzo email valido",
+		invalidFax: "Inserisci un numero di fax valido"
 	}
 };

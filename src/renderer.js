@@ -45,6 +45,14 @@ const setupTooltips = () => {
 	}
 };
 
+const isSpecialKey = (code) => { return ["Tab", "Backspace", "Delete", "ArrowLeft", "ArrowRight"].some(x => x === code); };
+const insertKey = (key, target) => { 
+	const curPos = target.selectionStart;
+	target.value = target.value.slice(0, curPos) + key + target.value.slice(curPos);
+	target.selectionStart = curPos + 1;
+	target.selectionEnd = curPos + 1;
+ };
+
 const onDOMContentLoaded = () => {
 	setupText();
 	setupTooltips();
@@ -109,14 +117,25 @@ const onDOMContentLoaded = () => {
 				}
 				return err;
 			case 1:
-				// if none checked => error
+				// if none checked
 				if([checkPhone, checkPaddr, checkEmail, checkFax].every(checkbox => !checkbox.checked))
-					err = strings.err.missingContact;
-				['phone', 'paddr', 'email', 'fax'].forEach((field) => {
-					const checkBox = document.getElementById(`check-${field}`);	
-					const formComponent = document.getElementById(`form-${field}`);
-
-				});
+					return strings.err.missingContact;
+				if(checkFax.checked && !formFax.value.match(/\d{9,10}/g)){
+					formFax.classList.add('invalid');
+					err = strings.err.invalidFax;
+				}
+				if(checkEmail.checked && !formEmail.match(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)){
+					formEmail.classList.add('invalid');
+					err = strings.err.invalidEmail;
+				}
+				if(checkPaddr.checked && formPaddr.value.length === 0){
+					formPaddr.classList.add('invalid');
+					err = strings.err.emptyField;
+				}
+				if(checkPhone.checked && !formPhone.value.match(/\d{9,10}/g)){
+					formPhone.classList.add('invalid');
+					err = strings.err.invalidPhone;
+				}
 				return err;
 			case 2:
 				return err;
@@ -167,6 +186,15 @@ const onDOMContentLoaded = () => {
 		});
 	});
 
+	formPhone.addEventListener('keydown', (event) => {
+		if(!isSpecialKey(event.code)){
+			event.preventDefault();
+			// insert only numbers
+			if(event.target.value.length < 10 && isDigit(event.key))
+				insertKey(event.key, event.target);
+		} 
+	});
+
 	formName.addEventListener('input', formHandler);
 	formSurname.addEventListener('input', formHandler);
 	formFisccode.addEventListener('input', formHandler);
@@ -175,16 +203,10 @@ const onDOMContentLoaded = () => {
 	formBirthdate.addEventListener('input', formHandler);
 	formFisccode.addEventListener('keydown', (event) => {
 		// insert only uppercase letters
-		if(event.code !== "Tab" && event.code !== "Backspace" && event.code !== "ArrowLeft" && event.code !== "ArrowRight"){
-			if(event.target.value.length < 16 && (isLetter(event.key) || isDigit(event.key))){
-				event.preventDefault();
-				const curPos = event.target.selectionStart;
-				event.target.value = event.target.value.slice(0, curPos) + event.key.toUpperCase() + event.target.value.slice(curPos);
-				event.target.selectionStart = curPos + 1;
-				event.target.selectionEnd = curPos + 1;
-			} else {
-				event.preventDefault();
-			}
+		if(!isSpecialKey(event.code)){
+			event.preventDefault();
+			if(event.target.value.length < 16 && (isLetter(event.key) || isDigit(event.key)))
+				insertKey(event.key.toUpperCase(), event.target);
 		} 
 		formHandler();
 	});
@@ -211,7 +233,7 @@ const onDOMContentLoaded = () => {
 			const nextPos = [3,6].some(x => x === textPos) ? textPos - 2 : textPos - 1;
 			event.target.selectionStart = nextPos;
 			event.target.selectionEnd = nextPos;
-		} else if(event.code !== "Tab" && event.code !== "Backspace" && event.code !== "ArrowLeft" && event.code !== "ArrowRight"){
+		} else if(!isSpecialKey(event.code)){
 			event.preventDefault();
 			// only allow numbers
 			if(Array.from(Array(10).keys()).map(x => String(x)).some(x => x === event.key) && curDate.length < 8){
