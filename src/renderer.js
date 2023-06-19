@@ -186,14 +186,21 @@ const onDOMContentLoaded = () => {
 		});
 	});
 
-	formPhone.addEventListener('keydown', (event) => {
+	// event listener for fax and phone number
+	const numberEventListener = (event) => {
 		if(!isSpecialKey(event.code)){
 			event.preventDefault();
 			// insert only numbers
 			if(event.target.value.length < 10 && isDigit(event.key))
 				insertKey(event.key, event.target);
 		} 
-	});
+		formHandler();
+	};
+
+	formPhone.addEventListener('keydown', numberEventListener);
+	formPaddr.addEventListener('input', formHandler);
+	formEmail.addEventListener('input', formHandler);
+	formFax.addEventListener('keydown', numberEventListener);
 
 	formName.addEventListener('input', formHandler);
 	formSurname.addEventListener('input', formHandler);
