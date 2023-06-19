@@ -120,21 +120,29 @@ const onDOMContentLoaded = () => {
 				// if none checked
 				if([checkPhone, checkPaddr, checkEmail, checkFax].every(checkbox => !checkbox.checked))
 					return strings.err.missingContact;
-				if(checkFax.checked && !formFax.value.match(/\d{9,10}/g)){
+				if(checkFax.checked && !formFax.value.match(/^\d{9,10}$/g)){
 					formFax.classList.add('invalid');
 					err = strings.err.invalidFax;
+				} else {
+					formFax.classList.remove('invalid');
 				}
-				if(checkEmail.checked && !formEmail.match(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)){
+				if(checkEmail.checked && !formEmail.value.match(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)){
 					formEmail.classList.add('invalid');
 					err = strings.err.invalidEmail;
+				} else {
+					formEmail.classList.remove('invalid');
 				}
 				if(checkPaddr.checked && formPaddr.value.length === 0){
 					formPaddr.classList.add('invalid');
 					err = strings.err.emptyField;
+				} else {
+					formPaddr.classList.remove('invalid');
 				}
-				if(checkPhone.checked && !formPhone.value.match(/\d{9,10}/g)){
+				if(checkPhone.checked && !formPhone.value.match(/^\d{9,10}$/g)){
 					formPhone.classList.add('invalid');
 					err = strings.err.invalidPhone;
+				} else {
+					formPhone.classList.remove('invalid');
 				}
 				return err;
 			case 2:
@@ -183,6 +191,7 @@ const onDOMContentLoaded = () => {
 			} else {
 				hideComponent(container);
 			}
+			formHandler();
 		});
 	});
 
