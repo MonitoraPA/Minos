@@ -146,7 +146,8 @@ const onDOMContentLoaded = () => {
 				}
 				return err;
 			case 2:
-				return err;
+				if(getElementsByIds(['check-decl-1', 'check-decl-2', 'check-decl-3']).every(checkbox => !checkbox.checked))
+					return strings.err.missingOption;
 			case 3:
 				return err;
 			default:
@@ -180,6 +181,9 @@ const onDOMContentLoaded = () => {
 	});
 
 	topButton.addEventListener('click', onClickStart); 
+
+	getElementsByIds(['check-decl-1', 'check-decl-2', 'check-decl-3'])
+    	.forEach((checkbox) => { checkbox.addEventListener('change', formHandler); });
 
 	// add event listeners to checkboxes
 	['phone', 'paddr', 'email', 'fax'].forEach((field) => {
@@ -284,6 +288,13 @@ const onDOMContentLoaded = () => {
 				page++;
 				break;
 			case 1:
+				hideComponent(document.getElementById('form-fields-2'));
+				showComponent(document.getElementById('form-fields-3'));
+				showComponent(prevButton);
+				enable(prevButton);
+				formLabel.innerText = strings.components.form.pages[2];
+				nextButton.setAttribute('tooltip', strings.err.missingOption);
+				page++;
 				break;
 			case 2:
 				break;
@@ -308,6 +319,10 @@ const onDOMContentLoaded = () => {
 				page--;
 				break;
 			case 2:
+				hideComponent(document.getElementById('form-fields-3'));
+				showComponent(document.getElementById('form-fields-2'));
+				formLabel.innerText = strings.components.form.pages[1];
+				page--;
 				break;
 			case 3:
 				break;

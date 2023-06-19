@@ -45,7 +45,10 @@ export const strings = {
 				phone: {label: 'Telefono', placeholder: 'Telefono'},
 				paddr: {label: 'Indirizzo', placeholder: 'Indirizzo'},
 				email: {label: 'Email', placeholder: 'Email'},
-				fax: {label: 'Fax', placeholder: 'Fax'}
+				fax: {label: 'Fax', placeholder: 'Fax'},
+				decl_1: {label: 'La Repubblica Italiana è lo stato membro in cui risiedo abitualmente'},
+				decl_2: {label: 'La Repubblica Italiana è lo stato membro in cui lavoro'},
+				decl_3: {label: 'La violazione si è verificata mentre ero fisicamente presente sul suolo della Repubblica Italiana'}
 			},
 			buttons: {
 				next: "Avanti",
@@ -60,6 +63,7 @@ export const strings = {
 		missingContact: "Seleziona almeno un recapito",
 		invalidPhone: "Inserisci un numero di telefono valido",
 		invalidEmail: "Inserisci un indirizzo email valido",
-		invalidFax: "Inserisci un numero di fax valido"
+		invalidFax: "Inserisci un numero di fax valido",
+		missingOption: "Seleziona almeno un'opzione"
 	}
 };
