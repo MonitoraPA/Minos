@@ -62,6 +62,8 @@ const onDOMContentLoaded = () => {
 	const [formLabel, formName, formSurname, formBirthdate, formBirthplace, formFisccode, formAddress] = getElementsByIds(['form-label', 'form-name', 'form-surname', 'form-birthdate', 'form-birthplace', 'form-fisccode', 'form-address']);
 	const [formPhone, formPaddr, formEmail, formFax] = getElementsByIds(['form-phone', 'form-paddr', 'form-email', 'form-fax']);
 	const [checkPhone, checkPaddr, checkEmail, checkFax] = getElementsByIds(['check-phone', 'check-paddr', 'check-email', 'check-fax']);
+	const [radioSign1, radioSign2] = getElementsByIds(['radio-sign-1', 'radio-sign-2']);
+	const [buttonSignature, buttonIdPhoto] = getElementsByIds(['sign-button', 'idphoto-button']);
 	const pageValid = [false, false, false, false];
 
 	/* functions */
@@ -181,6 +183,19 @@ const onDOMContentLoaded = () => {
 	});
 
 	topButton.addEventListener('click', onClickStart); 
+
+	radioSign1.addEventListener('change', (event) => {
+		if(event.target.checked){
+			radioSign2.checked = false;
+			showComponent(buttonSignature);
+		}
+	});
+	radioSign2.addEventListener('change', (event) => {
+		if(event.target.checked){
+			radioSign1.checked = false;
+			hideComponent(buttonSignature);
+		}
+	})
 
 	getElementsByIds(['check-decl-1', 'check-decl-2', 'check-decl-3'])
     	.forEach((checkbox) => { checkbox.addEventListener('change', formHandler); });

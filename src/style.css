@@ -255,5 +255,6 @@ body {
 
 #form-sign-photo-buttons {
 	grid-template-columns: 1fr 1fr;
+	padding-top: var(--distance-big);
 	padding-bottom: var(--distance-big);
 }
