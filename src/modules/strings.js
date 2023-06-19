@@ -48,11 +48,16 @@ export const strings = {
 				fax: {label: 'Fax', placeholder: 'Fax'},
 				decl_1: {label: 'La Repubblica Italiana è lo stato membro in cui risiedo abitualmente'},
 				decl_2: {label: 'La Repubblica Italiana è lo stato membro in cui lavoro'},
-				decl_3: {label: 'La violazione si è verificata mentre ero fisicamente presente sul suolo della Repubblica Italiana'}
+				decl_3: {label: 'La violazione si è verificata mentre ero fisicamente presente sul suolo della Repubblica Italiana'},
+				signature_1 : {label: 'Firma autografa'},
+				signature_2 : {label: 'Firmerò digitalmente il reclamo'}
 			},
 			buttons: {
 				next: "Avanti",
-				prev: "Indietro"
+				prev: "Indietro",
+				submit: "Genera il reclamo",
+				signature: "Carica foto della firma",
+				idphoto: "Carica documento di identità fronte/retro"
 			}
 		}
 	},
@@ -64,6 +69,7 @@ export const strings = {
 		invalidPhone: "Inserisci un numero di telefono valido",
 		invalidEmail: "Inserisci un indirizzo email valido",
 		invalidFax: "Inserisci un numero di fax valido",
-		missingOption: "Seleziona almeno un'opzione"
+		missingOption: "Seleziona almeno un'opzione",
+		missingData: "Completa il form con i dati mancanti"
 	}
 };

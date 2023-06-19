@@ -297,8 +297,15 @@ const onDOMContentLoaded = () => {
 				page++;
 				break;
 			case 2:
+				hideComponent(document.getElementById('form-fields-3'));
+				showComponent(document.getElementById('form-fields-4'));
+				showComponent(prevButton);
+				enable(prevButton);
+				formLabel.innerText = strings.components.form.pages[3];
+				nextButton.setAttribute('tooltip', strings.err.missingData);
+				page++;
 				break;
-			case 3:
+			case 3: // next button becomes submit
 				break;
 		}
 	});
@@ -310,23 +317,12 @@ const onDOMContentLoaded = () => {
 			enable(nextButton);
 		else
 			disable(nextButton);
-		switch(page){
-			case 1:
-				hideComponent(document.getElementById('form-fields-2'));
-				showComponent(document.getElementById('form-fields-1'));
-				hideComponent(prevButton);
-				formLabel.innerText = strings.components.form.pages[0];
-				page--;
-				break;
-			case 2:
-				hideComponent(document.getElementById('form-fields-3'));
-				showComponent(document.getElementById('form-fields-2'));
-				formLabel.innerText = strings.components.form.pages[1];
-				page--;
-				break;
-			case 3:
-				break;
-		}
+		if(page === 1)
+			hideComponent(prevButton);
+		hideComponent(document.getElementById(`form-fields-${page + 1}`));
+		showComponent(document.getElementById(`form-fields-${page}`));
+		formLabel.innerText = strings.components.form.pages[page - 1];
+		page--;	
 	});
 
 	// on page navigation, update the URL in the urlBox

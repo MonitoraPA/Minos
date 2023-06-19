@@ -56,9 +56,14 @@ export const setupText = () => {
 	document.getElementById('form-email').setAttribute('placeholder', strings.components.form.fields.email.placeholder);
 	document.getElementById('form-fax').setAttribute('placeholder', strings.components.form.fields.fax.placeholder);
 
-	document.getElementById('form-decl-1').innerText = strings.components.form.fields.decl_1.label;
-	document.getElementById('form-decl-2').innerText = strings.components.form.fields.decl_2.label;
-	document.getElementById('form-decl-3').innerText = strings.components.form.fields.decl_3.label;
+	document.getElementById('form-decl-1-label').innerText = strings.components.form.fields.decl_1.label;
+	document.getElementById('form-decl-2-label').innerText = strings.components.form.fields.decl_2.label;
+	document.getElementById('form-decl-3-label').innerText = strings.components.form.fields.decl_3.label;
+
+	document.getElementById('form-sign-1-label').innerText = strings.components.form.fields.signature_1.label;
+	document.getElementById('form-sign-2-label').innerText = strings.components.form.fields.signature_2.label;
+	document.getElementById('sign-button').innerText = strings.components.form.buttons.signature;
+	document.getElementById('idphoto-button').innerText = strings.components.form.buttons.idphoto;
 
 	const [nextButton, prevButton] = getElementsByIds(['button-next', 'button-prev']);
 	nextButton.innerText = strings.components.form.buttons.next;
