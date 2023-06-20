@@ -63,7 +63,7 @@ const onDOMContentLoaded = () => {
 	const [formPhone, formPaddr, formEmail, formFax] = getElementsByIds(['form-phone', 'form-paddr', 'form-email', 'form-fax']);
 	const [checkPhone, checkPaddr, checkEmail, checkFax] = getElementsByIds(['check-phone', 'check-paddr', 'check-email', 'check-fax']);
 	const [radioSign1, radioSign2] = getElementsByIds(['radio-sign-1', 'radio-sign-2']);
-	const [buttonSignature, buttonIdPhoto] = getElementsByIds(['sign-button', 'idphoto-button']);
+	const [signContainer, buttonSignature, buttonIdPhoto] = getElementsByIds(['sign-button-container', 'sign-button', 'idphoto-button']);
 	const pageValid = [false, false, false, false];
 
 	/* functions */
@@ -187,13 +187,13 @@ const onDOMContentLoaded = () => {
 	radioSign1.addEventListener('change', (event) => {
 		if(event.target.checked){
 			radioSign2.checked = false;
-			showComponent(buttonSignature);
+			showComponent(signContainer);
 		}
 	});
 	radioSign2.addEventListener('change', (event) => {
 		if(event.target.checked){
 			radioSign1.checked = false;
-			hideComponent(buttonSignature);
+			hideComponent(signContainer);
 		}
 	})
 
@@ -340,10 +340,15 @@ const onDOMContentLoaded = () => {
 		page--;	
 	});
 
+	buttonIdPhoto.addEventListener('click', () => {
+		window.electronAPI.loadIDCard();
+	});
+
 	// on page navigation, update the URL in the urlBox
 	window.electronAPI.onChangeURL((event, url) => {
 		urlBox.value = url;
 	});
+
 	window.electronAPI.onBadRequests((event, data) => {
 		hideComponent(document.getElementById('top-bar'));
 		showComponent(document.getElementById('report-container'));

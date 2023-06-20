@@ -65,6 +65,9 @@ export const setupText = () => {
 	document.getElementById('sign-button').innerText = strings.components.form.buttons.signature;
 	document.getElementById('idphoto-button').innerText = strings.components.form.buttons.idphoto;
 
+	document.getElementById('sign-label').innerText = strings.components.form.labels.missingFile;
+	document.getElementById('idphoto-label').innerText = strings.components.form.labels.missingFile;
+
 	const [nextButton, prevButton] = getElementsByIds(['button-next', 'button-prev']);
 	nextButton.innerText = strings.components.form.buttons.next;
 	prevButton.innerText = strings.components.form.buttons.prev;

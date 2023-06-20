@@ -58,6 +58,9 @@ export const strings = {
 				submit: "Genera il reclamo",
 				signature: "Carica foto della firma",
 				idphoto: "Carica documento di identità fronte/retro"
+			},
+			labels: {
+				missingFile: 'Nessun file selezionato'
 			}
 		}
 	},

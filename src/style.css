@@ -45,6 +45,7 @@
 	--font-size-normal: 16px;
 	--font-size-small: 14px;
 	--font-size-tiny: 13px;
+	--distance-tiny: 2px;
 	--distance-small: 5px;
 	--distance-normal: 8px;
 	--distance-big: 10px;
@@ -254,15 +255,32 @@ body {
 }
 
 #form-sign-photo-buttons {
-	grid-template-columns: 1fr 1fr;
+	grid-template-columns: 1fr;
 	padding-top: var(--distance-big);
 	padding-bottom: var(--distance-big);
 }
 
-#sign-button {
+.upload-button-container {
+	grid-template-columns: 1fr 1fr;
+	padding: var(--distance-tiny);
+	border-radius: var(--border-radius);
+	border: 1px solid var(--color-gray-lighter);
+	margin: var(--distance-normal);
+}
+
+#sign-button, #idphoto-button {
 	grid-column: 1;
 }
 
-#photo-button {
+#sign-label, #idphoto-label {
 	grid-column: 2;
+}
+
+.upload-label {
+	text-align: center;
+	font-size: var(--font-size-small);
+	color: var(--color-gray-light);
+	padding: var(--distance-normal);
+	justify-self: center;
+	align-self: center;
 }
