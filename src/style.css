@@ -258,3 +258,11 @@ body {
 	padding-top: var(--distance-big);
 	padding-bottom: var(--distance-big);
 }
+
+#sign-button {
+	grid-column: 1;
+}
+
+#photo-button {
+	grid-column: 2;
+}
