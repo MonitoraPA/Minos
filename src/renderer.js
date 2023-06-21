@@ -369,6 +369,11 @@ const onDOMContentLoaded = () => {
 			hideComponent(reportButton);
 		}
 	});
+
+	window.electronAPI.onIDCardUpload((event, path) => {
+		// display 
+		document.getElementById('idphoto-label').innerText = path;
+	});
 };
 
 window.addEventListener('DOMContentLoaded', onDOMContentLoaded);

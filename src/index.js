@@ -31,6 +31,8 @@ const page = new Page();
 const hosts = require('../hosts.json');
 const badRequests = {'requests': []};
 
+const filePaths = {};
+
 const cropViewsToWindowSize = (mainWindow) => {
 	const winBounds = mainWindow.getBounds();
 	const views = mainWindow.getBrowserViews();
@@ -52,8 +54,7 @@ const resizeViews = (mainWindow, localViewBounds, webViewBounds) => {
 const handlers = {
 	start: (event, URL) => {
 		resizeViews(getWin(event.sender), config.bounds.localView.small, config.bounds.webView.full);
-		const views = getViews(getWin(event.sender));
-		const webView = views[1];
+		const [localView, webView] = getViews(getWin(event.sender));
 		if(!URL.startsWith('https://')){
 			URL = 'https://' + URL;
 		}
@@ -69,15 +70,21 @@ const handlers = {
 		localView.webContents.send('bad-requests', badRequests);
 	},
 	loadIDCard: (event) => {
+		const [localView, webView] = getViews(getWin(event.sender));
 		dialog.showOpenDialog({ 
-			properties: ['openFile'], 
-			filters: [ { name: 'Images', extensions: ['jpg', 'png'] } ]}).then((response) => {
-			if(!response.canceled){
-				console.log(response);
-			} else {
-				console.log("no file selected");
-			}
-		});
+				properties: ['openFile'], 
+				filters: [ { name: 'Images', extensions: ['jpg', 'png'] } ]})
+			.then((response) => {
+				if(!response.canceled){
+					filePaths['idcard'] = response.filePaths[0];
+					// send idCard path to renderer
+					localView.webContents.send('idcard-upload', filePaths['idcard']);	
+				} else {
+					// do nothing... it should be good (?)
+				}
+			}).catch((err) => {
+				console.log(`error: ${err}.`);
+			});
 	}
 };
 

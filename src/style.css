@@ -283,4 +283,6 @@ body {
 	padding: var(--distance-normal);
 	justify-self: center;
 	align-self: center;
+	word-wrap: break-word;
+	word-break: break-all;
 }

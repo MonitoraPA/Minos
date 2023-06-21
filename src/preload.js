@@ -15,4 +15,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	loadIDCard: () => ipcRenderer.send('loadIDCard'),
 	onChangeURL: (callback) => ipcRenderer.on('change-url', callback),
 	onBadRequests: (callback) => ipcRenderer.on('bad-requests', callback),
+	onIDCardUpload: (callback) => ipcRenderer.on('idcard-upload', callback),
 });
