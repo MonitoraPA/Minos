@@ -51,6 +51,11 @@ const resizeViews = (mainWindow, localViewBounds, webViewBounds) => {
 	webView.setBounds({ ...webViewBounds, width: Math.min(webViewBounds.width, winBounds.width)});
 };
 
+const fileDialogOptions = {
+	properties: ['openFile'],
+	filters: [ { name: 'Images', extensions: ['jpg', 'png'] } ]
+};
+
 const handlers = {
 	start: (event, URL) => {
 		resizeViews(getWin(event.sender), config.bounds.localView.small, config.bounds.webView.full);
@@ -71,14 +76,27 @@ const handlers = {
 	},
 	loadIDCard: (event) => {
 		const [localView, webView] = getViews(getWin(event.sender));
-		dialog.showOpenDialog({ 
-				properties: ['openFile'], 
-				filters: [ { name: 'Images', extensions: ['jpg', 'png'] } ]})
+		dialog.showOpenDialog(fileDialogOptions)
 			.then((response) => {
 				if(!response.canceled){
 					filePaths['idcard'] = response.filePaths[0];
 					// send idCard path to renderer
 					localView.webContents.send('idcard-upload', filePaths['idcard']);	
+				} else {
+					// do nothing... it should be good (?)
+				}
+			}).catch((err) => {
+				console.log(`error: ${err}.`);
+			});
+	},
+	loadSignature: (event) => {
+		const [localView, webView] = getViews(getWin(event.sender));
+		dialog.showOpenDialog(fileDialogOptions)
+			.then((response) => {
+				if(!response.canceled){
+					filePaths['signature'] = response.filePaths[0];
+					// send idCard path to renderer
+					localView.webContents.send('signature-upload', filePaths['signature']);	
 				} else {
 					// do nothing... it should be good (?)
 				}
@@ -242,6 +260,7 @@ const onReadyApp = () => {
 	ipcMain.on('start', handlers.start);
 	ipcMain.on('analyze', handlers.analyze);
 	ipcMain.on('loadIDCard', handlers.loadIDCard);
+	ipcMain.on('loadSignature', handlers.loadSignature);
 	createWindow();
 	app.on('activate', () => {
 		if(BrowserWindow.getAllWindows().length === 0)

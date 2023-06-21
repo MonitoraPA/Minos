@@ -63,7 +63,7 @@ const onDOMContentLoaded = () => {
 	const [formPhone, formPaddr, formEmail, formFax] = getElementsByIds(['form-phone', 'form-paddr', 'form-email', 'form-fax']);
 	const [checkPhone, checkPaddr, checkEmail, checkFax] = getElementsByIds(['check-phone', 'check-paddr', 'check-email', 'check-fax']);
 	const [radioSign1, radioSign2] = getElementsByIds(['radio-sign-1', 'radio-sign-2']);
-	const [signContainer, buttonSignature, buttonIdPhoto] = getElementsByIds(['sign-button-container', 'sign-button', 'idphoto-button']);
+	const [signContainer, signatureUploadButton, idCardUploadButton] = getElementsByIds(['sign-button-container', 'sign-button', 'idphoto-button']);
 	const pageValid = [false, false, false, false];
 
 	/* functions */
@@ -340,8 +340,12 @@ const onDOMContentLoaded = () => {
 		page--;	
 	});
 
-	buttonIdPhoto.addEventListener('click', () => {
+	idCardUploadButton.addEventListener('click', () => {
 		window.electronAPI.loadIDCard();
+	});
+
+	signatureUploadButton.addEventListener('click', () => {
+		window.electronAPI.loadSignature();
 	});
 
 	// on page navigation, update the URL in the urlBox
@@ -371,8 +375,11 @@ const onDOMContentLoaded = () => {
 	});
 
 	window.electronAPI.onIDCardUpload((event, path) => {
-		// display 
 		document.getElementById('idphoto-label').innerText = path;
+	});
+
+	window.electronAPI.onSignatureUpload((event, path) => {
+		document.getElementById('sign-label').innerText = path;
 	});
 };
 

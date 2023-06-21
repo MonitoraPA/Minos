@@ -284,5 +284,5 @@ body {
 	justify-self: center;
 	align-self: center;
 	word-wrap: break-word;
-	word-break: break-all;
+	word-break: break-word;
 }
