@@ -69,7 +69,9 @@ const handlers = {
 		localView.webContents.send('bad-requests', badRequests);
 	},
 	loadIDCard: (event) => {
-		dialog.showOpenDialog({ properties: ['openFile'] }).then((response) => {
+		dialog.showOpenDialog({ 
+			properties: ['openFile'], 
+			filters: [ { name: 'Images', extensions: ['jpg', 'png'] } ]}).then((response) => {
 			if(!response.canceled){
 				console.log(response);
 			} else {
