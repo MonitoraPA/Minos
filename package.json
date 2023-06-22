@@ -12,5 +12,8 @@
   "license": "Hacking License",
   "devDependencies": {
     "electron": "^24.1.2"
+  },
+  "dependencies": {
+    "pdfkit": "^0.13.0"
   }
 }
