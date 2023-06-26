@@ -229,7 +229,6 @@ const createWindow = () => {
 		height: config.bounds.browserWindow.height, 
 		backgroundColor: config.colors.background,
 		webPreferences: {
-			webViewTag: true,
 			nodeIntegration: true
 		}
 	});
@@ -243,17 +242,23 @@ const createWindow = () => {
 			}
 		}
 	);
-	localView.webContents.loadFile('src/main.html');
-	localView.setBounds({ ...config.bounds.localView.full });
-	localView.setAutoResize({ width: true });
 	const webView = new BrowserView();
-	webView.setBounds({ ...config.bounds.webView.hidden });
-	webView.setAutoResize({ width: true, height: true });
 	mainWindow.addBrowserView(localView);
 	mainWindow.addBrowserView(webView);
+	localView.webContents.loadFile('src/main.html').then(() => {
+		localView.setBounds({ ...config.bounds.localView.full });
+		localView.setAutoResize({ width: true });
+	});
+	webView.setBounds({ ...config.bounds.webView.hidden });
+	webView.setAutoResize({ width: true, height: true });
 	if(config.debug)
 		localView.webContents.openDevTools();
 	registerForEvents(mainWindow);
+	// due to some bugs, browserviews will not show up until the 
+	// main window is resized; see: https://github.com/electron/electron/issues/31424
+	// however, Electron himself suggests not using webview tags, so
+	// by now the cleanest solution seems to be the BrowserView
+	// see: https://www.electronjs.org/docs/latest/api/webview-tag#warning
 };
 
 const onReadyApp = () => {
