@@ -174,6 +174,12 @@ const attachDebugger = (view) => {
 		}
 	});
 
+	view.webContents.debugger.sendCommand(`Network.setCacheDisabled`).then(() => {
+		console.log(`debugger: network cache disabled.`);
+	}).catch((err) => {
+		console.log(`debugger: could not disable network cache due to: ${err}.`);
+	});
+
 	const enableCmds = ['Network', 'Page'];
 
 	for(const cmd of enableCmds){
