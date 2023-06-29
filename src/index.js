@@ -174,7 +174,7 @@ const attachDebugger = (view) => {
 		}
 	});
 
-	view.webContents.debugger.sendCommand(`Network.setCacheDisabled`).then(() => {
+	view.webContents.debugger.sendCommand(`Network.setCacheDisabled`, {cacheDisabled: true}).then(() => {
 		console.log(`debugger: network cache disabled.`);
 	}).catch((err) => {
 		console.log(`debugger: could not disable network cache due to: ${err}.`);
