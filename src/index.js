@@ -119,6 +119,20 @@ const writeLog = (HAR) => {
 	});
 };
 
+const getCookies = (webContents) => {
+	webContents.debugger.sendCommand('Network.getCookies')
+	    .then((cookies) => {
+			for(const cookie of cookies){
+				console.log(`cookie:`);
+				console.log(cookie);
+			}
+		}).catch((err) => {
+			if(err){
+				console.error(`err: ${err}`);
+			}
+		});
+}
+
 const attachDebugger = (view) => {
 
 	try {
