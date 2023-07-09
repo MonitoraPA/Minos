@@ -1,5 +1,5 @@
 {
-	"500-adobe.hosts": [
+	"adobe.hosts": [
 		".adobe.com",
 		".fyre.co",
 		".livefyre.com",
@@ -18,14 +18,14 @@
 		".omtrdc.net",
 		".touchclarity.com"
 	],
-	"501-aws.hosts": [
+	"aws.hosts": [
 		".amazonaws.com"
 	],
-	"502-moatads.hosts": [
+	"moatads.hosts": [
 		".moat.com",
 		".moatads.com"
 	],
-	"503-azure.hosts": [
+	"azure.hosts": [
 		".accesscontrol.windows.net",
 		".graph.windows.net",
 		".onmicrosoft.com",
@@ -59,7 +59,7 @@
 		".visualstudio.com",
 		".windowsazure.com"
 	],
-	"504-facebook.hosts": [
+	"facebook.hosts": [
 		".atlassolutions.com",
 		".e.gg",
 		".facebook.com",
@@ -93,11 +93,11 @@
 		".instagram.com",
 		".messenger.com"
 	],
-	"505-fontawesome.hosts": [
+	"fontawesome.hosts": [
 		".fontawesome.com",
 		".bootstrapcdn.com"
 	],
-	"506-googlemaps.hosts": [
+	"googlemaps.hosts": [
 		"maps.googleapis.com",
 		"roads.googleapis.com",
 		"khmdb0.google.com",
@@ -125,10 +125,10 @@
 		"geo2.ggpht.com",
 		"geo3.ggpht.com"
 	],
-	"507-cloudfront.hosts": [
+	"cloudfront.hosts": [
 		".cloudfront.net"
 	],
-	"508-microsoft.hosts": [
+	"microsoft.hosts": [
 		".aadrm.com",
 		".acompli.net",
 		".adbureau.net",
@@ -217,17 +217,17 @@
 		".yammer.com",
 		".yammerusercontent.com"
 	],
-	"509-googlehostedlibraries.hosts": [
+	"googlehostedlibraries.hosts": [
 		"ajax.googleapis.com"
 	],
-	"510-twitter.hosts": [
+	"twitter.hosts": [
 		".twitter.com",
 		".ads-twitter.com",
 		".tweetdeck.com",
 		".twimg.com",
 		".twitter.jp"
 	],
-	"511-youtube.hosts": [
+	"youtube.hosts": [
 		".youtube.ae",
 		".youtube.at",
 		".youtube.az",
@@ -385,56 +385,56 @@
 		".ytimg.l.google.com",
 		".youtube"
 	],
-	"512-googletagmanager.hosts": [
+	"googletagmanager.hosts": [
 		".googletagmanager.com",
 		".googletagservices.com"
 	],
-	"513-googleanalytics.hosts": [
+	"googleanalytics.hosts": [
 		".analytics.google.com",
 		".google-analytics.com",
 		".admob.com",
 		".postrank.com",
 		".smtad.net"
 	],
-	"513-googlecrashlytics.hosts": [
+	"googlecrashlytics.hosts": [
 		".crashlytics.com"
 	],
-	"514-unpkg.hosts": [
+	"unpkg.hosts": [
 		"unpkg.com"
 	],
-	"515-akamai.hosts": [
+	"akamai.hosts": [
 		".imiclk.com",
 		".abmr.net",
 		".akamai.com",
 		".edgesuite.net",
-		".go-mpulse.net"
+		"mpulse.net"
 	],
-	"516-cloudflareinsights.hosts": [
+	"cloudflareinsights.hosts": [
 		"static.cloudflareinsights.com"
 	],
-	"517-jsdelivr.hosts": [
+	"jsdelivr.hosts": [
 		"cdn.jsdelivr.net"
 	],
-	"518-hcaptcha.hosts": [
+	"hcaptcha.hosts": [
 		".hcaptcha.com"
 	],
-	"519-turnstile.hosts": [
+	"turnstile.hosts": [
 		"challenges.cloudflare.com"
 	],
-	"520-cdnjs.hosts": [
+	"cdnjs.hosts": [
 		"cdnjs.cloudflare.com"
 	],
-	"521-jquery.hosts": [
+	"jquery.hosts": [
 		"code.jquery.com"
 	],
-	"522-vimeo.hosts": [
+	"vimeo.hosts": [
 		"vimeo.com",
 		"vimeocdn.com"
 	],
-	"523-fastly.hosts": [
+	"fastly.hosts": [
 		".fastly.net"
 	],
-	"524-addthis.hosts": [
+	"addthis.hosts": [
 		".addthis.com",
 		".addthiscdn.com",
 		".addthisedge.com",
@@ -443,13 +443,13 @@
 		".xgraph.com",
 		".xgraph.net"
 	],
-	"525-addtoany.hosts": [
+	"addtoany.hosts": [
 		".addtoany.com"
 	],
-	"526-googletranslate.hosts": [
+	"googletranslate.hosts": [
 		"translate.google.com"
 	],
-	"527-yandex.hosts": [
+	"yandex.hosts": [
 		".adfox.ru",
 		".kinopoisk.ru",
 		".moikrug.ru",
@@ -463,14 +463,14 @@
 		".web-visor.com",
 		".webvisor.org"
 	],
-	"528-tencent.hosts": [
+	"tencent.hosts": [
 		".myqcloud.com",
 		".tencentcloud.com",
 		".qcloud.com",
 		".qcloudimg.com",
 		".tencent-cloud.cn"
 	],
-	"529-alibaba.hosts": [
+	"alibaba.hosts": [
 		".alicdn.com",
 		".alibabacloud.com",
 		".alibabadns.com",
@@ -480,11 +480,11 @@
 		".tbcache.com",
 		".mmstat.com"
 	],
-	"530-cloudflarecdn.hosts": [
+	"cloudflarecdn.hosts": [
 		".cloudflare.com",
 		".cloudflare.net"
 	],
-	"531-googlesearch.hosts": [
+	"googlesearch.hosts": [
 		"cse.google.com",
 		"clients1.google.com",
 		".google.ac",
@@ -688,11 +688,11 @@
 		".destinationurl.com",
 		".gmodules.com"
 	],
-	"532-googledoubleclick.hosts": [
+	"googledoubleclick.hosts": [
 		".doubleclick.net",
 		".2mdn.net",
 		".admeld.com",
-		".cc-dt.com",
+		"dt.com",
 		".ads.google.com",
 		".admob.google.com",
 		".admanager.google.com",
