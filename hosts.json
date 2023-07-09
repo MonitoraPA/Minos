@@ -1,5 +1,5 @@
 {
-	"adobe.hosts": [
+	"adobe": [
 		".adobe.com",
 		".fyre.co",
 		".livefyre.com",
@@ -18,14 +18,14 @@
 		".omtrdc.net",
 		".touchclarity.com"
 	],
-	"aws.hosts": [
+	"aws": [
 		".amazonaws.com"
 	],
-	"moatads.hosts": [
+	"moatads": [
 		".moat.com",
 		".moatads.com"
 	],
-	"azure.hosts": [
+	"azure": [
 		".accesscontrol.windows.net",
 		".graph.windows.net",
 		".onmicrosoft.com",
@@ -59,7 +59,7 @@
 		".visualstudio.com",
 		".windowsazure.com"
 	],
-	"facebook.hosts": [
+	"facebook": [
 		".atlassolutions.com",
 		".e.gg",
 		".facebook.com",
@@ -93,11 +93,11 @@
 		".instagram.com",
 		".messenger.com"
 	],
-	"fontawesome.hosts": [
+	"fontawesome": [
 		".fontawesome.com",
 		".bootstrapcdn.com"
 	],
-	"googlemaps.hosts": [
+	"googlemaps": [
 		"maps.googleapis.com",
 		"roads.googleapis.com",
 		"khmdb0.google.com",
@@ -125,10 +125,10 @@
 		"geo2.ggpht.com",
 		"geo3.ggpht.com"
 	],
-	"cloudfront.hosts": [
+	"cloudfront": [
 		".cloudfront.net"
 	],
-	"microsoft.hosts": [
+	"microsoft": [
 		".aadrm.com",
 		".acompli.net",
 		".adbureau.net",
@@ -217,17 +217,17 @@
 		".yammer.com",
 		".yammerusercontent.com"
 	],
-	"googlehostedlibraries.hosts": [
+	"googlehostedlibraries": [
 		"ajax.googleapis.com"
 	],
-	"twitter.hosts": [
+	"twitter": [
 		".twitter.com",
 		".ads-twitter.com",
 		".tweetdeck.com",
 		".twimg.com",
 		".twitter.jp"
 	],
-	"youtube.hosts": [
+	"youtube": [
 		".youtube.ae",
 		".youtube.at",
 		".youtube.az",
@@ -385,56 +385,56 @@
 		".ytimg.l.google.com",
 		".youtube"
 	],
-	"googletagmanager.hosts": [
+	"googletagmanager": [
 		".googletagmanager.com",
 		".googletagservices.com"
 	],
-	"googleanalytics.hosts": [
+	"googleanalytics": [
 		".analytics.google.com",
 		".google-analytics.com",
 		".admob.com",
 		".postrank.com",
 		".smtad.net"
 	],
-	"googlecrashlytics.hosts": [
+	"googlecrashlytics": [
 		".crashlytics.com"
 	],
-	"unpkg.hosts": [
+	"unpkg": [
 		"unpkg.com"
 	],
-	"akamai.hosts": [
+	"akamai": [
 		".imiclk.com",
 		".abmr.net",
 		".akamai.com",
 		".edgesuite.net",
 		"mpulse.net"
 	],
-	"cloudflareinsights.hosts": [
+	"cloudflareinsights": [
 		"static.cloudflareinsights.com"
 	],
-	"jsdelivr.hosts": [
+	"jsdelivr": [
 		"cdn.jsdelivr.net"
 	],
-	"hcaptcha.hosts": [
+	"hcaptcha": [
 		".hcaptcha.com"
 	],
-	"turnstile.hosts": [
+	"turnstile": [
 		"challenges.cloudflare.com"
 	],
-	"cdnjs.hosts": [
+	"cdnjs": [
 		"cdnjs.cloudflare.com"
 	],
-	"jquery.hosts": [
+	"jquery": [
 		"code.jquery.com"
 	],
-	"vimeo.hosts": [
+	"vimeo": [
 		"vimeo.com",
 		"vimeocdn.com"
 	],
-	"fastly.hosts": [
+	"fastly": [
 		".fastly.net"
 	],
-	"addthis.hosts": [
+	"addthis": [
 		".addthis.com",
 		".addthiscdn.com",
 		".addthisedge.com",
@@ -443,13 +443,13 @@
 		".xgraph.com",
 		".xgraph.net"
 	],
-	"addtoany.hosts": [
+	"addtoany": [
 		".addtoany.com"
 	],
-	"googletranslate.hosts": [
+	"googletranslate": [
 		"translate.google.com"
 	],
-	"yandex.hosts": [
+	"yandex": [
 		".adfox.ru",
 		".kinopoisk.ru",
 		".moikrug.ru",
@@ -463,14 +463,14 @@
 		".web-visor.com",
 		".webvisor.org"
 	],
-	"tencent.hosts": [
+	"tencent": [
 		".myqcloud.com",
 		".tencentcloud.com",
 		".qcloud.com",
 		".qcloudimg.com",
 		".tencent-cloud.cn"
 	],
-	"alibaba.hosts": [
+	"alibaba": [
 		".alicdn.com",
 		".alibabacloud.com",
 		".alibabadns.com",
@@ -480,11 +480,11 @@
 		".tbcache.com",
 		".mmstat.com"
 	],
-	"cloudflarecdn.hosts": [
+	"cloudflarecdn": [
 		".cloudflare.com",
 		".cloudflare.net"
 	],
-	"googlesearch.hosts": [
+	"googlesearch": [
 		"cse.google.com",
 		"clients1.google.com",
 		".google.ac",
@@ -688,7 +688,7 @@
 		".destinationurl.com",
 		".gmodules.com"
 	],
-	"googledoubleclick.hosts": [
+	"googledoubleclick": [
 		".doubleclick.net",
 		".2mdn.net",
 		".admeld.com",
