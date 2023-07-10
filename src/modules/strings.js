@@ -50,7 +50,9 @@ export const strings = {
 				decl_2: {label: 'La Repubblica Italiana è lo stato membro in cui lavoro'},
 				decl_3: {label: 'La violazione si è verificata mentre ero fisicamente presente sul suolo della Repubblica Italiana'},
 				signature_1 : {label: 'Firma autografa'},
-				signature_2 : {label: 'Firmerò digitalmente il reclamo'}
+				signature_2 : {label: 'Firmerò digitalmente il reclamo'},
+				data_controller: {label: 'Estremi identificativi del titolare del trattamento', placeholder: 'Titolare del trattamento'},
+				data_responsible: {label: 'Estremi identificativi del responsabile del trattamento (se conosciuto)', placeholder: 'Responsabile del trattamento'},
 			},
 			buttons: {
 				next: "Avanti",

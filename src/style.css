@@ -286,3 +286,7 @@ body {
 	word-wrap: break-word;
 	word-break: break-word;
 }
+
+#data-controller-responsible {
+	padding-top: var(--distance-big);
+}
