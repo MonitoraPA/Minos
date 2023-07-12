@@ -54,6 +54,8 @@
 	--font-family: sans-serif;
 	/* tooltip */
 	--tooltip-width: 125px;
+	/* infobox */
+	--infobox-width: 200px;
 }
 
 body {
@@ -247,6 +249,18 @@ body {
 	top: -18px;
 	width: 0;
 	height: 0;
+}
+
+.infobox {
+	background-color: var(--color-gray-light);
+	color: white;
+	padding: var(--distance-small);
+	position: absolute;
+	right: 5px;
+	border-radius: 5px;;
+	width: var(--infobox-width);
+	text-align: center;
+	z-index: 1;
 }
 
 #form-checkboxes {

@@ -11,6 +11,19 @@ import { strings } from './modules/strings.js';
 import { enable, disable, isLetter, isDigit, disableInput, hideComponent, showComponent, getElementsByIds } from './modules/util.js';
 import { setupText } from './modules/setuptext.js';
 
+const setupInfoboxes = () => {
+	const dataController = {'infobox': document.getElementById('form-data-controller-infobox'), 'label': document.getElementById('data-controller-container') };
+	const dataResponsible = {'infobox': document.getElementById('form-data-responsible-infobox'), 'label': document.getElementById('data-responsible-container') };
+	[dataController, dataResponsible].forEach(d => {
+		d.label.addeventlistener('mouseenter', (event) => {
+			d.infobox.classList.remove('hidden');	
+		});
+		d.label.addeventlistener('mouseleave', (event) => {
+			d.infobox.classList.add('hidden');	
+		});
+	});
+};
+
 const setupTooltips = () => {
 	for(const button of document.getElementsByTagName('button')){
 		const ttext = button.getAttribute('tooltip');
