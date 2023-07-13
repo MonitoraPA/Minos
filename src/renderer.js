@@ -12,13 +12,13 @@ import { enable, disable, isLetter, isDigit, disableInput, hideComponent, showCo
 import { setupText } from './modules/setuptext.js';
 
 const setupInfoboxes = () => {
-	const dataController = {'infobox': document.getElementById('form-data-controller-infobox'), 'label': document.getElementById('data-controller-container') };
-	const dataResponsible = {'infobox': document.getElementById('form-data-responsible-infobox'), 'label': document.getElementById('data-responsible-container') };
+	const dataController = {'infobox': document.getElementById('form-data-controller-infobox'), 'badge': document.getElementById('form-data-controller-infobadge') };
+	const dataResponsible = {'infobox': document.getElementById('form-data-responsible-infobox'), 'badge': document.getElementById('form-data-responsible-infobadge') };
 	[dataController, dataResponsible].forEach(d => {
-		d.label.addeventlistener('mouseenter', (event) => {
+		d.badge.addEventListener('mouseenter', (event) => {
 			d.infobox.classList.remove('hidden');	
 		});
-		d.label.addeventlistener('mouseleave', (event) => {
+		d.badge.addEventListener('mouseleave', (event) => {
 			d.infobox.classList.add('hidden');	
 		});
 	});
@@ -69,6 +69,7 @@ const insertKey = (key, target) => {
 const onDOMContentLoaded = () => {
 	setupText();
 	setupTooltips();
+	setupInfoboxes();
 	/* variables */
 	let page = 0;
 	const [mainButton, topButton, urlBox, textarea, reportButton, reportLabel, nextButton, prevButton] = getElementsByIds(['main-button', 'top-button', 'url-box', 'report', 'report-button', 'report-label',  'button-next', 'button-prev']);

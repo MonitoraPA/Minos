@@ -51,8 +51,8 @@ export const strings = {
 				decl_3: {label: 'La violazione si è verificata mentre ero fisicamente presente sul suolo della Repubblica Italiana'},
 				signature_1 : {label: 'Firma autografa'},
 				signature_2 : {label: 'Firmerò digitalmente il reclamo'},
-				data_controller: {label: 'Estremi identificativi del titolare del trattamento', placeholder: 'Titolare del trattamento', infobox: 'Gli estremi identificativi del titolare dovrebbero essere di norma disponibili in rete. Puoi provare ad effettuare una ricerca con un motore di ricerca inserendo come query: "titolare trattamento dati" seguito dal nome dell\'host individuato.'},
-				data_responsible: {label: 'Estremi identificativi del responsabile del trattamento (se conosciuto)', placeholder: 'Responsabile del trattamento', infobox: 'Gli estremi identificativi del responsabile non sono sempre di facile individuazione. Puoi provare ad effettuare una ricerca con un motore di ricerca inserendo come query: "responsabile trattamento dati" seguito dal nome dell\'host individuato.'},
+				data_controller: {label: 'Estremi identificativi del titolare del trattamento', placeholder: 'Titolare del trattamento', infobox: 'Gli estremi identificativi del titolare dovrebbero essere di norma disponibili in rete. Puoi provare ad effettuare una ricerca con un motore di ricerca inserendo come query: "titolare trattamento dati" oppure "privacy policy" seguito dal nome dell\'host individuato.'},
+				data_responsible: {label: 'Estremi identificativi del responsabile del trattamento (se conosciuto)', placeholder: 'Responsabile del trattamento (se conosciuto)', infobox: 'Gli estremi identificativi del responsabile non sono sempre di facile individuazione. Puoi provare ad effettuare una ricerca con un motore di ricerca inserendo come query: "responsabile trattamento dati" oppure "privacy policy" seguito dal nome dell\'host individuato.'},
 			},
 			buttons: {
 				next: "Avanti",
