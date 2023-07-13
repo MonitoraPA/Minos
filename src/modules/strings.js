@@ -75,6 +75,7 @@ export const strings = {
 		invalidEmail: "Inserisci un indirizzo email valido",
 		invalidFax: "Inserisci un numero di fax valido",
 		missingOption: "Seleziona almeno un'opzione",
-		missingData: "Completa il form con i dati mancanti"
+		missingData: "Completa il form con i dati mancanti",
+		missingDataController: "Inserisci gli estremi del titolare"
 	}
 };

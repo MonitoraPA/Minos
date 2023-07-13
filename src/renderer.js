@@ -164,7 +164,16 @@ const onDOMContentLoaded = () => {
 			case 2:
 				if(getElementsByIds(['check-decl-1', 'check-decl-2', 'check-decl-3']).every(checkbox => !checkbox.checked))
 					return strings.err.missingOption;
+				const dataController = document.getElementById('form-data-controller');
+				if(dataController.value.length === 0){
+					dataController.classList.add('invalid');
+					return strings.err.missingDataController;
+				} else {
+					dataController.classList.remove('invalid');
+				}
+				return err;
 			case 3:
+				err = 'TODO';
 				return err;
 			default:
 				return err;
@@ -210,6 +219,8 @@ const onDOMContentLoaded = () => {
 			hideComponent(signContainer);
 		}
 	})
+
+	document.getElementById('form-data-controller').addEventListener('input', formHandler);
 
 	getElementsByIds(['check-decl-1', 'check-decl-2', 'check-decl-3'])
     	.forEach((checkbox) => { checkbox.addEventListener('change', formHandler); });
