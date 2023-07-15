@@ -1,0 +1,25 @@
+{
+	"address": [
+		"AL GARANTE PER LA PROTEZIONE DEI DATI PERSONALI",
+		"P.ZZA VENEZIA, 11",
+		"00187 ROMA"
+	],
+	"title": "Reclamo ex art. 77 del Regolamento (UE) 2016/679 e artt. da 140-bis a 143 del Codice in materia di protezione dei dati personali, recante disposizioni per l'adeguamento dell'ordinamento nazionale al Regolamento",
+	"generalities": "Il/La sottoscritto/a %name%, nato/a a %birthplace% il %birthdate%, residente in %address%, CF %fisccode%, il/la quale ai fini del presente procedimento dichiara di voler ricevere eventuali comunicazioni  al seguente recapito: %delivery%, espone quanto segue:",
+	"data_controller_label": "estremi identificativi del titolare del trattamento",
+	"data_responsible_label": "estremi identificativi del responsabile del trattamento",
+	"facts": "Il giorno %date%, durante la navigazione sul sito web \"%website%\", riscontrava la presenza di richieste HTTP verso gli host: %badhosts%, come testimoniato dai log della navigazione (allegato 1).",
+	"regulation": "si presume violato in particolare l'art. 45 del GDPR, secondo cui \"il trasferimento di dati personali verso un paese terzo o un'organizzazione internazionale è ammesso se la Commissione ha deciso che il paese terzo, un territorio o uno o più settori specifici all'interno del paese terzo, o l'organizzazione internazionale in questione garantiscono un livello di protezione adeguato. In tal caso il trasferimento non necessita di autorizzazioni specifiche\"; si presume che nel Paese ",
+	"pre_request": "Tutto ciò premesso, il/la sottoscritto/a",
+	"request_label": "CHIEDE",
+	"request": "al Garante per la protezione dei dati personali, esaminato il reclamo che precede e ritenutane la fondatezza, di assumere nei confronti di %data-controller% ogni opportuno provvedimento, ai sensi e per gli effetti dell'art. 144 del Codice in materia di protezione dei dati personali (Decreto Legislativo 30 giugno 2003, n. 196 e successive modifiche e integrazioni), anche ai fini dell'emanazione dei provvedimenti di cui all'art. 58 del GDPR. e, in particolare",
+	"specific_requests": [
+		"a) rivolgere a questi o al responsabile del trattamento avvertimenti o ammonimenti sul fatto che detti trattamenti possono verosimilmente violare, ovvero abbiano violato, le disposizioni vigenti in materia",
+		"b) ingiungere al titolare del trattamento di soddisfare le richieste di esercizio dei diritti di cui agli artt. da 15 a 22 del Regolamento e/o di conformare i trattamenti alle disposizioni vigenti in materia anche nei confronti del responsabile del trattamento, ove previsto",
+		"c) imporre una limitazione provvisoria o definitiva al trattamento, incluso il divieto di trattamento"
+	],
+	"attachments_label": "Elenco dei documenti allegati",
+	"reminder": "Si ricorda che chiunque, in un procedimento dinanzi al Garante, dichiara o attesta falsamente notizie o circostanze o produce atti o documenti falsi ne risponde ai sensi dell'art. 168 del Codice in materia di protezione dei dati personali (Falsità nelle dichiarazioni al Garante e interruzione dell'esecuzione dei compiti o dell'esercizio dei poteri del Garante), salvo che il fatto non costituisca più grave reato",
+	"date": "Data",
+	"signature": "Firma"
+}
