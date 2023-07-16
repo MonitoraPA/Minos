@@ -12,7 +12,6 @@ const path = require('path');
 const document = require(path.join(__dirname, '../../assets/document.json'));
 const fs = require('fs');
 
-const docPath = './doc.pdf';
 const textOptions = { align: 'justify' };
 const indent = 15;
 
@@ -23,7 +22,7 @@ exports.createDocument = (path, data) => {
 	const locale = 'it-IT';
 	const dateString = date.toLocaleDateString(locale, {})
 
-	doc.pipe(fs.createWriteStream(docPath));
+	doc.pipe(fs.createWriteStream(path));
 
 	doc.fontSize(11);
 
@@ -76,13 +75,12 @@ exports.createDocument = (path, data) => {
 		doc.text(req + ';', textOptions);
 		doc.moveDown();
 	}
-	doc.moveDown();
 
 	doc.text(document.attachments_label + ':', doc.x - indent, doc.y, textOptions);
 	doc.moveDown();
 
 	doc.text('1) ' + data.attachment, textOptions);
-	doc.moveDown().moveDown();
+	doc.moveDown();
 
 	doc.text(document.date, { align: 'left', continued: true }).text(document.signature, { align: 'right' });
 	doc.text(dateString);
