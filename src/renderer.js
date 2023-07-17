@@ -11,6 +11,9 @@ import { strings } from './modules/strings.js';
 import { enable, disable, isLetter, isDigit, disableInput, hideComponent, showComponent, getElementsByIds } from './modules/util.js';
 import { setupText } from './modules/setuptext.js';
 
+let idcard = false;
+let signature = false;
+
 const setupInfoboxes = () => {
 	const dataController = {'infobox': document.getElementById('form-data-controller-infobox'), 'badge': document.getElementById('form-data-controller-infobadge') };
 	const dataResponsible = {'infobox': document.getElementById('form-data-responsible-infobox'), 'badge': document.getElementById('form-data-responsible-infobadge') };
@@ -173,7 +176,16 @@ const onDOMContentLoaded = () => {
 				}
 				return err;
 			case 3:
-				err = 'TODO';
+				const [radio1, radio2] = getElementsByIds(['radio-sign-1', 'radio-sign-2']);
+				if(radio1.checked){
+					if(!idcard)
+						err = strings.err.missingIDCard;
+					if(!signature)
+						err = strings.err.missingSignature;
+				} else if(radio2.checked){
+					if(!idcard)
+						err = strings.err.missingIDCard;
+				}
 				return err;
 			default:
 				return err;
@@ -308,6 +320,18 @@ const onDOMContentLoaded = () => {
 		formHandler();
 	});
 
+	const collectFormData = () => {
+		const data = {
+			name: formName.value,
+			surname: formSurname.value,
+			birthplace: formBirthplace.value,
+			birthdate: formBirthdate.value,
+			address: formAddress.value,
+			fisccode: formFisccode.value
+		}
+		return data;
+	}
+
 	nextButton.addEventListener('mouseenter', formHandler);
 
 	nextButton.addEventListener('click', (event) => {
@@ -343,9 +367,12 @@ const onDOMContentLoaded = () => {
 				enable(prevButton);
 				formLabel.innerText = strings.components.form.pages[3];
 				nextButton.setAttribute('tooltip', strings.err.missingData);
+				nextButton.innerText = strings.components.form.buttons.submit;
 				page++;
 				break;
-			case 3: // next button becomes submit
+			case 3: // next button is submit now
+				formHandler(); // check form validity
+				window.electronAPI.submitForm(data);	
 				break;
 		}
 	});
@@ -362,6 +389,8 @@ const onDOMContentLoaded = () => {
 		hideComponent(document.getElementById(`form-fields-${page + 1}`));
 		showComponent(document.getElementById(`form-fields-${page}`));
 		formLabel.innerText = strings.components.form.pages[page - 1];
+		if(page === 3)
+			nextButton.innerText = strings.components.form.buttons.next;
 		page--;	
 	});
 
@@ -401,10 +430,14 @@ const onDOMContentLoaded = () => {
 
 	window.electronAPI.onIDCardUpload((event, path) => {
 		document.getElementById('idphoto-label').innerText = path;
+		idcard = true;
+		formHandler();
 	});
 
 	window.electronAPI.onSignatureUpload((event, path) => {
 		document.getElementById('sign-label').innerText = path;
+		signature = true;
+		formHandler();
 	});
 };
 
