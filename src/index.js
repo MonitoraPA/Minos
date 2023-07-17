@@ -18,6 +18,7 @@ const { url } = require('url');
 const path = require('path');
 const createHAR = require('./har/cdp2har');
 const Page = require('./har/page');
+const document = require('./modules/document');
 
 const MODE_IS_DEV = !app.isPackaged;
 const APP_PATH = app.getAppPath();
@@ -83,7 +84,7 @@ const handlers = {
 					// send idCard path to renderer
 					localView.webContents.send('idcard-upload', filePaths['idcard']);	
 				} else {
-					// do nothing... it should be good (?)
+					// do nothing
 				}
 			}).catch((err) => {
 				console.log(`error: ${err}.`);
@@ -98,11 +99,14 @@ const handlers = {
 					// send idCard path to renderer
 					localView.webContents.send('signature-upload', filePaths['signature']);	
 				} else {
-					// do nothing... it should be good (?)
+					// do nothing
 				}
 			}).catch((err) => {
 				console.log(`error: ${err}.`);
 			});
+	}, 
+	submitForm: (event, data) => {
+		console.log(JSON.stringify(data, null, 4));
 	}
 };
 
@@ -244,6 +248,30 @@ const registerForEvents = (win) => {
 };
 
 const createWindow = () => {
+
+	// sample data
+	const data = {
+		'name': 'Nome', 
+		'surname': 'Cognome', 
+		'birthplace': 'Luogo Di Nascita',
+		'birthdate': 'GG/MM/AAAA',
+		'address': 'Indirizzo Di Residenza',
+		'fisccode': 'CODFIS00A01A000A',
+		'delivery': 'telefono: 123456789',
+		'declarations': [
+			'la Repubblica Italiana è lo Stato membro in cui risiede abitualmente',
+		],
+		'data_controller': 'Responsabile Del Trattamento Dei Dati, Indirizzo, etc.',
+		'data_responsible': 'sconosciuto',
+		'attachment': 'log_20230716.har',
+		'website': 'sitoweb.com',
+		'badhosts': [
+			'extraue.host'
+		]
+	}
+
+	document.createDocument('reclamo.pdf', data);
+
 	const mainWindow = new BrowserWindow({
 		width: config.bounds.browserWindow.width, 
 		height: config.bounds.browserWindow.height, 
@@ -286,6 +314,7 @@ const onReadyApp = () => {
 	ipcMain.on('analyze', handlers.analyze);
 	ipcMain.on('loadIDCard', handlers.loadIDCard);
 	ipcMain.on('loadSignature', handlers.loadSignature);
+	ipcMain.on('submit-form', handlers.submitForm);
 	createWindow();
 	app.on('activate', () => {
 		if(BrowserWindow.getAllWindows().length === 0)

@@ -15,9 +15,9 @@ let idcard = false;
 let signature = false;
 
 const setupInfoboxes = () => {
-	const dataController = {'infobox': document.getElementById('form-data-controller-infobox'), 'badge': document.getElementById('form-data-controller-infobadge') };
-	const dataResponsible = {'infobox': document.getElementById('form-data-responsible-infobox'), 'badge': document.getElementById('form-data-responsible-infobadge') };
-	[dataController, dataResponsible].forEach(d => {
+	const dataControllerInfobox = {'infobox': document.getElementById('form-data-controller-infobox'), 'badge': document.getElementById('form-data-controller-infobadge') };
+	const dataResponsibleInfobox = {'infobox': document.getElementById('form-data-responsible-infobox'), 'badge': document.getElementById('form-data-responsible-infobadge') };
+	[dataControllerInfobox, dataResponsibleInfobox].forEach(d => {
 		d.badge.addEventListener('mouseenter', (event) => {
 			d.infobox.classList.remove('hidden');	
 		});
@@ -81,6 +81,8 @@ const onDOMContentLoaded = () => {
 	const [checkPhone, checkPaddr, checkEmail, checkFax] = getElementsByIds(['check-phone', 'check-paddr', 'check-email', 'check-fax']);
 	const [radioSign1, radioSign2] = getElementsByIds(['radio-sign-1', 'radio-sign-2']);
 	const [signContainer, signatureUploadButton, idCardUploadButton] = getElementsByIds(['sign-button-container', 'sign-button', 'idphoto-button']);
+	const [checkDecl1, checkDecl2, checkDecl3] = getElementsByIds(['check-decl-1', 'check-decl-2', 'check-decl-3'])
+	const [dataController, dataResponsible] = getElementsByIds(['form-data-controller', 'form-data-responsible']);
 	const pageValid = [false, false, false, false];
 
 	/* functions */
@@ -165,9 +167,8 @@ const onDOMContentLoaded = () => {
 				}
 				return err;
 			case 2:
-				if(getElementsByIds(['check-decl-1', 'check-decl-2', 'check-decl-3']).every(checkbox => !checkbox.checked))
+				if([checkDecl1, checkDecl2, checkDecl3].every(checkbox => !checkbox.checked))
 					return strings.err.missingOption;
-				const dataController = document.getElementById('form-data-controller');
 				if(dataController.value.length === 0){
 					dataController.classList.add('invalid');
 					return strings.err.missingDataController;
@@ -327,8 +328,20 @@ const onDOMContentLoaded = () => {
 			birthplace: formBirthplace.value,
 			birthdate: formBirthdate.value,
 			address: formAddress.value,
-			fisccode: formFisccode.value
-		}
+			fisccode: formFisccode.value,
+			delivery: [[formPhone, checkPhone], [formEmail, checkEmail], [formPaddr, checkPaddr], [formFax, checkFax]]
+				.filter(a => a[1].checked)
+				.map(a => a[0].getAttribute('placeholder') + ': ' + a[0].value)
+				.join('; '),
+			declarations: [checkDecl1, checkDecl2, checkDecl3].map((cb, index) => {
+				if(cb.checked)
+					return strings.components.form.fields.declarations[index]
+				else
+					return undefined
+			}).filter(decl => decl !== undefined),
+			data_controller: dataController.value, 
+			data_responsible: dataResponsible.value.length === 0 ? strings.components.form.fields.data_responsible.missing : dataResponsible.value,
+		} // the other data will be added from index.js
 		return data;
 	}
 
@@ -372,7 +385,7 @@ const onDOMContentLoaded = () => {
 				break;
 			case 3: // next button is submit now
 				formHandler(); // check form validity
-				window.electronAPI.submitForm(data);	
+				window.electronAPI.submitForm(collectFormData());	
 				break;
 		}
 	});
