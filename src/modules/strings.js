@@ -76,6 +76,8 @@ export const strings = {
 		invalidFax: "Inserisci un numero di fax valido",
 		missingOption: "Seleziona almeno un'opzione",
 		missingData: "Completa il form con i dati mancanti",
-		missingDataController: "Inserisci gli estremi del titolare"
+		missingDataController: "Inserisci gli estremi del titolare",
+		missingSignature: "Carica una foto della firma autografa",
+		missingIDCard: "Carica una foto del documento di identità fronte/retro"
 	}
 };
