@@ -56,9 +56,9 @@ export const setupText = () => {
 	document.getElementById('form-email').setAttribute('placeholder', strings.components.form.fields.email.placeholder);
 	document.getElementById('form-fax').setAttribute('placeholder', strings.components.form.fields.fax.placeholder);
 
-	document.getElementById('form-decl-1-label').innerText = strings.components.form.fields.decl_1.label;
-	document.getElementById('form-decl-2-label').innerText = strings.components.form.fields.decl_2.label;
-	document.getElementById('form-decl-3-label').innerText = strings.components.form.fields.decl_3.label;
+	document.getElementById('form-decl-1-label').innerText = strings.components.form.fields.declarations[0];
+	document.getElementById('form-decl-2-label').innerText = strings.components.form.fields.declarations[1];
+	document.getElementById('form-decl-3-label').innerText = strings.components.form.fields.declarations[2];
 	document.getElementById('form-data-controller-label').innerText = strings.components.form.fields.data_controller.label;
 	document.getElementById('form-data-responsible-label').innerText = strings.components.form.fields.data_responsible.label;
 	document.getElementById('form-data-controller-infobox').innerText = strings.components.form.fields.data_controller.infobox;

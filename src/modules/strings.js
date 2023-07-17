@@ -46,9 +46,11 @@ export const strings = {
 				paddr: {label: 'Indirizzo', placeholder: 'Indirizzo'},
 				email: {label: 'Email', placeholder: 'Email'},
 				fax: {label: 'Fax', placeholder: 'Fax'},
-				decl_1: {label: 'La Repubblica Italiana è lo Stato membro in cui risiede abitualmente'},
-				decl_2: {label: 'La Repubblica Italiana è lo Stato membro in cui lavora'},
-				decl_3: {label: 'La violazione si è verificata mentre era fisicamente presente sul suolo della Repubblica Italiana'},
+				declarations: [
+					'La Repubblica Italiana è lo Stato membro in cui risiede abitualmente',
+					'La Repubblica Italiana è lo Stato membro in cui lavora',
+					'La violazione si è verificata mentre era fisicamente presente sul suolo della Repubblica Italiana'
+				],
 				signature_1 : {label: 'Firma autografa'},
 				signature_2 : {label: 'Firmerò digitalmente il reclamo'},
 				data_controller: {label: 'Estremi identificativi del titolare del trattamento', placeholder: 'Estremi identificativi del titolare del trattamento', infobox: 'Gli estremi identificativi del titolare dovrebbero essere di norma disponibili in rete. Puoi provare ad effettuare una ricerca con un motore di ricerca inserendo come query: "titolare trattamento dati" oppure "privacy policy" seguito dal nome dell\'host individuato. Ricorda di inserire'},
