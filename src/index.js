@@ -33,6 +33,8 @@ const hosts = require('../hosts.json');
 const badRequests = {'requests': []};
 
 const filePaths = {};
+let log_file = undefined;
+let navigation_url = undefined;
 
 const cropViewsToWindowSize = (mainWindow) => {
 	const winBounds = mainWindow.getBounds();
@@ -64,6 +66,7 @@ const handlers = {
 		if(!URL.startsWith('https://')){
 			URL = 'https://' + URL;
 		}
+		navigation_url = URL;
 		attachDebugger(webView);
 		webView.webContents.loadURL(URL);
 	},
@@ -106,7 +109,17 @@ const handlers = {
 			});
 	}, 
 	submitForm: (event, data) => {
-		console.log(JSON.stringify(data, null, 4));
+		data = {...data,
+			attachment: log_file,
+			website: navigation_url,
+			badhosts: badRequests.requests
+		}
+		const timestamp = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
+		try {
+			document.createDocument(config.claimPrefix + "_" + timestamp + ".pdf", data);
+		} catch(err){
+			console.log(`Could not generate claim: ${err}.`);
+		}
 	}
 };
 
@@ -115,9 +128,9 @@ const getViews = (mainWindow) => mainWindow.getBrowserViews();
 
 const writeLog = (HAR) => {
 	const timestamp = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
-	const LOG_FILE = config.logFilePrefix + "_" + timestamp + ".har"
-	badRequests['logfile'] = LOG_FILE;
-	appendFile(LOG_FILE, JSON.stringify(HAR, null, 4), (err) => {
+	log_file = config.logFilePrefix + "_" + timestamp + ".har";
+	badRequests['logfile'] = log_file;
+	appendFile(log_file, JSON.stringify(HAR, null, 4), (err) => {
 		if(err)
 			console.error(`error: writing log file failed due to: ${err}.`);
 	});
@@ -248,30 +261,6 @@ const registerForEvents = (win) => {
 };
 
 const createWindow = () => {
-
-	// sample data
-	const data = {
-		'name': 'Nome', 
-		'surname': 'Cognome', 
-		'birthplace': 'Luogo Di Nascita',
-		'birthdate': 'GG/MM/AAAA',
-		'address': 'Indirizzo Di Residenza',
-		'fisccode': 'CODFIS00A01A000A',
-		'delivery': 'telefono: 123456789',
-		'declarations': [
-			'la Repubblica Italiana è lo Stato membro in cui risiede abitualmente',
-		],
-		'data_controller': 'Responsabile Del Trattamento Dei Dati, Indirizzo, etc.',
-		'data_responsible': 'sconosciuto',
-		'attachment': 'log_20230716.har',
-		'website': 'sitoweb.com',
-		'badhosts': [
-			'extraue.host'
-		]
-	}
-
-	document.createDocument('reclamo.pdf', data);
-
 	const mainWindow = new BrowserWindow({
 		width: config.bounds.browserWindow.width, 
 		height: config.bounds.browserWindow.height, 

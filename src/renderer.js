@@ -332,7 +332,7 @@ const onDOMContentLoaded = () => {
 			delivery: [[formPhone, checkPhone], [formEmail, checkEmail], [formPaddr, checkPaddr], [formFax, checkFax]]
 				.filter(a => a[1].checked)
 				.map(a => a[0].getAttribute('placeholder') + ': ' + a[0].value)
-				.join('; '),
+				.join(', '),
 			declarations: [checkDecl1, checkDecl2, checkDecl3].map((cb, index) => {
 				if(cb.checked)
 					return strings.components.form.fields.declarations[index]
