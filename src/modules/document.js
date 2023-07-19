@@ -15,9 +15,10 @@ const fs = require('fs');
 const textOptions = { align: 'justify' };
 const indent = 15;
 const imgOffset = 20;
+const margin = 50;
 
 exports.createDocument = (path, data) => {
-	const doc = new PDF({font: 'Times-Roman'});
+	const doc = new PDF({font: 'Times-Roman', margins: { top: margin, right: margin, bottom: margin, left: margin }});
 
 	const date = new Date(Date.now());
 	const locale = 'it-IT';
@@ -83,8 +84,18 @@ exports.createDocument = (path, data) => {
 	doc.text('1) ' + data.attachment, textOptions);
 	doc.moveDown();
 
-	doc.text(document.date, { align: 'left', continued: true }).text(document.signature, { align: 'right' });
-	doc.text(dateString);
+	if(data.signature !== undefined){
+		doc.text(document.date, { align: 'left', continued: true }).text(document.signature, { align: 'right' });
+		doc.text(dateString);
+		const sigWidth = doc.page.width / 4;
+		const sigHeight = doc.page.height;
+		const sigX = doc.page.width - (doc.page.margins.right + sigWidth);
+		const sigY = doc.y - doc.heightOfString(dateString);
+		doc.image(data.signature, sigX, sigY, { fit: [sigWidth, sigHeight] });
+	} else {
+		doc.text(document.date);
+		doc.text(dateString);
+	}
 
 	doc.addPage().text('Documento di identità:');
 	doc.image(data.idcard, doc.page.margins.left, doc.page.margins.top + imgOffset, { fit: [doc.page.width - (doc.page.margins.left + doc.page.margins.right), doc.page.height - (imgOffset + doc.page.margins.top + doc.page.margins.bottom)] });
