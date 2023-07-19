@@ -81,5 +81,10 @@ export const strings = {
 		missingDataController: "Inserisci gli estremi del titolare",
 		missingSignature: "Carica una foto della firma autografa",
 		missingIDCard: "Carica una foto del documento di identità fronte/retro"
+	},
+	message: {
+		claimOutputSuccess: "Il reclamo è stato esportato correttamente sul file %filename%. Ricorda di controllare che i dati siano corretti prima di inviarlo al Garante.",
+		claimOutputFail: "Non è stato possibile esportare il reclamo a causa di un errore interno.",
+		navigationFail: "Non è possibile contattare il sito a causa di un errore.",
 	}
 };

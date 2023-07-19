@@ -109,6 +109,7 @@ const handlers = {
 			});
 	}, 
 	submitForm: (event, data) => {
+		const [localView, webView] = getViews(getWin(event.sender));
 		data = {...data,
 			attachment: log_file,
 			website: navigation_url,
@@ -122,6 +123,7 @@ const handlers = {
 		const docpath = config.claimPrefix + "_" + timestamp + ".pdf"
 		try {
 			document.createDocument(docpath, data);
+			localView.webContents.send('claim-output', docpath);
 		} catch(err){
 			console.log(`Could not generate claim: ${err}.`);
 		}

@@ -452,6 +452,17 @@ const onDOMContentLoaded = () => {
 		signature = true;
 		formHandler();
 	});
+
+	window.electronAPI.onClaimOutput((event, docpath) => {
+		hideComponent(document.getElementById('form-container'));
+		showComponent(document.getElementById('message-container'));
+		const message = document.getElementById('message');
+		if(docpath !== undefined){
+			message.innerText = strings.message.claimOutputSuccess.replace('%filename%', docpath);
+		} else {
+			message.innerText = strings.message.claimOutputFail;
+		}
+	});
 };
 
 window.addEventListener('DOMContentLoaded', onDOMContentLoaded);

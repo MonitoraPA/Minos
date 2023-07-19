@@ -18,5 +18,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	onChangeURL: (callback) => ipcRenderer.on('change-url', callback),
 	onBadRequests: (callback) => ipcRenderer.on('bad-requests', callback),
 	onIDCardUpload: (callback) => ipcRenderer.on('idcard-upload', callback),
-	onSignatureUpload: (callback) => ipcRenderer.on('signature-upload', callback)
+	onSignatureUpload: (callback) => ipcRenderer.on('signature-upload', callback),
+	onClaimOutput: (callback) => ipcRenderer.on('claim-output', callback)
 });

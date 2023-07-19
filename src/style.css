@@ -322,3 +322,9 @@ body {
 	position: relative;
 	border-radius: var(--border-radius);
 }
+
+#message {
+	font-size: var(--font-size-big);
+	font-weight: bold;
+	text-align: center;
+}
