@@ -53,7 +53,7 @@ export const strings = {
 				],
 				signature_1 : {label: 'Firma autografa'},
 				signature_2 : {label: 'Firmerò digitalmente il reclamo'},
-				data_controller: {label: 'Estremi identificativi del titolare del trattamento', placeholder: 'Estremi identificativi del titolare del trattamento', infobox: 'Gli estremi identificativi del titolare dovrebbero essere di norma disponibili in rete. Puoi provare ad effettuare una ricerca con un motore di ricerca inserendo come query: "titolare trattamento dati" oppure "privacy policy" seguito dal nome dell\'host individuato. Ricorda di inserire'},
+				data_controller: {label: 'Estremi identificativi del titolare del trattamento', placeholder: 'Estremi identificativi del titolare del trattamento', infobox: 'Gli estremi identificativi del titolare dovrebbero essere di norma disponibili in rete. Puoi provare ad effettuare una ricerca con un motore di ricerca inserendo come query: "titolare trattamento dati" oppure "privacy policy" seguito dal nome dell\'host individuato.'},
 				data_responsible: {label: 'Estremi identificativi del responsabile del trattamento (se conosciuto)', placeholder: 'Estremi identificativi del responsabile del trattamento (se conosciuto)', infobox: 'Gli estremi identificativi del responsabile non sono sempre di facile individuazione. Puoi provare ad effettuare una ricerca con un motore di ricerca inserendo come query: "responsabile trattamento dati" oppure "privacy policy" seguito dal nome dell\'host individuato.', missing: 'sconosciuto'},
 			},
 			buttons: {
