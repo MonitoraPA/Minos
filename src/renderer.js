@@ -463,6 +463,14 @@ const onDOMContentLoaded = () => {
 			message.innerText = strings.message.claimOutputFail;
 		}
 	});
+
+	window.electronAPI.onNavigationFail((event, errorCode, errorDescription) => {
+		const mainDivs = getElementsByIds(['top-bar', 'main', 'report-container', 'form-container']);
+		mainDivs.forEach(d => { hideComponent(d); });
+		showComponent(document.getElementById('message-container'));
+		const message = document.getElementById('message');
+		message.innerText = strings.message.navigationFail.replace('%errcode%', errorCode).replace('%errdesc%', errorDescription);
+	});
 };
 
 window.addEventListener('DOMContentLoaded', onDOMContentLoaded);

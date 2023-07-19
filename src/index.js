@@ -68,7 +68,11 @@ const handlers = {
 		}
 		navigation_url = URL;
 		attachDebugger(webView);
-		webView.webContents.loadURL(URL);
+		webView.webContents.loadURL(URL)
+			.then()
+			.catch((err) => {
+				// localView.webContents.send('navigation-fail', errorCode, errorDescription);		
+			});
 	},
 	analyze: (event) => {
 		resizeViews(getWin(event.sender), config.bounds.localView.full, config.bounds.webView.hidden);
@@ -258,13 +262,15 @@ const registerForEvents = (win) => {
 		cropViewsToWindowSize(win);
 	});
 	webView.webContents.on('did-navigate', (event, URL, httpResponseCode, httpStatusText) => {
-		// TODO check if navigation ok
 		page.url = URL;
 	});
 	// whenever the webView location changes, update the URL in the urlBox 
 	webView.webContents.on('did-navigate-in-page', (event, URL, httpResponseCode, httpStatusText) => {
-		// TODO check if navigation ok
 		localView.webContents.send('change-url', URL);
+	});
+	webView.webContents.on('did-fail-load', (event, errorCode, errorDescription, validateURL, isMainFrame, frameProcessId, frameRoutingId) => {
+		resizeViews(getWin(event.sender), config.bounds.localView.full, config.bounds.webView.hidden);
+		localView.webContents.send('navigation-fail', errorCode, errorDescription);		
 	});
 };
 
