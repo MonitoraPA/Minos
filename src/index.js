@@ -62,7 +62,7 @@ const fileDialogOptions = {
 const handlers = {
 	start: (event, URL) => {
 		const [localView, webView] = getViews(getWin(event.sender));
-		if(!URL.startsWith('https://')){
+		if(!URL.startsWith('https://') && !URL.startsWith('http://')){
 			URL = 'https://' + URL;
 		}
 		navigation_url = URL;

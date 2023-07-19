@@ -19,10 +19,10 @@ const setupInfoboxes = () => {
 	const dataResponsibleInfobox = {'infobox': document.getElementById('form-data-responsible-infobox'), 'badge': document.getElementById('form-data-responsible-infobadge') };
 	[dataControllerInfobox, dataResponsibleInfobox].forEach(d => {
 		d.badge.addEventListener('mouseenter', (event) => {
-			d.infobox.classList.remove('hidden');	
+			showComponent(d.infobox);
 		});
 		d.badge.addEventListener('mouseleave', (event) => {
-			d.infobox.classList.add('hidden');	
+			hideComponent(d.infobox);
 		});
 	});
 };
@@ -89,7 +89,7 @@ const onDOMContentLoaded = () => {
 	const onClickStart = (event) => {
 		// run only the 1st time
 		const URL = urlBox.value; 
-		document.getElementById('spinner').classList.remove('hidden');
+		showComponent(document.getElementById('spinner'));
 		if(URL.length !== 0){
 			window.electronAPI.start(URL);
 			const button = event.target;
@@ -98,6 +98,7 @@ const onDOMContentLoaded = () => {
 			// clicked for the 2nd time (analyze)
 			button.addEventListener('click', () => {
 				window.electronAPI.analyze();
+				hideComponent(document.getElementById('spinner'));
 			}, { once: true });
 			button.removeEventListener('click', onClickStart);
 		}
@@ -419,7 +420,7 @@ const onDOMContentLoaded = () => {
 	// on page navigation, update the URL in the urlBox
 	window.electronAPI.onChangeURL((event, url) => {
 		// hide spinner
-		document.getElementById('spinner').classList.add('hidden');
+		hideComponent(document.getElementById('spinner'));
 		urlBox.value = url;
 	});
 
