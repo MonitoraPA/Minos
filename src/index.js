@@ -56,7 +56,7 @@ const resizeViews = (mainWindow, localViewBounds, webViewBounds) => {
 
 const fileDialogOptions = {
 	properties: ['openFile'],
-	filters: [ { name: 'Images', extensions: ['jpg', 'png'] } ]
+	filters: [ { name: 'Images', extensions: ['jpg', 'jpeg', 'png'] } ]
 };
 
 const handlers = {
@@ -112,11 +112,16 @@ const handlers = {
 		data = {...data,
 			attachment: log_file,
 			website: navigation_url,
-			badhosts: badRequests.requests
+			badhosts: badRequests.requests.map(r => {
+				r.hosts.values[0] + "(" + r.hosts.source + ")"
+			}),
+			signature: filePaths['signature'],
+			idcard: filePaths['idcard']
 		}
 		const timestamp = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
+		const docpath = config.claimPrefix + "_" + timestamp + ".pdf"
 		try {
-			document.createDocument(config.claimPrefix + "_" + timestamp + ".pdf", data);
+			document.createDocument(docpath, data);
 		} catch(err){
 			console.log(`Could not generate claim: ${err}.`);
 		}

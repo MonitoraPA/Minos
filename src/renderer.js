@@ -334,8 +334,8 @@ const onDOMContentLoaded = () => {
 				.map(a => a[0].getAttribute('placeholder') + ': ' + a[0].value)
 				.join(', '),
 			declarations: [checkDecl1, checkDecl2, checkDecl3].map((cb, index) => {
-				if(cb.checked)
-					return strings.components.form.fields.declarations[index]
+				if(cb.checked) // de-capitalize first character
+					return strings.components.form.fields.declarations[index].substring(0, 1).toLowerCase() + strings.components.form.fields.declarations[index].substring(1);
 				else
 					return undefined
 			}).filter(decl => decl !== undefined),

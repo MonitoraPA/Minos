@@ -14,6 +14,7 @@ const fs = require('fs');
 
 const textOptions = { align: 'justify' };
 const indent = 15;
+const imgOffset = 20;
 
 exports.createDocument = (path, data) => {
 	const doc = new PDF({font: 'Times-Roman'});
@@ -84,6 +85,9 @@ exports.createDocument = (path, data) => {
 
 	doc.text(document.date, { align: 'left', continued: true }).text(document.signature, { align: 'right' });
 	doc.text(dateString);
+
+	doc.addPage().text('Documento di identità:');
+	doc.image(data.idcard, doc.page.margins.left, doc.page.margins.top + imgOffset, { fit: [doc.page.width - (doc.page.margins.left + doc.page.margins.right), doc.page.height - (imgOffset + doc.page.margins.top + doc.page.margins.bottom)] });
 
 	doc.end();
 }
