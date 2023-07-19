@@ -113,8 +113,8 @@ const handlers = {
 			attachment: log_file,
 			website: navigation_url,
 			badhosts: badRequests.requests.map(r => {
-				r.hosts.values[0] + "(" + r.hosts.source + ")"
-			}),
+				return r.hosts.values[0] + " (" + r.hosts.source + ")"
+			}).filter((val, idx, arr) => arr.indexOf(val) === idx), // remove duplicates
 			signature: filePaths['signature'],
 			idcard: filePaths['idcard']
 		}
