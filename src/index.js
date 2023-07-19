@@ -126,6 +126,7 @@ const handlers = {
 			localView.webContents.send('claim-output', docpath);
 		} catch(err){
 			console.log(`Could not generate claim: ${err}.`);
+			localView.webContents.send('claim-output', undefined); // signal error
 		}
 	}
 };
