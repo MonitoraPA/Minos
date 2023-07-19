@@ -89,6 +89,7 @@ const onDOMContentLoaded = () => {
 	const onClickStart = (event) => {
 		// run only the 1st time
 		const URL = urlBox.value; 
+		document.getElementById('spinner').classList.remove('hidden');
 		if(URL.length !== 0){
 			window.electronAPI.start(URL);
 			const button = event.target;
@@ -417,6 +418,8 @@ const onDOMContentLoaded = () => {
 
 	// on page navigation, update the URL in the urlBox
 	window.electronAPI.onChangeURL((event, url) => {
+		// hide spinner
+		document.getElementById('spinner').classList.add('hidden');
 		urlBox.value = url;
 	});
 
@@ -465,7 +468,7 @@ const onDOMContentLoaded = () => {
 	});
 
 	window.electronAPI.onNavigationFail((event, errorCode, errorDescription) => {
-		const mainDivs = getElementsByIds(['top-bar', 'main', 'report-container', 'form-container']);
+		const mainDivs = getElementsByIds(['top-bar', 'main', 'report-container', 'form-container', 'spinner']);
 		mainDivs.forEach(d => { hideComponent(d); });
 		showComponent(document.getElementById('message-container'));
 		const message = document.getElementById('message');

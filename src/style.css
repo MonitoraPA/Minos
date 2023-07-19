@@ -328,3 +328,17 @@ body {
 	font-weight: bold;
 	text-align: center;
 }
+
+#spinner {
+	border: 10px solid var(--color-gray-lighter); /* Light grey */
+	border-top: 10px solid var(--color-title); /* Blue */
+	border-radius: 50%;
+	width: 50px;
+	height: 50px;
+	animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}

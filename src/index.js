@@ -61,7 +61,6 @@ const fileDialogOptions = {
 
 const handlers = {
 	start: (event, URL) => {
-		resizeViews(getWin(event.sender), config.bounds.localView.small, config.bounds.webView.full);
 		const [localView, webView] = getViews(getWin(event.sender));
 		if(!URL.startsWith('https://')){
 			URL = 'https://' + URL;
@@ -71,6 +70,8 @@ const handlers = {
 		webView.webContents.loadURL(URL)
 			.then()
 			.catch((err) => {
+				console.log(`could not load page!`);
+				// resizeViews(getWin(event.sender), config.bounds.localView.full, config.bounds.webView.hidden);
 				// localView.webContents.send('navigation-fail', errorCode, errorDescription);		
 			});
 	},
@@ -157,7 +158,7 @@ const getCookies = (webContents) => {
 			}
 		}).catch((err) => {
 			if(err){
-				console.error(`err: ${err}`);
+				console.log(`err: ${err}`);
 			}
 		});
 }
@@ -266,6 +267,7 @@ const registerForEvents = (win) => {
 	});
 	// whenever the webView location changes, update the URL in the urlBox 
 	webView.webContents.on('did-navigate-in-page', (event, URL, httpResponseCode, httpStatusText) => {
+		resizeViews(getWin(event.sender), config.bounds.localView.small, config.bounds.webView.full);
 		localView.webContents.send('change-url', URL);
 	});
 	webView.webContents.on('did-fail-load', (event, errorCode, errorDescription, validateURL, isMainFrame, frameProcessId, frameRoutingId) => {
