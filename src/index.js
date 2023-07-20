@@ -67,7 +67,8 @@ const handlers = {
 		}
 		navigation_url = URL;
 		attachDebugger(webView);
-		webView.webContents.loadURL(URL)
+		const options = { userAgent: config.userAgent };
+		webView.webContents.loadURL(URL, options)
 			.then()
 			.catch((err) => {
 				console.log(`could not load page!`);
