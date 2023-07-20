@@ -264,11 +264,12 @@ const registerForEvents = (win) => {
 		cropViewsToWindowSize(win);
 	});
 	webView.webContents.on('did-navigate', (event, URL, httpResponseCode, httpStatusText) => {
+		resizeViews(getWin(event.sender), config.bounds.localView.small, config.bounds.webView.full);
+		localView.webContents.send('change-url', URL);
 		page.url = URL;
 	});
 	// whenever the webView location changes, update the URL in the urlBox 
 	webView.webContents.on('did-navigate-in-page', (event, URL, httpResponseCode, httpStatusText) => {
-		resizeViews(getWin(event.sender), config.bounds.localView.small, config.bounds.webView.full);
 		localView.webContents.send('change-url', URL);
 	});
 	webView.webContents.on('did-fail-load', (event, errorCode, errorDescription, validateURL, isMainFrame, frameProcessId, frameRoutingId) => {
