@@ -9,7 +9,7 @@
 	"data_controller_label": "estremi identificativi del titolare del trattamento",
 	"data_responsible_label": "estremi identificativi del responsabile del trattamento",
 	"facts": "Il giorno %date%, durante la navigazione sul sito web \"%website%\", riscontrava la presenza di richieste HTTP verso gli host: %badhosts%, come testimoniato dai log della navigazione (allegato 1).",
-	"regulation": "si presume violato in particolare l'art. 45 del GDPR, secondo cui \"il trasferimento di dati personali verso un paese terzo o un'organizzazione internazionale è ammesso se la Commissione ha deciso che il paese terzo, un territorio o uno o più settori specifici all'interno del paese terzo, o l'organizzazione internazionale in questione garantiscono un livello di protezione adeguato. In tal caso il trasferimento non necessita di autorizzazioni specifiche\";",
+	"regulation": "si presumono violati in particolare gli art. 44 e successivi del Capo V del GDPR;",
 	"pre_request": "Tutto ciò premesso, il/la sottoscritto/a",
 	"request_label": "CHIEDE",
 	"request": "al Garante per la protezione dei dati personali, esaminato il reclamo che precede e ritenutane la fondatezza, di assumere nei confronti di %data-controller% ogni opportuno provvedimento, ai sensi e per gli effetti dell'art. 144 del Codice in materia di protezione dei dati personali (Decreto Legislativo 30 giugno 2003, n. 196 e successive modifiche e integrazioni), anche ai fini dell'emanazione dei provvedimenti di cui all'art. 58 del GDPR. e, in particolare",
