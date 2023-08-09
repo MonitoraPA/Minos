@@ -7,8 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron-forge start",
-	"package": "electron-forge package",
-	"make": "electron-forge make"
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "author": "ebmaj7",
   "license": "Hacking License",
@@ -17,6 +17,17 @@
     "electron": "^24.1.2"
   },
   "dependencies": {
+    "@electron-forge/maker-zip": "^6.3.0",
     "pdfkit": "^0.13.0"
+  },
+  "config": {
+	  "forge": {
+		"makers": [
+			{
+				"name": "@electron-forge/maker-zip",
+				"platforms": ["darwin", "linux"]
+			}
+		]
+	  }
   }
 }
