@@ -18,3 +18,14 @@ ne derivino o ne dipendano (inclusi gli output prodotti), ricorsivamente.
 
 NOTA BENE: la Hacking License è incompatibile con (A)GPL, CAL, HESSLA e
 con tutti gli altri copyleft forti.
+
+# Installazione ed esecuzione
+
+Dopo aver clonato il repository è sufficiente installare le dipendenze ed
+eseguire l'applicazione con `npm run`:
+
+```
+git clone https://github.com/monitorapa/minos
+cd minos
+npm start
+```
