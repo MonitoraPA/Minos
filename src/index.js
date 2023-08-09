@@ -302,6 +302,16 @@ const createApplicationMenu = (mainWindow, localView, webView) => {
 					await shell.openExternal('https://monitora-pa.it/contatti.html');
 				}
 			}, {
+				label: 'Sorgenti (GitHub)',
+				click: async () => {
+					await shell.openExternal('https://github.com/MonitoraPA/Minos');
+				}
+			}, {
+				label: 'Segnalazioni (GitHub)',
+				click: async () => {
+					await shell.openExternal('https://github.com/MonitoraPA/Minos/issues');
+				}
+			}, {
 				label: 'Licenza',
 				click: async () => {
 					await shell.openExternal('https://monitora-pa.it/LICENSE.txt');
