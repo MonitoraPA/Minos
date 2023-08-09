@@ -73,6 +73,7 @@ body {
 	grid-template-columns: 6fr 1fr;
 	background-color: var(--color-gray-darker);
 	height: 50px;
+	width: 99%;
 }
 
 .box {
