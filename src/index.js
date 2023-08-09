@@ -283,6 +283,7 @@ const createWindow = () => {
 		width: config.bounds.browserWindow.width, 
 		height: config.bounds.browserWindow.height, 
 		backgroundColor: config.colors.background,
+		icon: 'assets/icon.png',
 		webPreferences: {
 			nodeIntegration: true
 		}
