@@ -12,7 +12,7 @@
  * (see licenses/MIT.txt)
  */
 
-const { app, session, BrowserWindow, BrowserView, ipcMain, dialog } = require('electron');
+const { app, Menu, session, BrowserWindow, BrowserView, ipcMain, dialog } = require('electron');
 const { appendFile, readFile, createReadStream } = require('fs');
 const { url } = require('url');
 const path = require('path');
@@ -278,6 +278,40 @@ const registerForEvents = (win) => {
 	});
 };
 
+const createApplicationMenu = (mainWindow, localView, webView) => {
+	const { shell } = require('electron');
+    const template = [
+		{ role: 'fileMenu' },
+		{ role: 'editMenu' },
+		{
+			label: 'View',
+			submenu: [
+				{ label: 'Ricarica',
+				  accelerator: "CmdOrCtrl+R", 
+				  click: () => {
+					 webView.webContents.reloadIgnoringCache();
+				}},
+				{ role: 'togglefullscreen' }
+			]
+		},
+		{
+			role: 'help',
+			submenu: [{
+				label: 'Contatti',
+				click: async () => {
+					await shell.openExternal('https://monitora-pa.it/contatti.html');
+				}
+			}, {
+				label: 'Licenza',
+				click: async () => {
+					await shell.openExternal('https://monitora-pa.it/LICENSE.txt');
+				}
+			}]
+		}];
+	const menu = Menu.buildFromTemplate(template);
+	Menu.setApplicationMenu(menu);
+}
+
 const createWindow = () => {
 	const mainWindow = new BrowserWindow({
 		width: config.bounds.browserWindow.width, 
@@ -315,6 +349,7 @@ const createWindow = () => {
 	// however, Electron himself suggests not using webview tags, so
 	// by now the cleanest solution seems to be the BrowserView
 	// see: https://www.electronjs.org/docs/latest/api/webview-tag#warning
+    createApplicationMenu(mainWindow, localView, webView)
 };
 
 const onReadyApp = () => {
