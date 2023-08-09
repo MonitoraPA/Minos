@@ -27,5 +27,6 @@ eseguire l'applicazione con `npm run`:
 ```
 git clone https://github.com/monitorapa/minos
 cd minos
+npm install
 npm start
 ```
