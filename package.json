@@ -1,20 +1,41 @@
 {
   "name": "Minos",
   "productName": "Minos",
+  "author": "ebmaj7",
+  "license": "Hacking License",
   "version": "1.0.0",
   "description": "Interceptor for dangerous web requests",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron-forge start",
-	"package": "electron-forge package",
-	"make": "electron-forge make"
+
+    "package": "electron-forge package",
+
+    "make": "npm run make-linux-zip && npm run make-linux-deb && npm run make-linux-rpm",
+    "make-win": "npm run make-win-zip && npm run make-win-installer",
+    "make-darwin": "npm run make-darwin-zip && npm run make-darwin-installer",
+
+    "make-linux-zip": "electron-forge make --platform linux --targets @electron-forge/maker-zip",
+    "make-win-zip": "electron-forge make --platform win32 --targets @electron-forge/maker-zip",
+    "make-darwin-zip": "electron-forge make --platform darwin --targets @electron-forge/maker-zip",
+
+    "make-linux-deb": "electron-forge make --platform linux --targets @electron-forge/maker-deb",
+    "make-linux-rpm": "electron-forge make --platform linux --targets @electron-forge/maker-rpm",
+    "make-win-installer": "electron-forge make --platform win32 --targets @electron-forge/maker-squirrel",
+    "make-darwin-dmg": "electron-forge make --platform darwin --targets @electron-forge/maker-dmg"
   },
-  "author": "ebmaj7",
-  "license": "Hacking License",
+  "config": {
+    "forge": "./forge.config.js"
+  },
   "devDependencies": {
-    "@electron-forge/cli": "^6.2.1",
-    "electron": "^24.1.2"
+    "@electron-forge/cli": "^6.3.0",
+    "@electron-forge/maker-deb": "^6.3.0",
+    "@electron-forge/maker-rpm": "^6.3.0",
+    "@electron-forge/maker-squirrel": "^6.3.0",
+    "@electron-forge/maker-zip": "^6.3.0",
+    "@electron-forge/maker-dmg": "^6.3.0",
+    "electron": "^25.4.0"
   },
   "dependencies": {
     "pdfkit": "^0.13.0"

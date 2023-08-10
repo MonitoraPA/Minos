@@ -1,18 +1,21 @@
-/** 
+/**
  * This file is part of Minos
  *
  * Copyright (C) 2023 ebmaj7 <ebmaj7@proton.me>
  *
  * Minos is a hack. You can use it according to the terms and
  * conditions of the Hacking License (see licenses/HACK.txt)
- */ 
+ */
 
 /**
- * Portions of this file are Copyright (C) 2023 Massimo Ghisalberti 
+ * Portions of this file are Copyright (C) 2023 Massimo Ghisalberti
  * (see licenses/MIT.txt)
  */
 
 const { app, Menu, session, BrowserWindow, BrowserView, ipcMain, dialog } = require('electron');
+
+try{ if (require('electron-squirrel-startup')) app.quit(); } catch {}
+
 const { appendFile, readFile, createReadStream } = require('fs');
 const { url } = require('url');
 const path = require('path');
@@ -35,6 +38,9 @@ const badRequests = {'requests': []};
 const filePaths = {};
 let log_file = undefined;
 let navigation_url = undefined;
+let mainWindow = undefined;
+let webView = undefined;
+let localView = undefined;
 
 const cropViewsToWindowSize = (mainWindow) => {
 	const winBounds = mainWindow.getBounds();
@@ -61,7 +67,7 @@ const fileDialogOptions = {
 
 const handlers = {
 	start: (event, URL) => {
-		const [localView, webView] = getViews(getWin(event.sender));
+
 		if(!URL.startsWith('https://') && !URL.startsWith('http://')){
 			URL = 'https://' + URL;
 		}
@@ -73,25 +79,25 @@ const handlers = {
 			.catch((err) => {
 				console.log(`could not load page!`);
 				// resizeViews(getWin(event.sender), config.bounds.localView.full, config.bounds.webView.hidden);
-				// localView.webContents.send('navigation-fail', errorCode, errorDescription);		
+				// localView.webContents.send('navigation-fail', errorCode, errorDescription);
 			});
 	},
 	analyze: (event) => {
-		resizeViews(getWin(event.sender), config.bounds.localView.full, config.bounds.webView.hidden);
-		const [localView, webView] = getViews(getWin(event.sender));
+		resizeViews(mainWindow, config.bounds.localView.full, config.bounds.webView.hidden);
+
 		const HAR = createHAR([page]);
 		detachDebugger(webView);
 		writeLog(HAR);
 		localView.webContents.send('bad-requests', badRequests);
 	},
 	loadIDCard: (event) => {
-		const [localView, webView] = getViews(getWin(event.sender));
+
 		dialog.showOpenDialog(fileDialogOptions)
 			.then((response) => {
 				if(!response.canceled){
 					filePaths['idcard'] = response.filePaths[0];
 					// send idCard path to renderer
-					localView.webContents.send('idcard-upload', filePaths['idcard']);	
+					localView.webContents.send('idcard-upload', filePaths['idcard']);
 				} else {
 					// do nothing
 				}
@@ -100,22 +106,22 @@ const handlers = {
 			});
 	},
 	loadSignature: (event) => {
-		const [localView, webView] = getViews(getWin(event.sender));
+
 		dialog.showOpenDialog(fileDialogOptions)
 			.then((response) => {
 				if(!response.canceled){
 					filePaths['signature'] = response.filePaths[0];
 					// send idCard path to renderer
-					localView.webContents.send('signature-upload', filePaths['signature']);	
+					localView.webContents.send('signature-upload', filePaths['signature']);
 				} else {
 					// do nothing
 				}
 			}).catch((err) => {
 				console.log(`error: ${err}.`);
 			});
-	}, 
+	},
 	submitForm: (event, data) => {
-		const [localView, webView] = getViews(getWin(event.sender));
+
 		data = {...data,
 			attachment: log_file,
 			website: navigation_url,
@@ -152,7 +158,7 @@ const writeLog = (HAR) => {
 
 const getCookies = (webContents) => {
 	webContents.debugger.sendCommand('Network.getCookies')
-	    .then((cookies) => {
+		.then((cookies) => {
 			for(const cookie of cookies){
 				console.log(`cookie:`);
 				console.log(cookie);
@@ -180,15 +186,15 @@ const attachDebugger = (view) => {
 	view.webContents.debugger.on('message', (event, method, params) => {
 		// identify requests to "bad" hosts (sooner is better!)
 		if(method === 'Network.requestWillBeSent'){
-			const {url} = params.request;	
+			const {url} = params.request;
 			const timestamp = new Date(params.wallTime * 1000).toISOString();
 			matching = Object.entries(hosts)
 					.map(([src, hs]) => [src, hs.filter(u => url.indexOf(u.slice(1)) >= 0)]) // identify matching hosts
 					.filter(([src, matchingHosts]) => matchingHosts.length > 0)
-					.reduce((obj, [src, matchingHosts]) => { 
-						obj['url'] = url; 
-						obj['hosts'] = {'source': src, 'values': matchingHosts}; 
-						obj['timestamp'] = timestamp; 
+					.reduce((obj, [src, matchingHosts]) => {
+						obj['url'] = url;
+						obj['hosts'] = {'source': src, 'values': matchingHosts};
+						obj['timestamp'] = timestamp;
 						return obj }
 					, {});
 			if(Object.entries(matching).length > 0)
@@ -264,30 +270,30 @@ const registerForEvents = (win) => {
 		cropViewsToWindowSize(win);
 	});
 	webView.webContents.on('did-navigate', (event, URL, httpResponseCode, httpStatusText) => {
-		resizeViews(getWin(event.sender), config.bounds.localView.small, config.bounds.webView.full);
+		resizeViews(mainWindow, config.bounds.localView.small, config.bounds.webView.full);
 		localView.webContents.send('change-url', URL);
 		page.url = URL;
 	});
-	// whenever the webView location changes, update the URL in the urlBox 
+	// whenever the webView location changes, update the URL in the urlBox
 	webView.webContents.on('did-navigate-in-page', (event, URL, httpResponseCode, httpStatusText) => {
 		localView.webContents.send('change-url', URL);
 	});
 	webView.webContents.on('did-fail-load', (event, errorCode, errorDescription, validateURL, isMainFrame, frameProcessId, frameRoutingId) => {
-		resizeViews(getWin(event.sender), config.bounds.localView.full, config.bounds.webView.hidden);
-		localView.webContents.send('navigation-fail', errorCode, errorDescription);		
+		resizeViews(mainWindow, config.bounds.localView.full, config.bounds.webView.hidden);
+		localView.webContents.send('navigation-fail', errorCode, errorDescription);
 	});
 };
 
 const createApplicationMenu = (mainWindow, localView, webView) => {
 	const { shell } = require('electron');
-    const template = [
+	const template = [
 		{ role: 'fileMenu' },
 		{ role: 'editMenu' },
 		{
 			label: 'View',
 			submenu: [
 				{ label: 'Ricarica',
-				  accelerator: "CmdOrCtrl+R", 
+				  accelerator: "CmdOrCtrl+R",
 				  click: () => {
 					 webView.webContents.reloadIgnoringCache();
 				}},
@@ -323,9 +329,9 @@ const createApplicationMenu = (mainWindow, localView, webView) => {
 }
 
 const createWindow = () => {
-	const mainWindow = new BrowserWindow({
-		width: config.bounds.browserWindow.width, 
-		height: config.bounds.browserWindow.height, 
+	mainWindow = new BrowserWindow({
+		width: config.bounds.browserWindow.width,
+		height: config.bounds.browserWindow.height,
 		backgroundColor: config.colors.background,
 		icon: 'assets/icon.png',
 		webPreferences: {
@@ -336,13 +342,13 @@ const createWindow = () => {
 	// please see: https://www.electronjs.org/docs/latest/tutorial/spellchecker/#does-the-spellchecker-use-any-google-services
 	mainWindow.webContents.session.setSpellCheckerLanguages([]);
 	mainWindow.webContents.session.setSpellCheckerEnabled(false);
-	const localView = new BrowserView({ 
-		webPreferences: { 
-				preload: path.join(__dirname, 'preload.js') 
+	localView = new BrowserView({
+		webPreferences: {
+				preload: path.join(__dirname, 'preload.js')
 			}
 		}
 	);
-	const webView = new BrowserView();
+	webView = new BrowserView();
 	mainWindow.addBrowserView(localView);
 	mainWindow.addBrowserView(webView);
 	localView.webContents.loadFile('src/main.html').then(() => {
@@ -354,12 +360,12 @@ const createWindow = () => {
 	if(config.debug)
 		localView.webContents.openDevTools();
 	registerForEvents(mainWindow);
-	// due to some bugs, browserviews will not show up until the 
+	// due to some bugs, browserviews will not show up until the
 	// main window is resized; see: https://github.com/electron/electron/issues/31424
 	// however, Electron himself suggests not using webview tags, so
 	// by now the cleanest solution seems to be the BrowserView
 	// see: https://www.electronjs.org/docs/latest/api/webview-tag#warning
-    createApplicationMenu(mainWindow, localView, webView)
+	createApplicationMenu(mainWindow, localView, webView)
 };
 
 const onReadyApp = () => {
