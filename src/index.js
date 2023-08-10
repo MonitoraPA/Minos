@@ -36,7 +36,7 @@ const hosts = require('../hosts.json');
 const badRequests = {'requests': []};
 
 const filePaths = {};
-let log_file = undefined;
+let log_file_path = undefined;
 let navigation_url = undefined;
 let mainWindow = undefined;
 let webView = undefined;
@@ -60,7 +60,7 @@ const resizeViews = (mainWindow, localViewBounds, webViewBounds) => {
 	webView.setBounds({ ...webViewBounds, width: Math.min(webViewBounds.width, winBounds.width)});
 };
 
-const fileDialogOptions = {
+const openFileDialogOptions = {
 	properties: ['openFile'],
 	filters: [ { name: 'Images', extensions: ['jpg', 'jpeg', 'png'] } ]
 };
@@ -87,12 +87,27 @@ const handlers = {
 
 		const HAR = createHAR([page]);
 		detachDebugger(webView);
-		writeLog(HAR);
-		localView.webContents.send('bad-requests', badRequests);
+		const timestamp = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
+		log_file_path = config.logFilePrefix + "_" + timestamp + ".har";
+		badRequests['logfile'] = log_file_path;
+		dialog.showSaveDialog({ 
+			properties: ['showOverwriteConfirmation', 'createDirectory'],
+			title: 'Save navigation log',
+			defaultPath: log_file_path,
+			buttonLabel: 'Salva',
+			filters: [ { name: 'HAR files', extensions: ['har'] } ]
+		}).then((response) => {
+			if(!response.canceled){
+				writeLog(HAR, response.filePath);
+				localView.webContents.send('bad-requests', badRequests);
+			} else {
+				// ?
+			}
+		});
 	},
 	loadIDCard: (event) => {
 
-		dialog.showOpenDialog(fileDialogOptions)
+		dialog.showOpenDialog(openFileDialogOptions)
 			.then((response) => {
 				if(!response.canceled){
 					filePaths['idcard'] = response.filePaths[0];
@@ -107,7 +122,7 @@ const handlers = {
 	},
 	loadSignature: (event) => {
 
-		dialog.showOpenDialog(fileDialogOptions)
+		dialog.showOpenDialog(openFileDialogOptions)
 			.then((response) => {
 				if(!response.canceled){
 					filePaths['signature'] = response.filePaths[0];
@@ -123,7 +138,7 @@ const handlers = {
 	submitForm: (event, data) => {
 
 		data = {...data,
-			attachment: log_file,
+			attachment: log_file_path,
 			website: navigation_url,
 			badhosts: badRequests.requests.map(r => {
 				return r.hosts.values[0] + " (" + r.hosts.source + ")"
@@ -140,17 +155,15 @@ const handlers = {
 			console.log(`Could not generate claim: ${err}.`);
 			localView.webContents.send('claim-output', undefined); // signal error
 		}
-	}
+	},
 };
 
 const getWin = (webContents) => BrowserWindow.fromWebContents(webContents);
 const getViews = (mainWindow) => mainWindow.getBrowserViews();
 
-const writeLog = (HAR) => {
-	const timestamp = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
-	log_file = config.logFilePrefix + "_" + timestamp + ".har";
-	badRequests['logfile'] = log_file;
-	appendFile(log_file, JSON.stringify(HAR, null, 4), (err) => {
+const writeLog = (HAR, path) => {
+	badRequests['logfile'] = path;
+	appendFile(path, JSON.stringify(HAR, null, 4), (err) => {
 		if(err)
 			console.error(`error: writing log file failed due to: ${err}.`);
 	});
