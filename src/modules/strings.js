@@ -23,6 +23,7 @@ export const strings = {
 		},
 		report: {
 			label: "Il log della navigazione è stato salvato nel file: ",
+			labelNoFile: "Il log della navigazione non è stato salvato.",
 			button: "Reclama al Garante",
 			badHostsDetected: "Durante la navigazione sono stati individuati trasferimenti illeciti verso questi hosts:",
 			noBadHostsDetected: "Non sono stati individuati trasferimenti illeciti durante la navigazione."

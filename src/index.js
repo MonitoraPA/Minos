@@ -89,19 +89,26 @@ const handlers = {
 		detachDebugger(webView);
 		const timestamp = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
 		log_file_path = config.logFilePrefix + "_" + timestamp + ".har";
-		badRequests['logfile'] = log_file_path;
 		dialog.showSaveDialog({ 
 			properties: ['showOverwriteConfirmation', 'createDirectory'],
-			title: 'Save navigation log',
+			title: "Salva il log della navigazione",
 			defaultPath: log_file_path,
 			buttonLabel: 'Salva',
 			filters: [ { name: 'HAR files', extensions: ['har'] } ]
 		}).then((response) => {
-			if(!response.canceled){
-				writeLog(HAR, response.filePath);
+			if(response.canceled){
 				localView.webContents.send('bad-requests', badRequests);
 			} else {
-				// ?
+				try {
+					appendFile(response.filePath, JSON.stringify(HAR, null, 4), 'utf8', (err) => {
+						if(err)
+							console.log(`error: writing log file failed due to: ${err}.`);
+					});
+					badRequests['logfile'] = response.filePath;
+					localView.webContents.send('bad-requests', badRequests);
+				} catch(err){
+					console.log(`error: something bad happened while saving log file: ${err}.`);
+				}
 			}
 		});
 	},
@@ -160,14 +167,6 @@ const handlers = {
 
 const getWin = (webContents) => BrowserWindow.fromWebContents(webContents);
 const getViews = (mainWindow) => mainWindow.getBrowserViews();
-
-const writeLog = (HAR, path) => {
-	badRequests['logfile'] = path;
-	appendFile(path, JSON.stringify(HAR, null, 4), (err) => {
-		if(err)
-			console.error(`error: writing log file failed due to: ${err}.`);
-	});
-};
 
 const getCookies = (webContents) => {
 	webContents.debugger.sendCommand('Network.getCookies')

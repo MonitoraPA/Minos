@@ -427,7 +427,10 @@ const onDOMContentLoaded = () => {
 	window.electronAPI.onBadRequests((event, data) => {
 		hideComponent(document.getElementById('top-bar'));
 		showComponent(document.getElementById('report-container'));
-		reportLabel.innerText += " " + data.logfile + ". ";
+		if(data.logfile)
+			reportLabel.innerText += " " + data.logfile + ". ";
+		else // if logfile is not present then the log has not been saved
+			reportLabel.innerText = strings.components.report.labelNoFile;
 		if(data.requests.length > 0){
 			reportLabel.innerText += `\r\n${strings.components.report.badHostsDetected}`
 			textarea.value = data.requests
