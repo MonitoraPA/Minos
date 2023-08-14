@@ -60,7 +60,7 @@ export const strings = {
 			buttons: {
 				next: "Avanti",
 				prev: "Indietro",
-				submit: "Genera il reclamo",
+				submit: "Salva il reclamo",
 				signature: "Carica foto della firma",
 				idphoto: "Carica documento di identità fronte/retro"
 			},
