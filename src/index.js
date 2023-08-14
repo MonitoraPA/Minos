@@ -16,8 +16,7 @@ const { app, Menu, session, BrowserWindow, BrowserView, ipcMain, dialog } = requ
 
 try{ if (require('electron-squirrel-startup')) app.quit(); } catch {}
 
-const { appendFile, readFile, createReadStream } = require('fs');
-const { url } = require('url');
+const { appendFile } = require('fs');
 const path = require('path');
 const createHAR = require('./har/cdp2har');
 const Page = require('./har/page');
