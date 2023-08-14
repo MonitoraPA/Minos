@@ -460,14 +460,14 @@ const onDOMContentLoaded = () => {
 		formHandler();
 	});
 
-	window.electronAPI.onClaimOutput((event, docpath) => {
+	window.electronAPI.onClaimOutput((event, claimOutput) => {
 		hideComponent(document.getElementById('form-container'));
 		showComponent(document.getElementById('message-container'));
 		const message = document.getElementById('message');
-		if(docpath !== undefined){
-			message.innerText = strings.message.claimOutputSuccess.replace('%filename%', docpath);
+		if(claimOutput.error){
+			message.innerText = strings.message.claimOutputFail.replace("%filename%", claimOutput.docpath);
 		} else {
-			message.innerText = strings.message.claimOutputFail;
+			message.innerText = strings.message.claimOutputSuccess.replace("%filename%", claimOutput.docpath);
 		}
 	});
 

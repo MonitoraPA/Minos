@@ -67,7 +67,6 @@ const openFileDialogOptions = {
 
 const handlers = {
 	start: (event, URL) => {
-
 		if(!URL.startsWith('https://') && !URL.startsWith('http://')){
 			URL = 'https://' + URL;
 		}
@@ -84,7 +83,6 @@ const handlers = {
 	},
 	analyze: (event) => {
 		resizeViews(mainWindow, config.bounds.localView.full, config.bounds.webView.hidden);
-
 		const HAR = createHAR([page]);
 		detachDebugger(webView);
 		const timestamp = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
@@ -113,7 +111,6 @@ const handlers = {
 		});
 	},
 	loadIDCard: (event) => {
-
 		dialog.showOpenDialog(openFileDialogOptions)
 			.then((response) => {
 				if(!response.canceled){
@@ -128,7 +125,6 @@ const handlers = {
 			});
 	},
 	loadSignature: (event) => {
-
 		dialog.showOpenDialog(openFileDialogOptions)
 			.then((response) => {
 				if(!response.canceled){
@@ -143,7 +139,6 @@ const handlers = {
 			});
 	},
 	submitForm: (event, data) => {
-
 		data = {...data,
 			attachment: log_file_path,
 			website: navigation_url,
@@ -155,13 +150,26 @@ const handlers = {
 		}
 		const timestamp = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
 		const docpath = config.claimPrefix + "_" + timestamp + ".pdf"
-		try {
-			document.createDocument(docpath, data);
-			localView.webContents.send('claim-output', docpath);
-		} catch(err){
-			console.log(`Could not generate claim: ${err}.`);
-			localView.webContents.send('claim-output', undefined); // signal error
-		}
+		// save document by allowing different filename
+		dialog.showSaveDialog({
+			properties: ['showOverwriteConfirmation', 'createDirectory'],
+			title: "Salva il reclamo",
+			defaultPath: docpath,
+			buttonLabel: "Salva",
+			filters: [ { name: "PDF files", extensions: ["pdf"] } ]
+		}).then((response) => {
+			if(response.canceled){
+				// do nothing
+			} else {
+				try {
+					document.createDocument(response.filePath, data);
+					localView.webContents.send("claim-output", {docpath: response.filePath, error: false});
+				} catch(err){
+					console.log(`Could not generate claim: ${err}.`);
+					localView.webContents.send("claim-output", {docpath: response.filePath, error: true}); // signal error
+				}
+			}
+		})
 	},
 };
 

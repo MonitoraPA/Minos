@@ -85,7 +85,7 @@ export const strings = {
 	},
 	message: {
 		claimOutputSuccess: "Il reclamo è stato esportato correttamente sul file %filename%. Ricorda di controllare che i dati siano corretti prima di inviarlo al Garante.",
-		claimOutputFail: "Non è stato possibile esportare il reclamo a causa di un errore interno.",
+		claimOutputFail: "Il reclamo filename% non è stato salvato a causa di un errore.",
 		navigationFail: "Non è possibile contattare il sito a causa di un errore HTTP. Codice dell'errore: %errcode% (%errdesc%).",
 	}
 };
