@@ -15,6 +15,8 @@ permettendo all'utente di:
 Minos è un software distribuito sotto la [Hacking License](licenses/HACK.txt) che,
 quale contratto esplicito con gli autori, va applicato a tutti i lavori che 
 ne derivino o ne dipendano (inclusi gli output prodotti), ricorsivamente.
+Alcuni file (in cui è esplicitamente indicato) sono stati importati da progetti
+sotto [licenza MIT](licenses/MIT.txt) con il permesso dei rispettivi autori.
 
 NOTA BENE: la Hacking License è incompatibile con (A)GPL, CAL, HESSLA e
 con tutti gli altri copyleft forti.
