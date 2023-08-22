@@ -73,7 +73,7 @@ function buildEntry(requestId, networkEvents, pageId, fetchEvents){
 	const getResponseBody = findResponseBody(networkEvents, fetchEvents);
 	const resourceChangedPriority = findEventParams('Network.resourceChangedPriority', networkEvents);
 
-	const status = responseReceived.response?.status ?? responseReceivedExtraInfo.statusCode ?? -1; /* no response */
+	const status = responseReceived.response?.status ?? responseReceivedExtraInfo.statusCode ?? 0; /* no response */
 	const statusText = responseReceived.response?.statusText ?? httpStatusMap[status] ?? "";
 
 
@@ -572,14 +572,14 @@ function simulateRequestWillBeSent(requestPaused, correspondingResponse, recorde
 	/* to locate the documentUrl we look in the recorded events following the response
 	 * for a Page.frameStoppedLoading with the same frameId...
 	 */
-	const frameStoppedLoadingURL = lookupAfter(correspondingResponse, recordedEvents,
+	const frameStoppedLoadingURL = lookupAfter(requestPaused, recordedEvents,
 		x => x.method === "Page.frameStoppedLoading"
 		  && x.params.frameId === requestPaused.params.frameId,
 		x => x.params.documentURL);
 	if (frameStoppedLoadingURL){
 		documentURL = frameStoppedLoadingURL;
 	} else {
-		const requestWillBeSentURL = lookupBefore(correspondingResponse, recordedEvents,
+		const requestWillBeSentURL = lookupBefore(requestPaused, recordedEvents,
 			x => x.method === 'Network.requestWillBeSent'
 			  && x.params.frameId === requestPaused.params.frameId
 			  && x.params.loaderId === requestPaused.params.loaderId,
