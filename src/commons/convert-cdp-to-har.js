@@ -41,7 +41,7 @@ const convertCDPtoHAR = (builderInfo, recordedEvents) => {
 	har.debug = {
 		recordedEventsLength: recordedEvents.length,
 		recordedEvents: recordedEvents,
-		paged: Object.fromEntries(pages)
+		byPage: Object.fromEntries(pages)
 	} ;
     /* */
 	return har;
@@ -89,7 +89,6 @@ function buildEntry(requestId, networkEvents, pageId, fetchEvents){
 	const rawRequestLength = computeRawRequestLength(requestWillBeSent.request.method, requestWillBeSent.request.url, "HTTP/1.0", requestHeaders);
 
 	const responseHeaders = mergeHeaders(responseReceived.response?.headers, responseReceivedExtraInfo.headers);
-	//const rawResponseHeaders = simulateRawResponse(status, statusText, httpVersion, responseHeaders);
 	const redirectURL = responseHeaders['location'] ?? ""; // required in schema
 
 	const responseDataLength = computeResponseDataLength(networkEvents);
@@ -429,7 +428,6 @@ function groupEventsByPages(recordedEvents){
 	}
 
 	/* Chromium mixes redirects with actual request: try to distinguish them */
-	let redirectIndex = 0;
 	for(const requestId of redirects){
 		const requests = requestsMap.get(requestId);
 		const actualRequest = [];
@@ -443,14 +441,16 @@ function groupEventsByPages(recordedEvents){
 		requests.splice(-actualRequest.length);
 
 		let redirect = [];
+		let redirectIndex = 0;
 		for(const ev of requests){
 			if(ev.method === 'Network.requestWillBeSent'){
 				if(redirect.length > 0){
 					requestsMap.set(redirect[0].params.requestId, redirect);
 				}
 				redirect = [];
+				redirectIndex++;
 			}
-			ev.params.requestId += "_redirect_" + (redirectIndex++);
+			ev.params.requestId += "_redirect_" + redirectIndex;
 			redirect.push(ev);
 		}
 		if(redirect.length > 0){
@@ -484,6 +484,20 @@ function groupEventsByPages(recordedEvents){
 				}
 
 				const simulatedRequestWillBeSent = simulateRequestWillBeSent(requestPaused, correspondingResponse, recordedEvents);
+				if(!pageEventMap.has(simulatedRequestWillBeSent.params.documentURL)){
+					/* worst case: we can't find the documentURL but we need a Page */
+					pageEventMap.set(simulatedRequestWillBeSent.params.documentURL, [
+						{
+							method: "Page.neverHappened", /* to mark this syntetic event */
+							params: {
+								documentURL: simulatedRequestWillBeSent.params.documentURL,
+								timestamp: simulatedRequestWillBeSent.params.timestamp,
+								frameId: simulatedRequestWillBeSent.params.frameId,
+								loaderId: simulatedRequestWillBeSent.params.loaderId
+							}
+						}
+					]);
+				}
 
 				const destination = requestsMap.get(simulatedRequestWillBeSent.params.requestId);
 				destination.unshift(simulatedRequestWillBeSent);
@@ -566,7 +580,7 @@ function simulateRequestWillBeSent(requestPaused, correspondingResponse, recorde
 	if (frameStoppedLoadingURL){
 		documentURL = frameStoppedLoadingURL;
 	} else {
-		const requestWillBeSentURL = lookupAfter(correspondingResponse, recordedEvents,
+		const requestWillBeSentURL = lookupBefore(correspondingResponse, recordedEvents,
 			x => x.method === 'Network.requestWillBeSent'
 			  && x.params.frameId === requestPaused.params.frameId
 			  && x.params.loaderId === requestPaused.params.loaderId,
@@ -626,8 +640,9 @@ function analyzePage(documentURL, requests){
 		pageTimings.onContentLoad = (domContentEventFired.timestamp - requestWillBeSent.timestamp) * 1000 ;
 	} else {
 		const firstResponseReceived = findEventParams('Network.responseReceived', requests[0].network);
-		if(firstResponseReceived.timestamp)
-		pageTimings.onContentLoad = (firstResponseReceived.timestamp - requestWillBeSent.timestamp) * 1000 ;
+		if(firstResponseReceived.timestamp){
+			pageTimings.onContentLoad = (firstResponseReceived.timestamp - requestWillBeSent.timestamp) * 1000 ;
+		}
 	}
 
 	const loadEventFired = findEventParams('Page.loadEventFired', requests[0].pageEvents);

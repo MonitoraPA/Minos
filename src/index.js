@@ -124,7 +124,7 @@ const handlers = {
 							.filter(([src, matchingHosts]) => matchingHosts.length > 0)
 							.reduce((obj, [src, matchingHosts]) => {
 								obj['url'] = url;
-								obj['hosts'] = {'source': src, 'values': matchingHosts};
+								obj['hosts'] = {'source': src, 'values': [matchingHosts.reduce((a, b) => a.length > b.length ? a : b)]};
 								obj['timestamp'] = timestamp;
 								return obj }
 							, {});
