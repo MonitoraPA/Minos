@@ -43,7 +43,7 @@ const convertCDPtoHAR = (builderInfo, recordedEvents) => {
 		recordedEvents: recordedEvents,
 		byPage: Object.fromEntries(pages)
 	} ;
-    /* */
+	/* */
 	return har;
 }
 
@@ -263,8 +263,7 @@ function buildEntryTimings(timing, finish, requestTimeStamp){
 		"connect": -1,
 		"send": -1,
 		"wait": -1,
-		"receive": -1,
-		"_blocked_queueing": -1
+		"receive": -1
 	}
 	if(timing){
 		let blocked = (timing.requestTime - requestTimeStamp) * 1000;
