@@ -73,15 +73,15 @@ function buildEntry(requestId, networkEvents, pageId, fetchEvents){
 	const getResponseBody = findResponseBody(networkEvents, fetchEvents);
 	const resourceChangedPriority = findEventParams('Network.resourceChangedPriority', networkEvents);
 
-	const status = responseReceived.response?.status ?? responseReceivedExtraInfo.statusCode;
-	const statusText = responseReceived.response?.statusText || httpStatusMap[status] || "";
+	const status = responseReceived.response?.status ?? responseReceivedExtraInfo.statusCode ?? -1; /* no response */
+	const statusText = responseReceived.response?.statusText ?? httpStatusMap[status] ?? "";
 
 
 	const wallTime = requestWillBeSent.wallTime * 1000;
 	const finish = responseReceived.timestamp
-				|| loadingFailed.timestamp
-				|| requestWillBeSentExtraInfo.connectTiming?.requestTime /* on 30x redirect */
-				|| requestWillBeSent.timestamp /* fallback to get a number anyway */;
+				?? loadingFailed.timestamp
+				?? requestWillBeSentExtraInfo.connectTiming?.requestTime /* on 30x redirect */
+				?? requestWillBeSent.timestamp /* fallback to get a number anyway */;
 
 	const httpVersion = computeHttpVersion(responseReceived.response?.protocol);
 
@@ -126,7 +126,7 @@ function buildEntry(requestId, networkEvents, pageId, fetchEvents){
 			bodySize: -1,
 			content: {
 				size: responseDataLength,
-				mimeType: responseReceived.response?.mimeType || "text/html",
+				mimeType: responseReceived.response?.mimeType ?? "text/html",
 				text: getResponseBody.body,
 				encoding
 			}
@@ -137,7 +137,7 @@ function buildEntry(requestId, networkEvents, pageId, fetchEvents){
 		serverIPAddress: responseReceived.response?.remoteIPAddress,
 		connection: `${responseReceived.response?.connectionId}`,
 		_initiator: requestWillBeSent.initiator,
-		_priority: resourceChangedPriority.newPriority || requestWillBeSent.request.initialPriority,
+		_priority: resourceChangedPriority.newPriority ?? requestWillBeSent.request.initialPriority,
 		_resourceType: requestWillBeSent.type
 	};
 }
