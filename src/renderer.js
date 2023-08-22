@@ -1,15 +1,15 @@
-/** 
+/**
  * This file is part of Minos
  *
  * Copyright (C) 2023 ebmaj7 <ebmaj7@proton.me>
  *
  * Minos is a hack. You can use it according to the terms and
  * conditions of the Hacking License (see licenses/HACK.txt)
- */ 
+ */
 
-import { strings } from './modules/strings.js';
-import { enable, disable, isLetter, isDigit, disableInput, hideComponent, showComponent, getElementsByIds } from './modules/util.js';
-import { setupText } from './modules/setuptext.js';
+import { strings } from './commons/strings.js';
+import { enable, disable, isLetter, isDigit, disableInput, hideComponent, showComponent, getElementsByIds } from './commons/util.js';
+import { setupText } from './commons/setuptext.js';
 
 let idcard = false;
 let signature = false;
@@ -45,7 +45,7 @@ const setupTooltips = () => {
 					tooltip.innerText = button.getAttribute('tooltip');
 					showComponent(tooltip);
 				}
-				else 
+				else
 					hideComponent(tooltip);
 			});
 			button.addEventListener('mouseleave', (event) => {
@@ -62,7 +62,7 @@ const setupTooltips = () => {
 };
 
 const isSpecialKey = (code) => { return ["Tab", "Backspace", "Delete", "ArrowLeft", "ArrowRight"].some(x => x === code); };
-const insertKey = (key, target) => { 
+const insertKey = (key, target) => {
 	const curPos = target.selectionStart;
 	target.value = target.value.slice(0, curPos) + key + target.value.slice(curPos);
 	target.selectionStart = curPos + 1;
@@ -88,7 +88,7 @@ const onDOMContentLoaded = () => {
 	/* functions */
 	const onClickStart = (event) => {
 		// run only the 1st time
-		const URL = urlBox.value; 
+		const URL = urlBox.value;
 		showComponent(document.getElementById('spinner'));
 		if(URL.length !== 0){
 			window.electronAPI.start(URL);
@@ -104,7 +104,7 @@ const onDOMContentLoaded = () => {
 		}
 	};
 
-	// return err, which is used to determine whether a given 
+	// return err, which is used to determine whether a given
 	// page is valid or not and possibly it is displayed as tooltip
 	// above the nextButton
 	const validateForm = () => {
@@ -216,11 +216,11 @@ const onDOMContentLoaded = () => {
 	urlBox.addEventListener('input', (event) => {
 		if(event.target.value.length === 0)
 			disable(topButton);
-		else 
+		else
 			enable(topButton);
 	});
 
-	topButton.addEventListener('click', onClickStart); 
+	topButton.addEventListener('click', onClickStart);
 
 	radioSign1.addEventListener('change', (event) => {
 		if(event.target.checked){
@@ -242,7 +242,7 @@ const onDOMContentLoaded = () => {
 
 	// add event listeners to checkboxes
 	['phone', 'paddr', 'email', 'fax'].forEach((field) => {
-		const checkBox = document.getElementById(`check-${field}`);	
+		const checkBox = document.getElementById(`check-${field}`);
 		const container = document.getElementById(`${field}-container`);
 		checkBox.addEventListener('change', (event) => {
 			if(event.target.checked){
@@ -261,7 +261,7 @@ const onDOMContentLoaded = () => {
 			// insert only numbers
 			if(event.target.value.length < 10 && isDigit(event.key))
 				insertKey(event.key, event.target);
-		} 
+		}
 		formHandler();
 	};
 
@@ -282,12 +282,12 @@ const onDOMContentLoaded = () => {
 			event.preventDefault();
 			if(event.target.value.length < 16 && (isLetter(event.key) || isDigit(event.key)))
 				insertKey(event.key.toUpperCase(), event.target);
-		} 
+		}
 		formHandler();
 	});
 
 	formBirthdate.addEventListener('keydown', (event) => {
-		const addSlashes = (date) => { 
+		const addSlashes = (date) => {
 			if(date.length >= 4)
 				return date.slice(0, 2) + "/" + date.slice(2, 4) + "/" + date.slice(4);
 			else if(date.length >= 2)
@@ -303,7 +303,7 @@ const onDOMContentLoaded = () => {
 		// if there's a backspace delete backspace + number
 		if(event.code === "Backspace"){
 			event.preventDefault();
-			const newDate = curDate.slice(0, datePos - 1) + curDate.slice(datePos);	
+			const newDate = curDate.slice(0, datePos - 1) + curDate.slice(datePos);
 			event.target.value = addSlashes(newDate);
 			const nextPos = [3,6].some(x => x === textPos) ? textPos - 2 : textPos - 1;
 			event.target.selectionStart = nextPos;
@@ -341,7 +341,7 @@ const onDOMContentLoaded = () => {
 				else
 					return undefined
 			}).filter(decl => decl !== undefined),
-			data_controller: dataController.value, 
+			data_controller: dataController.value,
 			data_responsible: dataResponsible.value.length === 0 ? strings.components.form.fields.data_responsible.missing : dataResponsible.value,
 		} // the other data will be added from index.js
 		return data;
@@ -387,7 +387,7 @@ const onDOMContentLoaded = () => {
 				break;
 			case 3: // next button is submit now
 				formHandler(); // check form validity
-				window.electronAPI.submitForm(collectFormData());	
+				window.electronAPI.submitForm(collectFormData());
 				break;
 		}
 	});
@@ -406,7 +406,7 @@ const onDOMContentLoaded = () => {
 		formLabel.innerText = strings.components.form.pages[page - 1];
 		if(page === 3)
 			nextButton.innerText = strings.components.form.buttons.next;
-		page--;	
+		page--;
 	});
 
 	idCardUploadButton.addEventListener('click', () => {

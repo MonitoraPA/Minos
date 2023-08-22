@@ -16,11 +16,14 @@ const { app, Menu, session, BrowserWindow, BrowserView, ipcMain, dialog } = requ
 
 try{ if (require('electron-squirrel-startup')) app.quit(); } catch {}
 
-const { appendFile } = require('fs');
+const packageInfo = require('../package');
+
+const { writeFile } = require('fs');
 const path = require('path');
-const createHAR = require('./har/cdp2har');
-const Page = require('./har/page');
-const document = require('./modules/document');
+const convertCDPtoHAR = require('./commons/convert-cdp-to-har');
+const CDPCollector = require('./commons/cdp-collector');
+
+const document = require('./commons/document');
 
 const MODE_IS_DEV = !app.isPackaged;
 const APP_PATH = app.getAppPath();
@@ -29,10 +32,10 @@ const CONF_PATH = MODE_IS_DEV
   : path.dirname(APP_PATH);
 const config = require(path.join(CONF_PATH, 'conf.json'));
 
-const page = new Page();
-
 const hosts = require('../hosts.json');
 const badRequests = {'requests': []};
+
+const collector = new CDPCollector();
 
 const filePaths = {};
 let log_file_path = undefined;
@@ -64,6 +67,17 @@ const openFileDialogOptions = {
 	filters: [ { name: 'Images', extensions: ['jpg', 'jpeg', 'png'] } ]
 };
 
+const urlToFilePrefix = function(url){
+	const noscheme = url.replace("https://", "").replace("http://", "");
+	const domain = noscheme.indexOf('/') > -1
+				 ? noscheme.substring(0, noscheme.indexOf('/'))
+				 : noscheme;
+	if (domain.indexOf('@') > -1){
+		return domain.substring(domain.indexOf('@') + 1);
+	}
+	return domain;
+}
+
 const handlers = {
 	start: (event, URL) => {
 		if(!URL.startsWith('https://') && !URL.startsWith('http://')){
@@ -75,36 +89,65 @@ const handlers = {
 		webView.webContents.loadURL(URL, options)
 			.then()
 			.catch((err) => {
-				console.log(`could not load page!`);
+				console.error('start ERROR', err);
 				// resizeViews(getWin(event.sender), config.bounds.localView.full, config.bounds.webView.hidden);
 				// localView.webContents.send('navigation-fail', errorCode, errorDescription);
 			});
 	},
 	analyze: (event) => {
 		resizeViews(mainWindow, config.bounds.localView.full, config.bounds.webView.hidden);
-		const HAR = createHAR([page]);
-		detachDebugger(webView);
 		const timestamp = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');
-		log_file_path = config.logFilePrefix + "_" + timestamp + ".har";
-		dialog.showSaveDialog({ 
+		log_file_path = config.logFilePrefix + '_' + urlToFilePrefix(navigation_url) + "_" + timestamp + ".har";
+		dialog.showSaveDialog({
 			properties: ['showOverwriteConfirmation', 'createDirectory'],
 			title: "Salva il log della navigazione",
 			defaultPath: log_file_path,
 			buttonLabel: 'Salva',
 			filters: [ { name: 'HAR files', extensions: ['har'] } ]
 		}).then((response) => {
+			/* delay collection to wait for all contents from debugger */
+			const collectedEvents = collector.getCollectedEvents();
+
+			collectedEvents.forEach(({method, params}) => {
+				if(method === 'Network.requestWillBeSent'){
+					const {url} = params.request;
+					let timestamp = 0;
+					try{
+						timestamp = new Date(params.wallTime * 1000).toISOString();
+					} catch (err){
+						console.error('timestamp', timestamp, err);
+						console.log(params);
+					}
+					// TODO: refactor (too clever)
+					matching = Object.entries(hosts)
+							.map(([src, hs]) => [src, hs.filter(u => url.indexOf(u.slice(1)) >= 0)]) // identify matching hosts
+							.filter(([src, matchingHosts]) => matchingHosts.length > 0)
+							.reduce((obj, [src, matchingHosts]) => {
+								obj['url'] = url;
+								obj['hosts'] = {'source': src, 'values': matchingHosts};
+								obj['timestamp'] = timestamp;
+								return obj }
+							, {});
+					if(Object.entries(matching).length > 0)
+						badRequests.requests.push(matching);
+				}
+			});
+
 			if(response.canceled){
 				localView.webContents.send('bad-requests', badRequests);
 			} else {
 				try {
-					appendFile(response.filePath, JSON.stringify(HAR, null, 4), 'utf8', (err) => {
+
+					const HAR = convertCDPtoHAR(packageInfo, collectedEvents);
+					detachDebugger(webView);
+					writeFile(response.filePath, JSON.stringify(HAR, null, 4), (err) => {
 						if(err)
-							console.log(`error: writing log file failed due to: ${err}.`);
-					});
+							console.error(`error: writing log file failed due to`, err);
+						});
 					badRequests['logfile'] = response.filePath;
 					localView.webContents.send('bad-requests', badRequests);
 				} catch(err){
-					console.log(`error: something bad happened while saving log file: ${err}.`);
+					console.error(`error: something bad happened while saving log file.`, err);
 				}
 			}
 		});
@@ -172,109 +215,13 @@ const handlers = {
 	},
 };
 
-const getWin = (webContents) => BrowserWindow.fromWebContents(webContents);
-const getViews = (mainWindow) => mainWindow.getBrowserViews();
-
-const getCookies = (webContents) => {
-	webContents.debugger.sendCommand('Network.getCookies')
-		.then((cookies) => {
-			for(const cookie of cookies){
-				console.log(`cookie:`);
-				console.log(cookie);
-			}
-		}).catch((err) => {
-			if(err){
-				console.log(`err: ${err}`);
-			}
-		});
-}
-
 const attachDebugger = (view) => {
-
-	try {
-		view.webContents.debugger.attach('1.3');
-		console.log(`debugger: attached`);
-	} catch(err) {
-		console.log(`debugger: attach failed due to: ${err}.`);
-	}
-
-	view.webContents.debugger.on('detach', (event, reason) => {
-		console.log(`debugger: detached due to: ${reason}`);
-	});
-
-	view.webContents.debugger.on('message', (event, method, params) => {
-		// identify requests to "bad" hosts (sooner is better!)
-		if(method === 'Network.requestWillBeSent'){
-			const {url} = params.request;
-			const timestamp = new Date(params.wallTime * 1000).toISOString();
-			matching = Object.entries(hosts)
-					.map(([src, hs]) => [src, hs.filter(u => url.indexOf(u.slice(1)) >= 0)]) // identify matching hosts
-					.filter(([src, matchingHosts]) => matchingHosts.length > 0)
-					.reduce((obj, [src, matchingHosts]) => {
-						obj['url'] = url;
-						obj['hosts'] = {'source': src, 'values': matchingHosts};
-						obj['timestamp'] = timestamp;
-						return obj }
-					, {});
-			if(Object.entries(matching).length > 0)
-				badRequests.requests.push(matching);
-		}
-		const methodName = `_${method.replace('.', '_')}`;
-		if(methodName in Page.prototype){
-			try {
-				page.processEvent(method, params);
-			} catch(err){
-				console.log(`err: ${err}`);
-			}
-		}
-		// we need to explicitly fetch the response body, since the
-		// loadingFinished params do not contain the response body
-		if(method === 'Network.loadingFinished'){
-			// only if entry is being tracked (e.g. no cached items)
-			if(page.entries.get(params.requestId)){
-				view.webContents.debugger.sendCommand('Network.getResponseBody', {
-					requestId: params.requestId
-				}).then((result) => {
-					page.processEvent('Network.getResponseBody', {requestId: params.requestId, ...result});
-				}).catch((err) => {
-					// sometimes it is impossible to fetch the whole content (please refer to: https://github.com/cyrus-and/chrome-har-capturer/issues/82)
-					page.processEvent('Network.getResponseBody', {requestId: params.requestId});
-				});
-			}
-		}
-	});
-
-	view.webContents.debugger.sendCommand(`Network.setCacheDisabled`, {cacheDisabled: true}).then(() => {
-		console.log(`debugger: network cache disabled.`);
-	}).catch((err) => {
-		console.log(`debugger: could not disable network cache due to: ${err}.`);
-	});
-
-	const enableCmds = ['Network', 'Page'];
-
-	for(const cmd of enableCmds){
-		view.webContents.debugger.sendCommand(`${cmd}.enable`).then(() => {
-			console.log(`debugger: ${cmd} enabled.`);
-		}).catch((err) => {
-			console.log(`debugger: ${cmd} could not be enabled due to: ${err}.`);
-		});
-	}
-
-	view.webContents.debugger.sendCommand('Network.enable').then(() => {
-		console.log(`debugger: network enabled.`);
-	}).catch((err) => {
-		console.log(`debugger: network could not be enabled due to: ${err}.`);
-	});
-	view.webContents.debugger.sendCommand('Page.enable').then(() => {
-		console.log(`debugger: page enabled.`);
-	}).catch((err) => {
-		console.log(`debugger: page could not be enabled due to: ${err}.`);
-	});
+	collector.attach(view);
 };
 
 const detachDebugger = (view) => {
 	try {
-		view.webContents.debugger.detach();
+		collector.detach(view);
 	} catch(err) {
 		console.log(`debugger: detach failed due to: ${err}.`);
 	}
@@ -291,7 +238,6 @@ const registerForEvents = (win) => {
 	webView.webContents.on('did-navigate', (event, URL, httpResponseCode, httpStatusText) => {
 		resizeViews(mainWindow, config.bounds.localView.small, config.bounds.webView.full);
 		localView.webContents.send('change-url', URL);
-		page.url = URL;
 	});
 	// whenever the webView location changes, update the URL in the urlBox
 	webView.webContents.on('did-navigate-in-page', (event, URL, httpResponseCode, httpStatusText) => {
