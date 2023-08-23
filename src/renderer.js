@@ -429,12 +429,12 @@ const onDOMContentLoaded = () => {
 		showComponent(document.getElementById('report-container'));
 		if(data.logfile)
 			reportLabel.innerText += " " + data.logfile + ". ";
-		else // if logfile is not present then the log has not been saved
+		else // if logfile is not present it means the log has not been saved
 			reportLabel.innerText = strings.components.report.labelNoFile;
 		if(data.requests.length > 0){
 			reportLabel.innerText += `\r\n${strings.components.report.badHostsDetected}`
 			textarea.value = data.requests
-				.map(d => d.hosts.source + ": " + d.hosts.values.map(v => String(v)).join()) // transform into string
+				.map(req => req.host.group + ": " + req.host.name) // transform into string
 				.filter((val, idx, arr) => arr.indexOf(val) === idx) // remove duplicates
 				.reduce((a, b) => a + b + "\r\n", ""); // add cr and newline
 			reportButton.addEventListener('click', () => {
