@@ -3,7 +3,7 @@
   "productName": "Minos",
   "author": "ebmaj7",
   "license": "Hacking License",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Interceptor for dangerous web requests",
   "main": "src/index.js",
   "scripts": {
