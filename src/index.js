@@ -118,18 +118,23 @@ const handlers = {
 						console.error('timestamp', timestamp, err);
 						console.log(params);
 					}
-					// TODO: refactor (too clever)
-					matching = Object.entries(hosts)
-							.map(([src, hs]) => [src, hs.filter(u => url.indexOf(u.slice(1)) >= 0)]) // identify matching hosts
-							.filter(([src, matchingHosts]) => matchingHosts.length > 0)
-							.reduce((obj, [src, matchingHosts]) => {
-								obj['url'] = url;
-								obj['hosts'] = {'source': src, 'values': [matchingHosts.reduce((a, b) => a.length > b.length ? a : b)]};
-								obj['timestamp'] = timestamp;
-								return obj }
-							, {});
-					if(Object.entries(matching).length > 0)
-						badRequests.requests.push(matching);
+					let match = undefined;
+					for(const [group, hostnames] of Object.entries(hosts)){
+						for(const hostname of hostnames){
+							if(url.indexOf(hostname.slice(1)) >= 0){ 	// slice to remove the beginning "dot" in the hostname
+								if(match === undefined)
+									match = {url: url, timestamp: timestamp, host: {name: hostname, group: group}};
+								else {
+									if(hostname.length > match.host.name){ // take only the longest matching host
+										match.host.name = hostname;
+										match.host.group = group;
+									}
+								}
+							} 
+						}
+					}
+					if (match !== undefined)
+						badRequests.requests.push(match);
 				}
 			});
 
@@ -137,7 +142,6 @@ const handlers = {
 				localView.webContents.send('bad-requests', badRequests);
 			} else {
 				try {
-
 					const HAR = convertCDPtoHAR(packageInfo, collectedEvents);
 					detachDebugger(webView);
 					writeFile(response.filePath, JSON.stringify(HAR, null, 4), (err) => {
