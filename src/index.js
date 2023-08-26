@@ -12,7 +12,7 @@
  * (see licenses/MIT.txt)
  */
 
-const { app, Menu, session, BrowserWindow, BrowserView, ipcMain, dialog } = require('electron');
+const { app, Menu, BrowserWindow, BrowserView, ipcMain, dialog } = require('electron');
 
 try{ if (require('electron-squirrel-startup')) app.quit(); } catch {}
 
@@ -49,8 +49,8 @@ const cropViewsToWindowSize = (mainWindow) => {
 	const views = mainWindow.getBrowserViews();
 	const localView = views[0];
 	const webView = views[1];
-	localView.setBounds({ ...localView.getBounds(), width: Math.min(localView.getBounds().width, winBounds.width)});
-	webView.setBounds({ ...webView.getBounds(), width: Math.min(webView.getBounds().width, winBounds.width)});
+	localView.setBounds({ ...localView.getBounds(), width: winBounds.width});
+	webView.setBounds({ ...webView.getBounds(), width: winBounds.width, height: winBounds.height - localView.getBounds().height });
 };
 
 const resizeViews = (mainWindow, localViewBounds, webViewBounds) => {
@@ -58,8 +58,8 @@ const resizeViews = (mainWindow, localViewBounds, webViewBounds) => {
 	const views = mainWindow.getBrowserViews();
 	const localView = views[0];
 	const webView = views[1];
-	localView.setBounds({ ...localViewBounds, width: Math.min(localViewBounds.width, winBounds.width)});
-	webView.setBounds({ ...webViewBounds, width: Math.min(webViewBounds.width, winBounds.width)});
+	localView.setBounds({ ...localViewBounds,  width: winBounds.width});
+	webView.setBounds({ ...webViewBounds, width: winBounds.width, height: winBounds.height - localView.getBounds().height});
 };
 
 const openFileDialogOptions = {
@@ -130,7 +130,7 @@ const handlers = {
 										match.host.group = group;
 									}
 								}
-							} 
+							}
 						}
 					}
 					if (match !== undefined)
@@ -239,6 +239,9 @@ const registerForEvents = (win) => {
 	win.on('resize', () => {
 		cropViewsToWindowSize(win);
 	});
+	win.on('resized', () => {
+		cropViewsToWindowSize(win);
+	});
 	webView.webContents.on('did-navigate', (event, URL, httpResponseCode, httpStatusText) => {
 		resizeViews(mainWindow, config.bounds.localView.small, config.bounds.webView.full);
 		localView.webContents.send('change-url', URL);
@@ -322,10 +325,10 @@ const createWindow = () => {
 	mainWindow.addBrowserView(webView);
 	localView.webContents.loadFile('src/main.html').then(() => {
 		localView.setBounds({ ...config.bounds.localView.full });
-		localView.setAutoResize({ width: true });
+		//localView.setAutoResize({ width: true });
 	});
 	webView.setBounds({ ...config.bounds.webView.hidden });
-	webView.setAutoResize({ width: true, height: true });
+	//webView.setAutoResize({ width: true, height: true });
 	if(config.debug)
 		localView.webContents.openDevTools();
 	registerForEvents(mainWindow);
