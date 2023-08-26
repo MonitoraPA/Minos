@@ -191,7 +191,7 @@ const handlers = {
 			badhosts: badRequests.requests.map(req => {
 				return req.host.name + " (" + req.host.group + ")"
 			}).filter((val, idx, arr) => arr.indexOf(val) === idx), // remove duplicates
-			signature: filePaths['signature'],
+			signature: data.signature ? filePaths['signature'] : undefined,
 			idcard: filePaths['idcard']
 		}
 		const timestamp = (new Date()).toISOString().replace(/\..*/g, '').replace(/[-:TZ]/g, '');

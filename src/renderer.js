@@ -343,6 +343,7 @@ const onDOMContentLoaded = () => {
 			}).filter(decl => decl !== undefined),
 			data_controller: dataController.value,
 			data_responsible: dataResponsible.value.length === 0 ? strings.components.form.fields.data_responsible.missing : dataResponsible.value,
+			signature: radioSign1.checked ? true : false
 		} // the other data will be added from index.js
 		return data;
 	}
