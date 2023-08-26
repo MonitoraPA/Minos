@@ -10,6 +10,19 @@ module.exports = {
   hooks: {
     postPackage: async (forgeConfig, options) => {
       fs.copyFileSync(
+        path.join(options.outputPaths[0], "LICENSE"),
+        path.join(options.outputPaths[0], "LICENSE.electron.txt")
+      );
+      fs.copyFileSync(
+        "./licenses/HACK.txt",
+        path.join(options.outputPaths[0], "LICENSE")
+      );
+      fs.copyFileSync(
+        "./licenses/MIT.txt",
+        path.join(options.outputPaths[0], "LICENSE.MIT.txt")
+      );
+
+      fs.copyFileSync(
         "./config/conf.json",
         path.join(options.outputPaths[0], "resources", "conf.json")
       );
