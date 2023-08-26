@@ -188,8 +188,8 @@ const handlers = {
 		data = {...data,
 			attachment: log_file_path,
 			website: navigation_url,
-			badhosts: badRequests.requests.map(r => {
-				return r.hosts.values[0] + " (" + r.hosts.source + ")"
+			badhosts: badRequests.requests.map(req => {
+				return req.host.name + " (" + req.host.group + ")"
 			}).filter((val, idx, arr) => arr.indexOf(val) === idx), // remove duplicates
 			signature: filePaths['signature'],
 			idcard: filePaths['idcard']
