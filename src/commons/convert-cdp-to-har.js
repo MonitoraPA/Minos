@@ -6,8 +6,14 @@
  * Minos is a hack. You can use it according to the terms and
  * conditions of the Hacking License (see licenses/HACK.txt)
  */
+"use strict";
+
+const parseSetCookieLine = require('./parse-set-cookie');
 
 const convertCDPtoHAR = (builderInfo, recordedEvents) => {
+	/* copy the recorded events as we are going to modify them down the road */
+	recordedEvents = structuredClone(recordedEvents);
+
 	const har = {
 		log: {
 			version: '1.2',
@@ -17,11 +23,12 @@ const convertCDPtoHAR = (builderInfo, recordedEvents) => {
 			},
 			pages: [],
 			entries: []
-		}
+		},
+		_exceptions: []
 	};
 
 	const pages = groupEventsByPages(recordedEvents);
-	har.log.pages = buildPages(pages);
+	har.log.pages = buildPages(pages, recordedEvents);
 	const pageIds = pageIdsByUrl(har.log.pages);
 	for (const [documentURL, requests] of pages){
 		const pageId = pageIds[documentURL];
@@ -30,15 +37,29 @@ const convertCDPtoHAR = (builderInfo, recordedEvents) => {
 			const requestId = request.requestId;
 			const networkEvents = request.network;
 			const fetchEvents = request.fetchEvents;
-			const entry = buildEntry(requestId, networkEvents, pageId, fetchEvents);
-			if(entry){
-				har.log.entries.push(entry);
+			try{
+				const entry = buildEntry(requestId, networkEvents, pageId, fetchEvents);
+				if(entry){
+					har.log.entries.push(entry);
+				}
+			} catch (e){
+				har._exceptions.push({
+					requestId,
+					networkEvents,
+					fetchEvents,
+					exception: {
+						name: e.name,
+						message: e.message,
+						code: e.code,
+						stack: e.stack
+					}
+				});
 			}
 		}
 		har.log.entries.sort(byStartedDateTime);
 	}
-	/* *
-	har.debug = {
+	/* */
+	har._debug = {
 		recordedEventsLength: recordedEvents.length,
 		recordedEvents: recordedEvents,
 		byPage: Object.fromEntries(pages)
@@ -59,15 +80,20 @@ function byStartedDateTime(a, b){
 
 function buildEntry(requestId, networkEvents, pageId, fetchEvents){
 	const requestWillBeSent = findEventParams('Network.requestWillBeSent', networkEvents);
-	if(requestWillBeSent.request.url.indexOf('data:') === 0){
+	if(!!requestWillBeSent && requestWillBeSent.request.url.indexOf('data:') === 0){
 		/* ignore data: requests */
+		return null;
+	}
+	const responseReceived = findEventParams('Network.responseReceived', networkEvents);
+	if(!!responseReceived && responseReceived.response.url.startsWith("blob:")){
+		/* ignore blob: responses */
 		return null;
 	}
 	const requestWillBeSentExtraInfo = findEventParams('Network.requestWillBeSentExtraInfo', networkEvents);
 	const getRequestPostData = findEventParams('Network.getRequestPostData', networkEvents);
-	const responseReceived = findEventParams('Network.responseReceived', networkEvents);
 	const responseReceivedExtraInfo = findEventParams('Network.responseReceivedExtraInfo', networkEvents);
-	const loadingFinished = findEventParams('Network.loadingFinished', networkEvents);
+	//const loadingFinished = findEventParams('Network.loadingFinished', networkEvents);
+
 	const loadingFailed = findEventParams('Network.loadingFailed', networkEvents);
 
 	const getResponseBody = findResponseBody(networkEvents, fetchEvents);
@@ -102,6 +128,7 @@ function buildEntry(requestId, networkEvents, pageId, fetchEvents){
 		_requestId: requestId,
 		_resourceType: requestWillBeSent.type,
 		_initiator: requestWillBeSent.initiator,
+		_browserView: requestWillBeSent._browserView,
 		startedDateTime: new Date(wallTime).toISOString(),
 		time: (finish - requestWillBeSent.timestamp) * 1000,
 		request: {
@@ -140,6 +167,36 @@ function buildEntry(requestId, networkEvents, pageId, fetchEvents){
 		_priority: resourceChangedPriority.newPriority ?? requestWillBeSent.request.initialPriority,
 		_resourceType: requestWillBeSent.type
 	};
+}
+
+function isTopWindow(requestWillBeSent, events){
+	if(requestWillBeSent.requestId.indexOf("_redirect_") > -1){
+		const redirectionID = requestWillBeSent.requestId;
+		const finalRequestWillBeSent = lookupAfter(requestWillBeSent, events,
+			e => e.method === "Network.requestWillBeSent"
+			  && redirectionID.length !== e.params.requestId.length
+			  && redirectionID.startsWith(e.params.requestId),
+			e => e.params);
+		if(!finalRequestWillBeSent){
+			return null; /* unknown */
+		}
+		requestWillBeSent = finalRequestWillBeSent;
+	}
+	let evidence;
+	evidence = lookupNearBy(requestWillBeSent, events,
+		e => e.method === "WebView.didNavigate"
+		  && e.params._browserView === requestWillBeSent._browserView
+		  && e.params.documentURL === requestWillBeSent.request.url,
+		_ => true);
+	if(!evidence){
+		evidence = lookupBefore(requestWillBeSent, events,
+			e => e.method === "WebView.willNavigate"
+			  && e.params._browserView === requestWillBeSent._browserView
+			  && e.params.documentURL === requestWillBeSent.request.url,
+			_ => true);
+	}
+
+	return !!evidence;
 }
 
 function getPostData(requestWillBeSent, getRequestPostData){
@@ -216,6 +273,10 @@ function parseSetCookies(setCookieHeaderValue){
 	}
 	const result = [];
 
+	/* Chrome DevTools Protocol collapse all set-cookie headers in a single one
+	 * separating the different lines with \n.
+	 */
+
 	const lines = setCookieHeaderValue.split('\n');
 	for(const line of lines){
 		result.push(parseSetCookieLine(line));
@@ -224,36 +285,6 @@ function parseSetCookies(setCookieHeaderValue){
 	return result;
 }
 
-function parseSetCookieLine(line){
-	const elements = line.split(';').map(x => x.trim())
-	const nameAndValue = elements.shift().split('=');
-	const name = nameAndValue.shift();
-	const value = "" + nameAndValue.join('=');
-
-	const result = {};
-	for(const kvp of elements.map(x => x.split('='))){
-		key = kvp.shift();
-		switch(key){
-			case "httponly":
-				key = "httpOnly";
-				break;
-			case "samesite":
-				key = "sameSite";
-				break;
-		}
-		result[key] = kvp.length > 0 ? kvp.join('=') : true;
-	}
-	result["name"] = name;
-	result["value"] = value;
-	if(result["expires"]){
-		result["expires"] = new Date(result["expires"]).toISOString()
-	}
-	if(!result["httpOnly"]){
-		result["httpOnly"] = false;
-	}
-
-	return result;
-}
 
 function buildEntryTimings(timing, finish, requestTimeStamp){
 	const result = {
@@ -390,6 +421,7 @@ function groupEventsByPages(recordedEvents){
 	const requestsMap = new Map();
 	const pageEventMap = new Map();
 	const fetchMap = new Map();
+	const webViewMap = new Map();
 	const redirects = [];
 	let recordingIndex = 0;
 	for(const req of recordedEvents){
@@ -397,14 +429,14 @@ function groupEventsByPages(recordedEvents){
 		/* used to locate nearby events */
 		req.params.recordingIndex = recordingIndex++;
 
-		if(req.method.indexOf('Page.') === 0){
+		if(req.method.startsWith('Page.')){
 			const documentURL = req.params.documentURL;
 			if(!pageEventMap.has(documentURL)){
 				pageEventMap.set(documentURL, []);
 			}
 			const pageEvents = pageEventMap.get(documentURL);
 			pageEvents.push(req);
-		} else if(req.method.indexOf('Network.') === 0) {
+		} else if(req.method.startsWith('Network.')) {
 			const requestId = req.params.requestId;
 			if(!requestsMap.has(requestId)){
 				requestsMap.set(requestId, []);
@@ -416,13 +448,20 @@ function groupEventsByPages(recordedEvents){
 			}
 			const requests = requestsMap.get(requestId);
 			requests.push(req);
-		} else if(req.method.indexOf('Fetch.') === 0) {
+		} else if(req.method.startsWith('Fetch.')) {
 			const requestId = req.params.requestId;
 			if(!fetchMap.has(requestId)){
 				fetchMap.set(requestId, []);
 			}
 			const fetchEvents = fetchMap.get(requestId);
 			fetchEvents.push(req);
+		} else if (req.method.startsWith('WebView.')){
+			const documentURL = req.params.documentURL;
+			if(!webViewMap.has(documentURL)){
+				webViewMap.set(documentURL, []);
+			}
+			const webViewEvents = webViewMap.get(documentURL);
+			webViewEvents.push(req);
 		}
 	}
 
@@ -509,9 +548,32 @@ function groupEventsByPages(recordedEvents){
 	const pages = new Map();
 	for(const [reqID, req] of requestsMap){
 		//console.log(">>> ", reqID, req.length);
+		if(!req.some(r => r.method === "Network.requestWillBeSent")
+		&& !req.every(r => r.method.startsWith("Network.webSocket"))){
+			/* for some reason the group lacks the requestWillBeSent
+			 * that is needed by buildEntry -> simulate it
+			 */
+			try{
+				const originalRequestID = reqID.substring(0, reqID.indexOf("_redirect") > -1 ? reqID.indexOf("_redirect") : reqID.length);
+				const requestPaused = fetchEventsByNetworkRequestId.get(originalRequestID)
+					.find(e => e.method === 'Fetch.requestPaused');
+				const correspondingResponse = req.find(x => x.method === "Network.responseReceived")
+					?? req.find(x => x.method === "Network.responseReceivedExtraInfo")
+					?? req.find(x => x.method === "Network.requestWillBeSentExtraInfo");
+				if(correspondingResponse.params.response?.url.startsWith("blob:")){
+					/* ignore syntetic browser's responses to blob: urls */
+					continue;
+				}
+				const simulatedRequestWillBeSent = simulateRequestWillBeSent(requestPaused, correspondingResponse, recordedEvents);
+				//console.log(`Missing Network.requestWillBeSent for requestId ${reqID}`, req, requestPaused)
+				req.unshift(simulatedRequestWillBeSent);
+			} catch (e) {
+				console.warn(`Cannot reconstruct missing Network.requestWillBeSent for ${reqID} (maybe frame.srcdoc?)`, req, e)
+			}
+		}
 		for(const event of req){
 			//console.log(event);
-			const documentURL = event.params.documentURL
+			const documentURL = event.params.documentURL;
 			if(documentURL){
 				if(!pages.has(documentURL)){
 					pages.set(documentURL, []);
@@ -521,7 +583,8 @@ function groupEventsByPages(recordedEvents){
 					requestId: reqID,
 					network: req,
 					pageEvents: pageEventMap.get(documentURL) ?? [],
-					fetchEvents: fetchEventsByNetworkRequestId.get(reqID) ?? []
+					fetchEvents: fetchEventsByNetworkRequestId.get(reqID) ?? [],
+					webViewEvents: webViewMap.get(documentURL) ?? []
 				});
 				break;
 			}
@@ -567,29 +630,44 @@ function lookupNearBy(event, recordedEvents, condition, extraction){
 }
 
 function simulateRequestWillBeSent(requestPaused, correspondingResponse, recordedEvents){
-	let documentURL;
+	let documentURL = correspondingResponse.params?.documentURL;
 
 	/* to locate the documentUrl we look in the recorded events following the response
 	 * for a Page.frameStoppedLoading with the same frameId...
 	 */
-	const frameStoppedLoadingURL = lookupAfter(requestPaused, recordedEvents,
-		x => x.method === "Page.frameStoppedLoading"
-		  && x.params.frameId === requestPaused.params.frameId,
-		x => x.params.documentURL);
-	if (frameStoppedLoadingURL){
-		documentURL = frameStoppedLoadingURL;
-	} else {
-		const requestWillBeSentURL = lookupBefore(requestPaused, recordedEvents,
+	if(!documentURL){
+		documentURL = lookupAfter(requestPaused, recordedEvents,
+			x => x.method === "Page.frameStoppedLoading"
+			  && x.params.frameId === requestPaused.params.frameId,
+			x => x.params.documentURL);
+	}
+	if (!documentURL){
+		documentURL = lookupBefore(requestPaused, recordedEvents,
 			x => x.method === 'Network.requestWillBeSent'
 			  && x.params.frameId === requestPaused.params.frameId
 			  && x.params.loaderId === requestPaused.params.loaderId,
 			x => x.params.documentURL);
-		if (requestWillBeSentURL){
-			documentURL = requestWillBeSentURL;
-		} else {
-			// last choice: we couldn't find anything better but we cannot miss the documentUrl
-			documentURL = correspondingResponse.params.request.url
-		}
+	}
+	if (!documentURL){
+		documentURL = lookupBefore(requestPaused, recordedEvents,
+			x => x.method === 'WebView.didNavigate'
+			  && x.params._browserView === requestPaused.params._browserView,
+			x => x.params.documentURL);
+	}
+	if (!documentURL){
+		// last option: we couldn't find anything better but we cannot miss the documentUrl
+		documentURL = correspondingResponse.params.request.url;
+	}
+
+	const wallTime = correspondingResponse === "Network.responseReceived"
+		? (correspondingResponse.params.response.responseTime / 1000) - (correspondingResponse.params.timestamp - correspondingResponse.params.response.timing.requestTime)
+		: -1;
+
+	let timing = -1;
+	if(correspondingResponse.method === "Network.responseReceived"){
+		timing = correspondingResponse.params.response.timing.requestTime;
+	} else if(correspondingResponse.method === "Network.requestWillBeSentExtraInfo"){
+		timing = correspondingResponse.params.connectTiming.requestTime;
 	}
 
 	return {
@@ -597,26 +675,27 @@ function simulateRequestWillBeSent(requestPaused, correspondingResponse, recorde
 		params: {
 			documentURL: documentURL,
 			frameId: requestPaused.params.frameId,
-			loaderId: correspondingResponse.params.loaderId,
+			loaderId: correspondingResponse?.params?.loaderId ?? "unknown",
 			hasUserGesture: false,
 			redirectHasExtraInfo: false,
 			request: requestPaused.params.request,
 			requestId: correspondingResponse.params.requestId,
 			type: requestPaused.params.resourceType,
-			timestamp: correspondingResponse.params.response.timing.requestTime,
-			wallTime: (correspondingResponse.params.response.responseTime / 1000) - (correspondingResponse.params.timestamp - correspondingResponse.params.response.timing.requestTime),
+			timestamp: correspondingResponse?.params?.response?.timing?.requestTime ?? -1,
+			wallTime: wallTime,
+			_browserView: requestPaused._browserView,
 
 			_note: `This Network event had to be reconstructed from nearby events. Ask Google why they WONT-FIX this https://bugs.chromium.org/p/chromium/issues/detail?id=750469`
 		}
 	}
 }
 
-function buildPages(pages) {
+function buildPages(pages, recordedEvents) {
 	let i = 0;
 	const result = [];
 
 	for (const [documentURL, requests] of pages){
-		result.push(analyzePage(documentURL, requests));
+		result.push(analyzePage(documentURL, requests, recordedEvents));
 	}
 	result.sort(byStartedDateTime);
 	for (const pageId in result){
@@ -626,7 +705,7 @@ function buildPages(pages) {
 	return result;
 }
 
-function analyzePage(documentURL, requests){
+function analyzePage(documentURL, requests, recordedEvents){
 	const requestWillBeSent = findEventParams('Network.requestWillBeSent', requests[0].network)
 	const wallTime = requestWillBeSent.wallTime * 1000;
 
@@ -657,7 +736,9 @@ function analyzePage(documentURL, requests){
 	return {
 		title: documentURL,
 		startedDateTime: new Date(wallTime).toISOString(),
-		pageTimings
+		pageTimings,
+		_topWindow: isTopWindow(requestWillBeSent, recordedEvents),
+		_browserView: requestWillBeSent._browserView
 	};
 }
 

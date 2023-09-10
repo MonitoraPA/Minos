@@ -8,7 +8,7 @@
  */ 
 
 import { strings } from './strings.js';
-import { getElementsByIds } from './util.js';
+import { getElementsByIds } from '../views/util.js';
 
 export const setupText = () => {
 	// setup text within the whole page

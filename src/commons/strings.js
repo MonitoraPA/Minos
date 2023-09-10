@@ -1,13 +1,13 @@
-/** 
+/**
  * This file is part of Minos
  *
  * Copyright (C) 2023 ebmaj7 <ebmaj7@proton.me>
  *
  * Minos is a hack. You can use it according to the terms and
  * conditions of the Hacking License (see licenses/HACK.txt)
- */ 
+ */
 
-export const strings = {
+const strings = {
 	components: {
 		topBar: {
 			urlBox: "inserisci un indirizzo",
@@ -22,12 +22,14 @@ export const strings = {
 			button: "Verifica sito web"
 		},
 		report: {
-			label: "Il log della navigazione è stato salvato nel file: ",
-			labelNoFile: "Il log della navigazione non è stato salvato.",
-			button: "Reclama al Garante",
+			locationHARFile: "Il log della navigazione è stato salvato nel file: ",
+			saveHARButton: "Scarica il log della navigazione.",
+			complaintButton: "Reclama al Garante",
 			badHostsDetected: "Durante la navigazione sono stati individuati trasferimenti illeciti verso questi hosts:",
-			noBadHostsDetected: "Non sono stati individuati trasferimenti illeciti durante la navigazione."
-		}, 
+			noBadHostDetected: "Non sono stati individuati trasferimenti illeciti durante la navigazione.",
+			cookiesDetected: "Durante la navigazione sono stati salvati questi cookie sul tuo browser:",
+			noCookieDetected: "Non è stato salvato alcun cookie sul tuo browser durante la navigazione."
+		},
 		form: {
 			title: 'Inserisci le informazioni necessarie per sporgere reclamo:',
 			pages: [
@@ -89,3 +91,5 @@ export const strings = {
 		navigationFail: "Non è possibile contattare il sito a causa di un errore HTTP. Codice dell'errore: %errcode% (%errdesc%).",
 	}
 };
+
+module.exports = strings;

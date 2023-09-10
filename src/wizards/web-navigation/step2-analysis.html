@@ -1,0 +1,78 @@
+<!--
+This file is part of Minos
+
+Copyright (C) 2023 ebmaj7 <ebmaj7@proton.me>
+Copyright (C) 2023 Giacomo Tesio <giacomo@tesio.it>
+
+Minos is a hack. You can use it according to the terms and
+conditions of the Hacking License (see licenses/HACK.txt)
+-->
+<!DOCTYPE html>
+<html lang="it">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Minos: Analysis</title>
+		<link rel="stylesheet" href="../../style.css">
+        <script src='../../views/util.js'></script>
+		<script src='../../views/templating.js'></script>
+		<script type="text/javascript">
+			function formatConnections(connections){
+				let result = "";
+				for(const connection of connections){
+					result += connection.host.group + ': ' + connection.url + '\n';
+				}
+				return result;
+			}
+			function computeButtonGridStyle(issues){
+				if(issues.cookies || issues.connections){
+					return "grid-template-columns: 1fr 1fr;"
+				}
+				return "grid-template-columns: 1fr;"
+			}
+		</script>
+	</head>
+
+    <body data-issues="wizardState.issues" data-strings="wizardState.strings">
+		<div if="issues" id='report-container' class='center grid'>
+			<div if="issues.connections">
+				<div
+					text="strings.badHostsDetected"
+					class='label'></div>
+				<textarea text="formatConnections(issues.connections)"
+					rows='4' cols='50'
+					class='box' autocomplete="off" autocapitalize="off"
+					spellcheck="false" readonly placeholder='Report'></textarea>
+			</div>
+			<div if="!issues.connections"
+					text="strings.noBadHostDetected"
+					class='label'></div>
+			<div if="issues.cookies">
+				<div
+					text="strings.cookiesDetected"
+					class='label'></div>
+				<textarea text="issues.hosts"
+					rows='4' cols='50'
+					class='box' autocomplete="off" autocapitalize="off"
+					spellcheck="false" readonly placeholder='Report'></textarea>
+			</div>
+			<div if="!issues.cookies"
+				text="strings.noCookieDetected"
+				class='label'></div>
+			<div class="grid" set:style="computeButtonGridStyle(issues)">
+				<button if="issues.cookies || issues.connections"
+					text="strings.complaintButton"
+					on:click="web-navigation/start-complaint"
+					class='button'></button>
+				<button
+					on:click="web-navigation/save-har"
+					text="strings.saveHARButton"
+					class='button'></button>
+			</div>
+			<div if="!!wizardState.log?.file"
+				text="strings.locationHARFile + wizardState.log.file"
+				class='label'></div>
+		</div>
+		<div if="!issues" id='spinner' class='center'></div>
+    </body>
+</html>

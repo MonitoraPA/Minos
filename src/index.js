@@ -12,6 +12,8 @@
  * (see licenses/MIT.txt)
  */
 
+const MinosGUI = require('./commons/minos-gui');
+
 const { app, Menu, BrowserWindow, BrowserView, ipcMain, dialog } = require('electron');
 
 try{ if (require('electron-squirrel-startup')) app.quit(); } catch {}
@@ -353,7 +355,8 @@ const onReadyApp = () => {
 	});
 };
 
-app.on('ready', onReadyApp);
+//app.on('ready', onReadyApp);
+app.on('ready', () => new MinosGUI(config));
 
 app.on('window-all-closed', () => {
 	if(process.platform !== 'darwin')

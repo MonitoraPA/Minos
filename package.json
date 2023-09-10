@@ -3,12 +3,13 @@
   "productName": "Minos",
   "author": "ebmaj7",
   "license": "Hacking License",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Interceptor for dangerous web requests",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron-forge start",
+    "debug": "electron-forge start --inspect-electron",
 
     "package": "electron-forge package",
 

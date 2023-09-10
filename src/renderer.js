@@ -8,7 +8,7 @@
  */
 
 import { strings } from './commons/strings.js';
-import { enable, disable, isLetter, isDigit, disableInput, hideComponent, showComponent, getElementsByIds } from './commons/util.js';
+import { enable, disable, isLetter, isDigit, disableInput, hideComponent, showComponent, getElementsByIds } from './views/util.js';
 import { setupText } from './commons/setuptext.js';
 
 let idcard = false;

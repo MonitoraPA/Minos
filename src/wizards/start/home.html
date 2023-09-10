@@ -1,0 +1,28 @@
+<!--
+This file is part of Minos
+
+Copyright (C) 2023 Giacomo Tesio <giacomo@tesio.it>
+
+Minos is a hack. You can use it according to the terms and
+conditions of the Hacking License (see licenses/HACK.txt)
+-->
+<!DOCTYPE html>
+<html lang="it">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Main</title>
+		<link rel="stylesheet" href="../../style.css">
+		<script src='../../views/templating.js' defer></script>
+        <template id="selector-button" key="idx" item="label">
+            <button class='button' text="label" on:click="wizard/start" on:click:data="idx"></button>
+        </template>
+	</head>
+
+    <body>
+		<div id='main' class='center grid'>
+			<h1 id='main-title' data-title="wizardState.strings.title" text="title"></h1>
+			<div map="selector-button" to="wizardState.wizards"></div>
+		</div>
+    </body>
+</html>

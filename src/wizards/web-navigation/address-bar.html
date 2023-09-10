@@ -1,0 +1,63 @@
+<!--
+This file is part of Minos
+
+Copyright (C) 2023 ebmaj7 <ebmaj7@proton.me>
+Copyright (C) 2023 Giacomo Tesio <giacomo@tesio.it>
+
+Minos is a hack. You can use it according to the terms and
+conditions of the Hacking License (see licenses/HACK.txt)
+-->
+<!DOCTYPE html>
+<html lang="it">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Minos: Web Navigation</title>
+		<link rel="stylesheet" href="../../style.css">
+        <script src='../../views/util.js'></script>
+		<script src='../../views/templating.js'></script>
+        <script type="text/javascript">
+            function getURI(){
+                const source = document.getElementById('url-box');
+                return source.value;
+            }
+            function initView(){
+                const urlBox = document.getElementById('url-box');
+                const topButton = document.getElementById('start-button');
+                urlBox.addEventListener('input', (event) => {
+                    if(event.target.value.length === 0){
+                        disable(topButton);
+                    } else {
+                        enable(topButton);
+                    }
+                });
+            }
+            initView();
+        </script>
+	</head>
+
+    <body>
+		<div
+            id='top-bar' class='grid' data-strings="wizardState.strings">
+			<input
+                type='text' class='enabled box' id='url-box'
+                set:autofocus="!wizardState.url"
+                set:disabled="wizardState.url ? true : false"
+                set:value="wizardState.url?.current ?? ''"
+                set:placeholder="strings.urlBox"></input>
+			<button if="!wizardState.url"
+                class='button disabled' id='start-button'
+                set:tooltip="strings.button.tooltip"
+                text="strings.button.start"
+                on:click="web-navigation/start" on:click:data="getURI()"></button>
+            <button if="!!wizardState.url && wizardState.loading"
+                class='button disabled' id='analyze-button'
+                text="strings.button.analyze"></button>
+            <button if="!!wizardState.url && !wizardState.loading"
+                class='button enabled' id='analyze-button'
+                text="strings.button.analyze"
+                on:click="web-navigation/analyze"></button>
+		</div>
+        <div if="wizardState.loading" id='spinner' class='center'></div>
+    </body>
+</html>

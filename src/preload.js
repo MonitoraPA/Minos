@@ -1,14 +1,15 @@
-/** 
+/**
  * This file is part of Minos
  *
  * Copyright (C) 2023 ebmaj7 <ebmaj7@proton.me>
+ * Copyright (C) 2023 Giacomo Tesio <giacomo@tesio.it>
  *
  * Minos is a hack. You can use it according to the terms and
  * conditions of the Hacking License (see licenses/HACK.txt)
- */ 
+ */
 
 const { contextBridge, ipcRenderer } = require('electron');
-
+/*
 contextBridge.exposeInMainWorld('electronAPI', {
 	start: (URL) => ipcRenderer.send('start', URL),
 	analyze: () => ipcRenderer.send('analyze'),
@@ -22,3 +23,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	onClaimOutput: (callback) => ipcRenderer.on('claim-output', callback),
 	onNavigationFail: (callback) => ipcRenderer.on('navigation-fail', callback)
 });
+*/
+ipcRenderer.on('minos/template/loaded', (event, viewName) => {
+	const minos = {
+		dispatch: (event, ...args) =>
+			ipcRenderer.send(viewName + ":" + event, ...args),
+		onWizardStateChange: (...args) => ipcRenderer.on('wizardState/changed', ...args)
+	}
+	contextBridge.exposeInMainWorld('minos', minos);
+})
