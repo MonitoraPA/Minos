@@ -36,7 +36,7 @@ class WizardSelector extends AbstractWizard {
 
         this._whileActive(minosGUI.on('resize', this.#setViewSize.bind(this)));
         minosGUI.showTemplate('view','src/wizards/start/home.html')
-            .then(() => view.webContents.openDevTools({ mode: 'detach' }))
+            //.then(() => view.webContents.openDevTools({ mode: 'detach' }))
             .then(() => {
                 this.set('strings', () => strings.components.main);
                 this.set('wizards', () => this.#factories.map(w => w.label));
