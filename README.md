@@ -32,3 +32,22 @@ cd minos
 npm install
 npm start
 ```
+# Screenshots
+
+## Un esempio di navigazione
+
+![navigation](https://monitora-pa.it/2023/08/28/Minos.png)
+
+## Individuazione di trasferimenti illeciti
+
+![badHosts](https://monitora-pa.it/2023/08/28/Minos02.png)
+
+## Compilazione del form
+
+![form](https://monitora-pa.it/2023/08/28/Minos03.png)
+
+![form2](https://monitora-pa.it/2023/08/28/Minos04.png)
+
+![form3](https://monitora-pa.it/2023/08/28/Minos05.png)
+
+![form4](https://monitora-pa.it/2023/08/28/Minos06.png)
