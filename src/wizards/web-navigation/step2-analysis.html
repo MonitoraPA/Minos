@@ -10,69 +10,140 @@ conditions of the Hacking License (see licenses/HACK.txt)
 <!DOCTYPE html>
 <html lang="it">
 
-	<head>
-		<meta charset="UTF-8">
-		<title>Minos: Analysis</title>
-		<link rel="stylesheet" href="../../style.css">
+    <head>
+        <meta charset="UTF-8">
+        <title>Minos: Analysis</title>
+        <link rel="stylesheet" href="../../minos.css">
         <script src='../../views/util.js'></script>
-		<script src='../../views/templating.js'></script>
-		<script type="text/javascript">
-			function formatConnections(connections){
-				let result = "";
-				for(const connection of connections){
-					result += connection.host.group + ': ' + connection.url + '\n';
-				}
-				return result;
-			}
-			function computeButtonGridStyle(issues){
-				if(issues.cookies || issues.connections){
-					return "grid-template-columns: 1fr 1fr;"
-				}
-				return "grid-template-columns: 1fr;"
-			}
-		</script>
-	</head>
+        <script src='../../views/templating.js'></script>
+        <script type="text/javascript">
+            function formatConnections(connections){
+                let result = "";
+                for(const connection in connections){
+                    result += connection + '\n';
+                }
+                return result;
+            }
+            function computeButtonGridStyle(issues){
+                if(issues.cookies || issues.connections){
+                    return "grid-template-columns: 1fr 1fr;gap: 1em;"
+                }
+                return "grid-template-columns: 1fr;"
+            }
+            function updateForm(){
+                const checkboxes = [...document.getElementsByTagName("input")]
+                                        .filter(c => c.type === 'checkbox' && c.checked);
+                const complaintButton = document.getElementById('complaint-button');
+                if(checkboxes.length === 0){
+                    complaintButton.setAttribute('disabled', 'disabled');
+                    complaintButton.setAttribute('title', 'Selezionare i problemi per cui si intende reclamare al Garante.');
+                } else if(complaintButton.hasAttribute('disabled')) {
+                    complaintButton.removeAttribute('disabled');
+                    complaintButton.removeAttribute('title');
+                }
+            }
+            function getComplaintData(){
+                const data = {};
+                const cookiesCbx = [...document.getElementsByTagName("input")]
+                                        .filter(c => c.type === 'checkbox' && c.checked && c.id.startsWith('cookie-'));
+                const hostsCbx = [...document.getElementsByTagName("input")]
+                    .filter(c => c.type === 'checkbox' && c.checked && c.id.startsWith('host-'));
+                if(cookiesCbx.length > 0){
+                    data.cookies = cookiesCbx.map(cbx => cbx.value);
+                }
+                if(hostsCbx.length > 0){
+                    data.hosts = hostsCbx.map(cbx => cbx.value);
+                }
+                return data;
+            }
+        </script>
+        <style type="text/css">
+            tbody {
+                font-size: medium;
+            }
+            input[type=checkbox] {
+                font-size: medium;
+            }
+        </style>
+
+        <template id="request-rows" key="idx" item="request">
+            <span text="request" set:title="request" style="text-overflow: ellipsis; overflow: hidden;padding-left: 2em;font-size:medium;"></span>
+        </template>
+
+        <template id="host-rows" key="host" item="requests">
+            <details>
+                <summary>
+                    <input set:id="'host-' + host" type="checkbox"
+                        set:value="host" onchange="updateForm()" checked />
+                    <span text="host"></span>
+                </summary>
+                <div map="request-rows" to="requests">
+                </div>
+            </details>
+        </template>
+
+        <template id="cookies-rows" item="cookie">
+            <td style="width: 3em;">
+                <input type="checkbox" set:id="'cookie-' + cookie.name"
+                    set:value="cookie.name" onchange="updateForm()" checked />
+            </td>
+            <td text="cookie.name"></td>
+            <td style="width: 8em;" text="cookie.thirdParty ? 'Sì' : 'No'"></td>
+            <td style="width: 8em;" text="cookie.javascript ? 'Sì' : 'No'"></td>
+        </template>
+    </head>
 
     <body data-issues="wizardState.issues" data-strings="wizardState.strings">
-		<div if="issues" id='report-container' class='center grid'>
-			<div if="issues.connections">
-				<div
-					text="strings.badHostsDetected"
-					class='label'></div>
-				<textarea text="formatConnections(issues.connections)"
-					rows='4' cols='50'
-					class='box' autocomplete="off" autocapitalize="off"
-					spellcheck="false" readonly placeholder='Report'></textarea>
-			</div>
-			<div if="!issues.connections"
-					text="strings.noBadHostDetected"
-					class='label'></div>
-			<div if="issues.cookies">
-				<div
-					text="strings.cookiesDetected"
-					class='label'></div>
-				<textarea text="issues.hosts"
-					rows='4' cols='50'
-					class='box' autocomplete="off" autocapitalize="off"
-					spellcheck="false" readonly placeholder='Report'></textarea>
-			</div>
-			<div if="!issues.cookies"
-				text="strings.noCookieDetected"
-				class='label'></div>
-			<div class="grid" set:style="computeButtonGridStyle(issues)">
-				<button if="issues.cookies || issues.connections"
-					text="strings.complaintButton"
-					on:click="web-navigation/start-complaint"
-					class='button'></button>
-				<button
-					on:click="web-navigation/save-har"
-					text="strings.saveHARButton"
-					class='button'></button>
-			</div>
-			<div if="!!wizardState.log?.file"
-				text="strings.locationHARFile + wizardState.log.file"
-				class='label'></div>
-		</div>
-		<div if="!issues" id='spinner' class='center'></div>
+        <main>
+            <section if="issues" id='report-container'>
+                <section if="issues.connections">
+                    <div style="margin-bottom: 1em;"
+                        text="strings.badHostsDetected"
+                        class='label'></div>
+                    <div map="host-rows" to="issues.connections">
+                    </div>
+                </section>
+                <section if="!issues.connections"
+                        text="strings.noBadHostDetected"
+                        class='label'></section>
+                <section if="issues.cookies">
+                    <div style="margin-bottom: 1em;"
+                        text="strings.cookiesDetected"
+                        class='label'></div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>Cookie</td>
+                                <td>Third Party</td>
+                                <td>JavaScript</td>
+                            </tr>
+                        </thead>
+                        <tbody map="cookies-rows" to="issues.cookies"></tbody>
+                    </table>
+                </section>
+                <section if="!issues.cookies"
+                    text="strings.noCookieDetected"
+                    class='label'></section>
+                <section class="grid" set:style="computeButtonGridStyle(issues)">
+                    <button if="issues.cookies || issues.connections"
+                        text="strings.complaintButton"
+                        on:click="web-navigation/start-complaint"
+                        on:click:data="getComplaintData()"
+                        id="complaint-button"
+                        class='button'></button>
+                    <button
+                        on:click="web-navigation/save-har"
+                        text="strings.saveHARButton"
+                        class='button'></button>
+                </section>
+                <section if="!!wizardState.log?.file"
+                    text="strings.locationHARFile + wizardState.log.file"
+                    class='label'></section>
+            </section>
+        </main>
+        <section class="center wide" if="!issues">
+            <div class='spinner'></div>
+        </section>
     </body>
 </html>

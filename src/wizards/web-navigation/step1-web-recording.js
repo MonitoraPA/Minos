@@ -45,7 +45,7 @@ class WebRecording extends AbstractWizardStep{
         this._whileActive(minosGUI.when('main', 'web-navigation/start', this.#startNavigation.bind(this)));
 		this._whileActive(minosGUI.when('main', 'web-navigation/analyze', this.#analyze.bind(this)));
 
-		minosGUI.showTemplate('main', 'src/wizards/web-navigation/address-bar.html')
+		minosGUI.showTemplate('main', 'src/wizards/web-navigation/step1-web-recording.html')
 			//.then(() => minosGUI.getView('main').webContents.openDevTools({ mode: 'detach' }))
 			.then(() => {
 				this.setViewsSize(minosGUI);

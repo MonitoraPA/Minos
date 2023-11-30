@@ -12,17 +12,51 @@ conditions of the Hacking License (see licenses/HACK.txt)
 	<head>
 		<meta charset="UTF-8">
 		<title>Main</title>
-		<link rel="stylesheet" href="../../style.css">
+		<link rel="stylesheet" href="../../minos.css">
 		<script src='../../views/templating.js' defer></script>
+		<style type="text/css">
+		.wizard-selector > header > h1 {
+			font-size: 3rem;
+			text-align: center;
+			color: #4384CD;
+			padding: 0; margin: 0;
+		}
+
+		.wizard-selector header {
+			padding-bottom: 0
+		}
+
+		.wizard-selector-button > div {
+			display: grid;
+			grid-gap: 1%;
+			grid-template-columns: 1fr 1fr 1fr;
+		}
+
+		.wizard-selector-button button {
+			grid-column: 2; /* <- TODO: remove when more tools are added */
+			width: 100%;
+		}
+		</style>
         <template id="selector-button" key="idx" item="label">
             <button class='button' text="label" on:click="wizard/start" on:click:data="idx"></button>
         </template>
 	</head>
 
-    <body>
-		<div id='main' class='center grid'>
+    <body class="wizard-selector">
+		<header>
 			<h1 id='main-title' data-title="wizardState.strings.title" text="title"></h1>
-			<div map="selector-button" to="wizardState.wizards"></div>
-		</div>
+		</header>
+		<main>
+			<section>
+				<p>
+					Benvenuti su Minos, un programma dedicato alla protezione diritti cibernetici.
+				</p>
+				<p class="warning">
+					Minos è un prototipo in alpha rilasciato nei termini della <a on:click="minos/show/license">Hacking License</a>, nella speranza che sia utile ma senza alcuna garanzia.
+				</p>
+			</section>
+			<section map="selector-button" to="wizardState.wizards" class="wizard-selector-button">
+			</section>
+		</main>
     </body>
 </html>

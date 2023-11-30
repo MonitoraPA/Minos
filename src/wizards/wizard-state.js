@@ -44,12 +44,13 @@ class WizardState {
         if(!(listener instanceof Function)){
             throw new Error("WizardState.observe: listener is not a function.")
         }
-        const newElementIndex = this.#listeners.push(listener) - 1;
+        this.#listeners.push(listener);
         return () => {
+            const newElementIndex = this.#listeners.indexOf(listener);
             this.#listeners.splice(newElementIndex, 1);
         }
     }
-    
+
     toObject(){
         return Object.fromEntries(this.#state);
     }

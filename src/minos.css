@@ -1,0 +1,43 @@
+@import url('pico.css');
+:root {
+	--line-height: 1;
+}
+
+.warning {
+	padding: 1em;
+	border: 1px dotted red;
+	background-color: bisque;
+}
+
+.grid {
+	display: grid;
+}
+
+.hidden {
+	display: none;
+}
+
+.spinner {
+	border: 10px solid var(--primary);
+	border-top: 10px solid var(--primary-inverse);
+	border-radius: 50%;
+	width: 50px;
+	height: 50px;
+	margin-top: 50px;
+	animation: spin 2s linear infinite;
+}
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+.center {
+	display: table;
+	height: 100%;
+}
+.center > div {
+  display:table-cell;
+  vertical-align:middle;
+  text-align:center;
+}
+

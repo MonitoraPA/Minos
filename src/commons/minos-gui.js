@@ -12,6 +12,7 @@ const WizardSelector = require('../wizards/start/wizard-selector');
 const WebNavigationAnalyzer = require('../wizards/web-navigation/web-navigation-analyzer');
 const WizardFactory = require('../wizards/wizard-factory');
 const packageInfo = require('../../package');
+const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor
 
 class MinosGUI {
     #window;
@@ -101,8 +102,14 @@ class MinosGUI {
         return this.#window.getContentBounds();
     }
 
-    setWizardMenu(menuConfig){
+    async openExternal(url){
         const { shell } = require('electron');
+        return () => {
+            shell.openExternal(url);
+        }
+    }
+
+    setWizardMenu(menuConfig){
         const controls = this.#wizards.map((w) => ({
             label: w.label,
             click: () => { this.#activateWizard(w); }
@@ -120,24 +127,16 @@ class MinosGUI {
                 role: 'help',
                 submenu: [{
                     label: 'Contatti',
-                    click: async () => {
-                        await shell.openExternal('https://monitora-pa.it/contatti.html');
-                    }
+                    click: this.openExternal('https://monitora-pa.it/contatti.html')
                 }, {
                     label: 'Sorgenti (GitHub)',
-                    click: async () => {
-                        await shell.openExternal('https://github.com/MonitoraPA/Minos');
-                    }
+                    click: this.openExternal('https://github.com/MonitoraPA/Minos')
                 }, {
                     label: 'Segnalazioni (GitHub)',
-                    click: async () => {
-                        await shell.openExternal('https://github.com/MonitoraPA/Minos/issues');
-                    }
+                    click: this.openExternal('https://github.com/MonitoraPA/Minos/issues')
                 }, {
                     label: 'Licenza',
-                    click: async () => {
-                        await shell.openExternal('https://monitora-pa.it/LICENSE.txt');
-                    }
+                    click: this.openExternal('https://monitora-pa.it/LICENSE.txt')
                 }]
             }];
         const menu = Menu.buildFromTemplate(template);
@@ -181,19 +180,30 @@ class MinosGUI {
     }
 
     on(windowEvent, callback){
-        const subscription = (...args) => callback(this, ...args);
+        const subscription = async (...args) => await callback(this, ...args);
         this.#window.on(windowEvent, subscription);
         return () => this.#window.removeListener(windowEvent, subscription)
+    }
+
+    #callbackWithMinos(callback){
+        if(callback instanceof AsyncFunction) {
+            return async (...args) => {
+                //console.log('MinosGUI: (async) ipcMain.on', ipcEvent, args);
+                await callback(this, ...args);
+            };
+        } else {
+            return (...args) => {
+                //console.log('MinosGUI: ipcMain.on', ipcEvent, args);
+                callback(this, ...args);
+            };
+        }
     }
 
     when(viewName, ipcEvent, callback){
         if(!this.#views[viewName]){
             throw new Error(`Cannot wait for ${ipcEvent} from ${viewName}: view was not registered.`);
         }
-        const subscription = (...args) => {
-            //console.log('MinosGUI: ipcMain.on', ipcEvent, args);
-            callback(this, ...args);
-        };
+        const subscription = this.#callbackWithMinos(callback);
         ipcMain.on(viewName + ":" + ipcEvent, subscription);
         return () => ipcMain.removeListener(viewName + ":" + ipcEvent, subscription);
     }

@@ -13,7 +13,7 @@ conditions of the Hacking License (see licenses/HACK.txt)
 	<head>
 		<meta charset="UTF-8">
 		<title>Minos: Web Navigation</title>
-		<link rel="stylesheet" href="../../style.css">
+		<link rel="stylesheet" href="../../minos.css">
         <script src='../../views/util.js'></script>
 		<script src='../../views/templating.js'></script>
         <script type="text/javascript">
@@ -31,9 +31,28 @@ conditions of the Hacking License (see licenses/HACK.txt)
                         enable(topButton);
                     }
                 });
+                urlBox.addEventListener('keydown', (event) => {
+                    if(event.target.value.length > 0
+                    && (event.key === "Enter" || event.key === "Return")){
+                        topButton.click();
+                    }
+                })
             }
-            initView();
         </script>
+        <style type="text/css">
+        #top-bar {
+            --line-height: 0.5;
+            column-gap: 10px;
+            grid-template-columns: 6fr 1fr;
+            /* background-color: var(--contrast);*/
+            height: 50px;
+            width: 99%;
+        }
+        .wide {
+            margin-top: 20%;
+            margin-left: 45%;
+        }
+        </style>
 	</head>
 
     <body>
@@ -57,7 +76,9 @@ conditions of the Hacking License (see licenses/HACK.txt)
                 class='button enabled' id='analyze-button'
                 text="strings.button.analyze"
                 on:click="web-navigation/analyze"></button>
-		</div>
-        <div if="wizardState.loading" id='spinner' class='center'></div>
+        </div>
+        <div class="center wide" if="wizardState.loading">
+            <div class='spinner'></div>
+        </div>
     </body>
 </html>

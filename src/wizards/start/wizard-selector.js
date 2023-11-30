@@ -32,6 +32,7 @@ class WizardSelector extends AbstractWizard {
         this._whileActive(minosGUI.attach('view', view));
         this._whileActive(minosGUI.when('view', 'wizard/start', this.#onSelection.bind(this)));
         this._whileActive(minosGUI.when('view', 'minos/template/activated', () => this.#setViewSize(minosGUI)));
+        this._whileActive(minosGUI.when('view', 'minos/show/license', minosGUI.openExternal('https://monitora-pa.it/LICENSE.txt')));
         this._whileActive(minosGUI.setWizardMenu([]));
 
         this._whileActive(minosGUI.on('resize', this.#setViewSize.bind(this)));

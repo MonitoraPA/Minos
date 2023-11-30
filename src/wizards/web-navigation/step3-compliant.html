@@ -1,0 +1,146 @@
+<!--
+This file is part of Minos
+
+Copyright (C) 2023 ebmaj7 <ebmaj7@proton.me>
+Copyright (C) 2023 Giacomo Tesio <giacomo@tesio.it>
+
+Minos is a hack. You can use it according to the terms and
+conditions of the Hacking License (see licenses/HACK.txt)
+-->
+<!DOCTYPE html>
+<html lang="it">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>Minos: Web Navigation</title>
+		<link rel="stylesheet" href="../../style.css">
+        <script src='../../views/util.js'></script>
+		<script src='../../views/templating.js'></script>
+        <script type="text/javascript">
+
+        </script>
+	</head>
+
+    <body>
+		<div id='form-container'>
+			<div id='form-title'></div>
+			<div>
+				<span id='form-label'></span>
+				<hr></hr>
+			</div>
+			<!-- form page 1 -->
+			<div id='form-fields-1' class='grid'>
+				<label id='form-name-label' class='label'></label>
+				<input id='form-name' type='text' class='form-input' placeholder='Nome'></input>
+				<label id='form-surname-label' class='label'></label>
+				<input id='form-surname' type='text' class='form-input' placeholder='Cognome'></input>
+				<label id='form-birthdate-label' class='label'></label>
+				<input id='form-birthdate' type='text' class='form-input' placeholder='GG/MM/AAAA'></input>
+				<label id='form-birthplace-label' class='label'></label>
+				<input id='form-birthplace' type='text' class='form-input' placeholder='Luogo di nascita'></input>
+				<label id='form-fisccode-label' class='label'></label>
+				<input id='form-fisccode' type='text' class='form-input' placeholder='Codice Fiscale'></input>
+				<label id='form-address-label' class='label'></label>
+				<input id='form-address' type='text' class='form-input' placeholder='Residenza'></input>
+			</div>
+			<!-- form page 2 -->
+			<div id='form-fields-2' class='grid'>
+				<span id='form-checkboxes' class='grid'>
+					<span>
+						<input type='checkbox' id='check-phone' name='check-phone' value='phone'>
+						<label id='check-phone-label' for='check-phone'></label>
+					</span>
+					<span>
+						<input type='checkbox' id='check-paddr' name='check-paddr' value='paddr'>
+						<label id='check-paddr-label' for='check-paddr'></label>
+					</span>
+					<span>
+						<input type='checkbox' id='check-email' name='check-email' value='email'>
+						<label id='check-email-label' for='check-email'></label>
+					</span>
+					<span>
+						<input type='checkbox' id='check-fax' name='check-fax' value='fax'>
+						<label id='check-fax-label' for='check-fax'></label>
+					</span>
+				</span>
+				<div class='grid hidden' id='phone-container'>
+					<label id='form-phone-label' class='label'></label>
+					<input id='form-phone' type='text' class='form-input' placeholder='Telefono'></input>
+				</div>
+				<div class='grid hidden' id='paddr-container'>
+					<label id='form-paddr-label' class='label'></label>
+					<input id='form-paddr' type='text' class='form-input' placeholder='Indirizzo fisico'></input>
+				</div>
+				<div class='grid hidden' id='email-container'>
+					<label id='form-email-label' class='label'></label>
+					<input id='form-email' type='text' class='form-input' placeholder='Email'></input>
+				</div>
+				<div class='grid hidden' id='fax-container'>
+					<label id='form-fax-label' class='label'></label>
+					<input id='form-fax' type='text' class='form-input' placeholder='Fax'></input>
+				</div>
+			</div>
+			<!-- form page 3 -->
+			<div id='form-fields-3' class='grid'>
+				<span>
+					<input type='checkbox' id='check-decl-1'>
+					<label id='form-decl-1-label'></label>
+				</span>
+				<span>
+					<input type='checkbox' id='check-decl-2'>
+					<label id='form-decl-2-label'></label>
+				</span>
+				<span>
+					<input type='checkbox' id='check-decl-3'>
+					<label id='form-decl-3-label'></label>
+				</span>
+				<div class='grid' id='data-controller-responsible'>
+					<div class='grid' id='data-controller-container'>
+						<div class='infobadge-container'>
+							<label id='form-data-controller-label' class='label'></label>
+							<div id='form-data-controller-infobadge' class='infobadge'>
+								info
+								<div id='form-data-controller-infobox' class='infobox hidden'></div>
+							</div>
+						</div>
+						<input id='form-data-controller' type='text' class='form-input' placeholder='Titolare del trattamento'></input>
+					</div>
+					<div class='grid' id='data-responsible-container'>
+						<div class='infobadge-container'>
+							<label id='form-data-responsible-label' class='label'></label>
+							<div id='form-data-responsible-infobadge' class='infobadge'>
+								info
+								<div id='form-data-responsible-infobox' class='infobox hidden'></div>
+							</div>
+						</div>
+						<input id='form-data-responsible' type='text' class='form-input' placeholder='Responsabile del trattamento'></input>
+					</div>
+				</div>
+			</div>
+			<!-- form page 4 -->
+			<div id='form-fields-4' class='grid'>
+				<span>
+					<input type='radio' id='radio-sign-1' checked>
+					<label id='form-sign-1-label'></label>
+				</span>
+				<span>
+					<input type='radio' id='radio-sign-2'>
+					<label id='form-sign-2-label'></label>
+				</span>
+				<div id='sign-button-container' class='upload-button-container grid'>
+					<button id='sign-button' class='button'></button>
+					<p id='sign-label' class='upload-label'></p>
+				</div>
+				<div id='idphoto-button-container' class='upload-button-container grid'>
+					<button id='idphoto-button' class='button'></button>
+					<p id='idphoto-label' class='upload-label'></p>
+				</div>
+			</div>
+			<!-- form buttons (prev, next) -->
+			<div id='form-buttons' class='grid'>
+				<button id='button-prev' class='button disabled hidden'></button>
+				<button id='button-next' class='button disabled'></button>
+			</div>
+		</div>
+    </body>
+</html>

@@ -8,27 +8,24 @@
  * conditions of the Hacking License (see licenses/HACK.txt)
  */
 const hosts = require('../../hosts.json');
+const trackingCookies = [
+	'_ga'
+]
 const parseSetCookieLine = require("./parse-set-cookie");
 
 function analyzeCDPLogs(collectedEvents, initialURL){
 	const issues = {};
-	const badRequests = [];
+	const requestedURLs = [];
+	const badRequests = {};
 	const httpCookiesNames = [];
 	const webViewSetCookies = [];
 	for (const {method, params} of collectedEvents){
 		switch(method){
 		case 'Network.requestWillBeSent':
+		case 'Fetch.requestPaused':
 			const {url} = params.request;
-			let timestamp = 0;
-			try{
-				timestamp = new Date(params.wallTime * 1000).toISOString();
-			} catch (err){
-				console.error('timestamp', timestamp, err);
-				console.log(params);
-			}
-			const match = findLongestMatch(url, timestamp);
-			if (match !== undefined){
-				badRequests.push(match);
+			if(!requestedURLs.includes(url)){
+				requestedURLs.push(url)
 			}
 			break;
 		case 'Network.responseReceivedExtraInfo':
@@ -54,17 +51,36 @@ function analyzeCDPLogs(collectedEvents, initialURL){
 			break;
 		}
 	};
-	if(badRequests.length > 0){
+
+	if(requestedURLs.length > 0){
+		for(const idx in requestedURLs){
+			requestedURLs[idx] = new URL(requestedURLs[idx]);
+		}
+		for(const [group, hostnames] of Object.entries(hosts)){
+			for(const hostname of hostnames){
+				for(const url of requestedURLs){
+					if(matches(url.hostname, hostname)){
+						if(!badRequests[group]){
+							badRequests[group] = [];
+						}
+						badRequests[group].push(url.toString());
+					}
+				}
+			}
+		}
+	}
+
+	if(Object.keys(badRequests).length > 0){
 		issues.connections = badRequests;
 	}
 
-	for(const cookie in webViewSetCookies){
+	for(const cookie of webViewSetCookies){
 		if(!httpCookiesNames.includes(cookie.name)){
 			cookie.javascript = true;
 		}
 	}
 
-	const thirdPartyCookies = webViewSetCookies.filter(e => e.thirdParty)
+	const thirdPartyCookies = webViewSetCookies.filter(e => e.thirdParty || trackingCookies.includes(e.name))
 
 	// TODO: include first party cookie like _ga
 	if(thirdPartyCookies.length > 0){
@@ -78,36 +94,33 @@ function mergeCookies(httpCookies, webViewSetCookies){
 
 }
 
-function findLongestMatch(urlString, timestamp){
+function findMatch(urlString, timestamp){
 	const url = new URL(urlString);
-	let match = undefined;
+	const match = {
+		host: null,
+		requests: []
+	};
 	for(const [group, hostnames] of Object.entries(hosts)){
 		for(const hostname of hostnames){
 			if(matches(url.hostname, hostname)){
-				if(match === undefined) {
-					match = {
-						requestCount: 1,
-						url: urlString,
-						timestamp: timestamp,
-						host: {
-							name: hostname,
-							group: group
-						}};
-				} else {
-					if(hostname.length > match.host.name){ // take only the longest matching host
-						match.host.name = hostname;
-						match.host.group = group;
-					}
-					match.requestCount++;
+				if(!match.host){
+					match.host = {
+						name: hostname,
+						group: group
+					};
 				}
+				match.requests.push({
+					url: urlString,
+					timestamp: timestamp
+				});
 			}
 		}
-		if(match){
+		if(match.host){
 			/* no need to look for other groups */
-			break;
+			return match;
 		}
 	}
-	return match;
+	return undefined;
 }
 
 function matches(urlHostname, hostname){

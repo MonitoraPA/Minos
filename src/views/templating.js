@@ -198,6 +198,7 @@ function minosDispatch(minosEvent){
 }
 
 function getDataFor(minosEvent, node){
+    console.log('getDataFor', minosEvent, node.minosEvents);
     if(node.minosEvents){
         const retriever = node.minosEvents[minosEvent];
         if(retriever){
@@ -246,6 +247,9 @@ function renderTree(rootElement, wizardState){
 }
 
 function cloneTemplate(activeTemplate){
+    if(!activeTemplate){
+        debugger;
+    }
     const clone = activeTemplate.cloneNode(true);
     copyScopingInfos(activeTemplate, clone);
     return clone;
@@ -270,6 +274,9 @@ function copyScopingInfos(source, target){
     if(source.minosEvents){
         target.minosEvents = source.minosEvents;
     }
+    if(source.activeTemplate){
+        target.activeTemplate = source.activeTemplate;
+    }
     if(source.eventSubscriptions){
         target.eventSubscriptions = source.eventSubscriptions;
         subscribeNodeEvents(target);
@@ -279,8 +286,24 @@ function copyScopingInfos(source, target){
     }
 }
 
+function createWrapperFor(containerTagName){
+    console.log('createWrapperFor', containerTagName)
+    switch(containerTagName){
+        case 'TABLE':
+            return document.createElement("TR");
+        case 'TBODY':
+            return document.createElement("TR");
+        case 'OL':
+            return document.createElement("LI");
+        case 'UL':
+            return document.createElement("LI");
+        default:
+            return document.createElement('DIV');
+    }
+}
+
 function bindTemplate(loopingNode, templateNode, iteractionKey, iteractionItem){
-    const wrapper = document.createElement('div');
+    const wrapper = createWrapperFor(loopingNode.tagName);
     const scopeVars = [...loopingNode.scopeVars]
     if(iteractionKey){
         scopeVars.push(iteractionKey);

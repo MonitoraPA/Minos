@@ -25,8 +25,8 @@ const strings = {
 			locationHARFile: "Il log della navigazione è stato salvato nel file: ",
 			saveHARButton: "Scarica il log della navigazione.",
 			complaintButton: "Reclama al Garante",
-			badHostsDetected: "Durante la navigazione sono stati individuati trasferimenti illeciti verso questi hosts:",
-			noBadHostDetected: "Non sono stati individuati trasferimenti illeciti durante la navigazione.",
+			badHostsDetected: "Durante la navigazione sono stati individuati trasferimenti verso queste terze parti:",
+			noBadHostDetected: "Non sono stati individuati trasferimenti verso terze parti problematiche durante la navigazione.",
 			cookiesDetected: "Durante la navigazione sono stati salvati questi cookie sul tuo browser:",
 			noCookieDetected: "Non è stato salvato alcun cookie sul tuo browser durante la navigazione."
 		},

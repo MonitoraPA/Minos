@@ -15,7 +15,7 @@ const { writeFile } = require('fs');
 class WebNavigationAnalysis extends AbstractWizardStep{
 	constructor(wizard){
 		super(wizard);
-		this.name = "Loading...";
+		this.name = "Log Analysis";
 	}
 
 	alreadyCompleted() {
@@ -28,6 +28,7 @@ class WebNavigationAnalysis extends AbstractWizardStep{
 		this.setViewsSize(minosGUI);
 
 		minosGUI.showTemplate('main', 'src/wizards/web-navigation/step2-analysis.html')
+			.then(() => minosGUI.getView('main').webContents.openDevTools({ mode: 'detach' }))
 			.then(() => {
 				this.wizard.set('strings', () => strings.components.report);
 			});
@@ -42,8 +43,9 @@ class WebNavigationAnalysis extends AbstractWizardStep{
 		mainView.setBounds({...bounds, x: 0, y: 0});
 	}
 
-	#startComplaint(minosGUI){
-		this.wizard.set('complainRequested', _ => true);
+	#startComplaint(minosGUI, event, issues){
+		console.log('startComplaint', issues);
+		this.wizard.set('complainRequested', _ => issues);
 	}
 
 	#downloadHAR(minosGUI){
